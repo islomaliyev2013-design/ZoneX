@@ -11,19 +11,43 @@ export default function ProductInputTable({
   onChange,
   showQuickChips = true,
 }) {
-  const { settings } = useApp();
+  const { settings, productsCatalog = [] } = useApp();
   const { t } = useLanguage();
-  const currency = settings.currency || '$';
+  const currency = settings.currency || "so'm";
 
-  const addRow = (prefillName = '') => {
+  const addRow = (prefillName = '', buy = '', sell = '') => {
     const newRow = {
       id: `p_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
       name: prefillName,
       quantity: 1,
-      purchasePrice: '',
-      sellingPrice: '',
+      purchasePrice: buy,
+      sellingPrice: sell,
     };
     onChange([...products, newRow]);
+  };
+
+  const addRowFromCatalog = (catItem) => {
+    // If the last row is completely empty, replace it
+    const lastIdx = products.length - 1;
+    if (
+      lastIdx >= 0 &&
+      !products[lastIdx].name &&
+      !products[lastIdx].purchasePrice &&
+      !products[lastIdx].sellingPrice
+    ) {
+      const updated = [...products];
+      updated[lastIdx] = {
+        ...products[lastIdx],
+        name: catItem.name,
+        quantity: 1,
+        purchasePrice: catItem.purchasePrice,
+        sellingPrice: catItem.sellingPrice,
+      };
+      onChange(updated);
+      return;
+    }
+
+    addRow(catItem.name, catItem.purchasePrice, catItem.sellingPrice);
   };
 
   const updateRow = (index, field, value) => {
@@ -63,33 +87,52 @@ export default function ProductInputTable({
 
   return (
     <div className="space-y-3">
-      {/* Quick Suggestion Chips */}
+      {/* Quick Suggestion Chips from Admin's Catalog ("Nimalar bor") */}
       {showQuickChips && (
         <div className="flex flex-wrap items-center gap-1.5 pt-1">
-          <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-blue-500" /> {t('productInput.quickAdd')}
+          <span className="text-xs font-semibold text-slate-400 flex items-center gap-1 mr-1">
+            <Sparkles className="w-3.5 h-3.5 text-brand-purpleLight" /> {t('productInput.quickAdd')}
           </span>
-          {QUICK_PRODUCTS.map((prod) => (
-            <button
-              key={prod}
-              type="button"
-              onClick={() => addRow(prod)}
-              className="text-xs px-2.5 py-1 rounded-md bg-slate-100 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 text-slate-700 border border-slate-200 transition font-medium"
-            >
-              + {prod}
-            </button>
-          ))}
+          {productsCatalog && productsCatalog.length > 0 ? (
+            productsCatalog.map((prod) => (
+              <button
+                key={prod.id}
+                type="button"
+                onClick={() => addRowFromCatalog(prod)}
+                title={`${prod.name} (Tannarxi: ${formatCurrency(prod.purchasePrice, currency)}, Sotilishi: ${formatCurrency(prod.sellingPrice, currency)})`}
+                className="text-xs px-2.5 py-1 rounded-lg bg-midnight-bg hover:bg-brand-purple/20 hover:text-brand-purpleLight text-slate-300 border border-midnight-border transition font-medium flex items-center gap-1"
+              >
+                <span>+ {prod.name}</span>
+                {prod.sellingPrice > 0 && (
+                  <span className="text-[10px] text-brand-lavender/80 font-bold">
+                    ({formatCurrency(prod.sellingPrice, currency)})
+                  </span>
+                )}
+              </button>
+            ))
+          ) : (
+            QUICK_PRODUCTS.map((prod) => (
+              <button
+                key={prod}
+                type="button"
+                onClick={() => addRow(prod)}
+                className="text-xs px-2.5 py-1 rounded-lg bg-midnight-bg hover:bg-brand-purple/20 hover:text-brand-purpleLight text-slate-300 border border-midnight-border transition font-medium"
+              >
+                + {prod}
+              </button>
+            ))
+          )}
         </div>
       )}
 
       {/* Product Rows */}
       {products.length === 0 ? (
-        <div className="text-center py-6 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50">
-          <p className="text-xs text-slate-500 mb-2">{t('productInput.noProductsYet')}</p>
+        <div className="text-center py-6 border border-dashed border-midnight-border rounded-xl bg-midnight-bg/40">
+          <p className="text-xs text-slate-400 mb-2">{t('productInput.noProductsYet')}</p>
           <button
             type="button"
             onClick={() => addRow()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 text-xs font-bold transition"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-purple/20 text-brand-purpleLight border border-brand-purple/30 hover:bg-brand-purple hover:text-white text-xs font-bold transition"
           >
             <Plus className="w-3.5 h-3.5" />
             {t('productInput.addFirstProduct')}
@@ -98,7 +141,7 @@ export default function ProductInputTable({
       ) : (
         <div className="space-y-2">
           {/* Header */}
-          <div className="hidden sm:grid sm:grid-cols-12 gap-2 px-2 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+          <div className="hidden sm:grid sm:grid-cols-12 gap-2 px-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
             <div className="sm:col-span-4">{t('productInput.productName')}</div>
             <div className="sm:col-span-2 text-center">{t('productInput.quantity')}</div>
             <div className="sm:col-span-2">{t('productInput.purchasePrice', { currency })}</div>
@@ -118,11 +161,11 @@ export default function ProductInputTable({
             return (
               <div
                 key={p.id || idx}
-                className="p-3 sm:p-2 bg-slate-50 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-12 gap-2 items-center"
+                className="p-3 sm:p-2 bg-midnight-bg rounded-xl border border-midnight-border grid grid-cols-1 sm:grid-cols-12 gap-2 items-center"
               >
                 {/* Product Name */}
                 <div className="sm:col-span-4">
-                  <label className="sm:hidden text-[10px] font-bold text-slate-500 uppercase">
+                  <label className="sm:hidden text-[10px] font-bold text-slate-400 uppercase">
                     {t('productInput.productName')}
                   </label>
                   <input
@@ -130,14 +173,14 @@ export default function ProductInputTable({
                     value={p.name}
                     onChange={(e) => updateRow(idx, 'name', e.target.value)}
                     placeholder={t('productInput.productPlaceholder')}
-                    className="w-full px-2.5 py-1.5 text-xs font-semibold bg-white border border-slate-300 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-2.5 py-1.5 text-xs font-semibold bg-midnight-card border border-midnight-border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-purple"
                     required
                   />
                 </div>
 
                 {/* Quantity */}
                 <div className="sm:col-span-2">
-                  <label className="sm:hidden text-[10px] font-bold text-slate-500 uppercase">
+                  <label className="sm:hidden text-[10px] font-bold text-slate-400 uppercase">
                     {t('productInput.quantity')}
                   </label>
                   <input
@@ -147,14 +190,14 @@ export default function ProductInputTable({
                     value={p.quantity}
                     onChange={(e) => updateRow(idx, 'quantity', e.target.value)}
                     placeholder="1"
-                    className="w-full px-2 py-1.5 text-xs font-semibold text-center bg-white border border-slate-300 rounded-lg text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-2 py-1.5 text-xs font-semibold text-center bg-midnight-card border border-midnight-border rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-brand-purple"
                     required
                   />
                 </div>
 
                 {/* Purchase Price */}
                 <div className="sm:col-span-2">
-                  <label className="sm:hidden text-[10px] font-bold text-slate-500 uppercase">
+                  <label className="sm:hidden text-[10px] font-bold text-slate-400 uppercase">
                     {t('productInput.purchasePrice', { currency })}
                   </label>
                   <input
@@ -164,14 +207,14 @@ export default function ProductInputTable({
                     value={p.purchasePrice}
                     onChange={(e) => updateRow(idx, 'purchasePrice', e.target.value)}
                     placeholder="0.00"
-                    className="w-full px-2 py-1.5 text-xs font-semibold bg-white border border-slate-300 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-2 py-1.5 text-xs font-semibold bg-midnight-card border border-midnight-border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-purple"
                     required
                   />
                 </div>
 
                 {/* Selling Price */}
                 <div className="sm:col-span-2">
-                  <label className="sm:hidden text-[10px] font-bold text-slate-500 uppercase">
+                  <label className="sm:hidden text-[10px] font-bold text-slate-400 uppercase">
                     {t('productInput.sellingPrice', { currency })}
                   </label>
                   <input
@@ -181,20 +224,20 @@ export default function ProductInputTable({
                     value={p.sellingPrice}
                     onChange={(e) => updateRow(idx, 'sellingPrice', e.target.value)}
                     placeholder="0.00"
-                    className="w-full px-2 py-1.5 text-xs font-semibold bg-white border border-slate-300 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-2 py-1.5 text-xs font-semibold bg-midnight-card border border-midnight-border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-purple"
                     required
                   />
                 </div>
 
                 {/* Line Profit & Delete */}
-                <div className="sm:col-span-2 flex items-center justify-between sm:justify-end gap-2 pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+                <div className="sm:col-span-2 flex items-center justify-between sm:justify-end gap-2 pt-1 sm:pt-0 border-t sm:border-t-0 border-midnight-border">
                   <div className="text-right">
                     <div className="text-[10px] text-slate-400 font-medium">
                       {t('productInput.profit')}
                     </div>
                     <div
                       className={`text-xs font-bold ${
-                        lineProfit >= 0 ? 'text-emerald-600' : 'text-rose-600'
+                        lineProfit >= 0 ? 'text-gaming-green' : 'text-gaming-red'
                       }`}
                     >
                       {formatCurrency(lineProfit, currency)}
@@ -203,7 +246,7 @@ export default function ProductInputTable({
                   <button
                     type="button"
                     onClick={() => removeRow(idx)}
-                    className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                    className="p-1.5 text-slate-400 hover:text-gaming-red hover:bg-gaming-redBg rounded-lg transition"
                     title={t('productInput.removeItem')}
                   >
                     <Trash2 className="w-4 h-4" />
@@ -218,7 +261,7 @@ export default function ProductInputTable({
             <button
               type="button"
               onClick={() => addRow()}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-brand-purpleLight hover:text-white bg-brand-purple/15 hover:bg-brand-purple/30 border border-brand-purple/30 rounded-lg transition"
             >
               <Plus className="w-3.5 h-3.5" />
               {t('productInput.addAnotherProduct')}
@@ -226,20 +269,20 @@ export default function ProductInputTable({
           </div>
 
           {/* Summary Box */}
-          <div className="mt-3 p-3 bg-slate-100 rounded-xl border border-slate-200/80 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="mt-3 p-3 bg-midnight-bg rounded-xl border border-midnight-border flex flex-wrap items-center justify-between gap-3 text-xs">
             <div className="flex gap-4">
               <div>
-                <span className="text-slate-500 font-medium block">{t('productInput.totalCostLabel')}</span>
-                <span className="font-bold text-slate-800">{formatCurrency(totals.cost, currency)}</span>
+                <span className="text-slate-400 font-medium block">{t('productInput.totalCostLabel')}</span>
+                <span className="font-bold text-white">{formatCurrency(totals.cost, currency)}</span>
               </div>
               <div>
-                <span className="text-slate-500 font-medium block">{t('productInput.totalRevenueLabel')}</span>
-                <span className="font-bold text-blue-600">{formatCurrency(totals.revenue, currency)}</span>
+                <span className="text-slate-400 font-medium block">{t('productInput.totalRevenueLabel')}</span>
+                <span className="font-bold text-brand-lavender">{formatCurrency(totals.revenue, currency)}</span>
               </div>
             </div>
             <div>
-              <span className="text-slate-500 font-medium block text-right">{t('productInput.productProfitLabel')}</span>
-              <span className="font-bold text-emerald-600 text-sm">{formatCurrency(totals.profit, currency)}</span>
+              <span className="text-slate-400 font-medium block text-right">{t('productInput.productProfitLabel')}</span>
+              <span className="font-bold text-gaming-green text-sm">{formatCurrency(totals.profit, currency)}</span>
             </div>
           </div>
         </div>

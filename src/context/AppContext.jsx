@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import {
   loadRooms,
   saveRooms,
@@ -6,6 +6,8 @@ import {
   saveTransactions,
   loadSettings,
   saveSettings,
+  loadProductsCatalog,
+  saveProductsCatalog,
   INITIAL_ROOMS_COUNT,
   STATIONS_PER_ROOM,
 } from '../utils/storage';
@@ -16,6 +18,15 @@ import {
 } from '../utils/calculations';
 import { toDateKey, formatTimeDisplay } from '../utils/formatters';
 import { useAuth } from './AuthContext';
+import { checkSupabaseConnection, supabase } from '../lib/supabase';
+import {
+  fetchRoomsStateFromCloud,
+  saveRoomsStateToCloud,
+  fetchTransactionsFromCloud,
+  saveTransactionToCloud,
+  fetchSettingsFromCloud,
+  saveSettingsToCloud,
+} from '../services/supabaseService';
 
 const AppContext = createContext(null);
 
@@ -26,12 +37,16 @@ export function AppProvider({ children }) {
   const [rooms, setRooms] = useState(() => loadRooms(accountId));
   const [transactions, setTransactions] = useState(() => loadTransactions(accountId));
   const [settings, setSettings] = useState(() => loadSettings(accountId));
+  const [productsCatalog, setProductsCatalog] = useState(() => loadProductsCatalog(accountId));
+  const [cloudStatus, setCloudStatus] = useState('checking'); // 'connected' | 'not_ready' | 'offline' | 'checking'
+  const [cloudMessage, setCloudMessage] = useState('');
 
   // Switch data when active user changes
   useEffect(() => {
     setRooms(loadRooms(accountId));
     setTransactions(loadTransactions(accountId));
     setSettings(loadSettings(accountId));
+    setProductsCatalog(loadProductsCatalog(accountId));
   }, [accountId]);
 
   // Save changes to localStorage for active account
@@ -47,6 +62,102 @@ export function AppProvider({ children }) {
     saveSettings(settings, accountId);
   }, [settings, accountId]);
 
+  useEffect(() => {
+    saveProductsCatalog(productsCatalog, accountId);
+  }, [productsCatalog, accountId]);
+
+  // Check Supabase connection and sync data from Cloud
+  useEffect(() => {
+    let isMounted = true;
+
+    async function initCloudSync() {
+      setCloudStatus('checking');
+      const health = await checkSupabaseConnection();
+
+      if (!isMounted) return;
+
+      if (!health.connected) {
+        setCloudStatus('offline');
+        setCloudMessage(health.error || 'Unable to connect to Supabase');
+        return;
+      }
+
+      if (!health.tablesReady) {
+        setCloudStatus('not_ready');
+        setCloudMessage(health.error || 'Database tables not ready');
+        return;
+      }
+
+      setCloudStatus('connected');
+      setCloudMessage('Cloud database synchronized');
+
+      // 1. Sync Rooms from cloud if available
+      const cloudRooms = await fetchRoomsStateFromCloud(accountId);
+      if (isMounted && Array.isArray(cloudRooms) && cloudRooms.length === INITIAL_ROOMS_COUNT) {
+        setRooms(cloudRooms);
+        saveRooms(cloudRooms, accountId);
+      } else if (isMounted && cloudRooms == null) {
+        // Initial sync to cloud
+        saveRoomsStateToCloud(accountId, rooms);
+      }
+
+      // 2. Sync Transactions from cloud if available
+      const cloudTxs = await fetchTransactionsFromCloud(accountId);
+      if (isMounted && Array.isArray(cloudTxs)) {
+        if (cloudTxs.length > 0) {
+          setTransactions(cloudTxs);
+          saveTransactions(cloudTxs, accountId);
+        } else if (transactions.length > 0) {
+          // Upload local transactions to cloud
+          cloudTxs.forEach((t) => saveTransactionToCloud(accountId, t));
+        }
+      }
+
+      // 3. Sync Settings from cloud if available
+      const cloudSettings = await fetchSettingsFromCloud(accountId);
+      if (isMounted && cloudSettings) {
+        setSettings(cloudSettings);
+        saveSettings(cloudSettings, accountId);
+      } else if (isMounted) {
+        saveSettingsToCloud(accountId, settings);
+      }
+    }
+
+    initCloudSync();
+
+    // Set up Realtime subscription for live room updates across screens
+    let channel = null;
+    try {
+      channel = supabase
+        .channel(`rooms_channel_${accountId}`)
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'rooms_state',
+            filter: `account_id=eq.${accountId}`,
+          },
+          (payload) => {
+            if (payload.new?.rooms_data && Array.isArray(payload.new.rooms_data)) {
+              setRooms(payload.new.rooms_data);
+              saveRooms(payload.new.rooms_data, accountId);
+            }
+          }
+        )
+        .subscribe();
+    } catch (e) {
+      console.warn('Realtime subscription not active:', e);
+    }
+
+    return () => {
+      isMounted = false;
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+    };
+  }, [accountId]);
+
   // Find a station across all rooms
   const findStation = (stationId) => {
     for (const room of rooms) {
@@ -60,53 +171,57 @@ export function AppProvider({ children }) {
    * Start a gaming session on an available station
    */
   const startSession = (stationId, { hourlyPrice, customerName }) => {
-    const rate = Number(hourlyPrice) || Number(settings.defaultHourlyRate) || 15;
+    const rate = Number(hourlyPrice) || Number(settings.defaultHourlyRate) || 20000;
     const now = Date.now();
 
-    setRooms((prevRooms) =>
-      prevRooms.map((room) => ({
-        ...room,
-        stations: room.stations.map((st) => {
-          if (st.id === stationId) {
-            return {
-              ...st,
-              status: 'occupied',
-              session: {
-                id: `sess_${now}_${Math.random().toString(36).substr(2, 5)}`,
-                startTime: now,
-                hourlyPrice: rate,
-                customerName: customerName ? customerName.trim() : '',
-                products: [],
-              },
-            };
-          }
-          return st;
-        }),
-      }))
-    );
+    const updatedRooms = rooms.map((room) => ({
+      ...room,
+      stations: room.stations.map((st) => {
+        if (st.id === stationId) {
+          return {
+            ...st,
+            status: 'occupied',
+            session: {
+              id: `sess_${now}_${Math.random().toString(36).substr(2, 5)}`,
+              startTime: now,
+              hourlyPrice: rate,
+              customerName: customerName ? customerName.trim() : '',
+              products: [],
+            },
+          };
+        }
+        return st;
+      }),
+    }));
+
+    setRooms(updatedRooms);
+    saveRooms(updatedRooms, accountId);
+    saveRoomsStateToCloud(accountId, updatedRooms);
   };
 
   /**
    * Add products to an ongoing session
    */
   const addProductsToSession = (stationId, newProducts = []) => {
-    setRooms((prevRooms) =>
-      prevRooms.map((room) => ({
-        ...room,
-        stations: room.stations.map((st) => {
-          if (st.id === stationId && st.session) {
-            return {
-              ...st,
-              session: {
-                ...st.session,
-                products: [...(st.session.products || []), ...newProducts],
-              },
-            };
-          }
-          return st;
-        }),
-      }))
-    );
+    const updatedRooms = rooms.map((room) => ({
+      ...room,
+      stations: room.stations.map((st) => {
+        if (st.id === stationId && st.session) {
+          return {
+            ...st,
+            session: {
+              ...st.session,
+              products: [...(st.session.products || []), ...newProducts],
+            },
+          };
+        }
+        return st;
+      }),
+    }));
+
+    setRooms(updatedRooms);
+    saveRooms(updatedRooms, accountId);
+    saveRoomsStateToCloud(accountId, updatedRooms);
   };
 
   /**
@@ -120,14 +235,12 @@ export function AppProvider({ children }) {
     const startTime = station.session.startTime;
     const durationMs = Math.max(0, endTime - startTime);
 
-    // Gaming payment
     const autoGaming = calculateGamingPayment(durationMs, station.session.hourlyPrice);
     const gamingPayment =
       finalGamingPayment !== undefined && finalGamingPayment !== ''
         ? Number(finalGamingPayment)
         : autoGaming;
 
-    // Product calculations
     const prodTotals = calculateProductTotals(finalProducts);
 
     const transaction = {
@@ -154,25 +267,28 @@ export function AppProvider({ children }) {
       totalPaid: gamingPayment + prodTotals.totalRevenue,
     };
 
-    // Save transaction
+    // Save transaction locally and in cloud
     setTransactions((prev) => [transaction, ...prev]);
+    saveTransactionToCloud(accountId, transaction);
 
     // Reset station
-    setRooms((prevRooms) =>
-      prevRooms.map((room) => ({
-        ...room,
-        stations: room.stations.map((st) => {
-          if (st.id === stationId) {
-            return {
-              ...st,
-              status: 'available',
-              session: null,
-            };
-          }
-          return st;
-        }),
-      }))
-    );
+    const updatedRooms = rooms.map((room) => ({
+      ...room,
+      stations: room.stations.map((st) => {
+        if (st.id === stationId) {
+          return {
+            ...st,
+            status: 'available',
+            session: null,
+          };
+        }
+        return st;
+      }),
+    }));
+
+    setRooms(updatedRooms);
+    saveRooms(updatedRooms, accountId);
+    saveRoomsStateToCloud(accountId, updatedRooms);
 
     return transaction;
   };
@@ -211,18 +327,61 @@ export function AppProvider({ children }) {
     };
 
     setTransactions((prev) => [transaction, ...prev]);
+    saveTransactionToCloud(accountId, transaction);
     return transaction;
   };
 
   const updateSettings = (newSettings) => {
-    setSettings((prev) => ({ ...prev, ...newSettings }));
+    setSettings((prev) => {
+      const updated = { ...prev, ...newSettings };
+      saveSettingsToCloud(accountId, updated);
+      return updated;
+    });
   };
 
-  // Calculations for dashboard
+  /**
+   * Catalog / Inventory management functions
+   */
+  const addProductToCatalog = ({ name, purchasePrice, sellingPrice }) => {
+    if (!name || !name.trim()) return null;
+    const newItem = {
+      id: `cat_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+      name: name.trim(),
+      purchasePrice: Number(purchasePrice) || 0,
+      sellingPrice: Number(sellingPrice) || 0,
+    };
+    setProductsCatalog((prev) => {
+      const updated = [newItem, ...prev];
+      saveProductsCatalog(updated, accountId);
+      return updated;
+    });
+    return newItem;
+  };
+
+  const updateProductInCatalog = (id, updatedFields) => {
+    setProductsCatalog((prev) => {
+      const updated = prev.map((item) =>
+        item.id === id ? { ...item, ...updatedFields } : item
+      );
+      saveProductsCatalog(updated, accountId);
+      return updated;
+    });
+  };
+
+  const deleteProductFromCatalog = (id) => {
+    setProductsCatalog((prev) => {
+      const updated = prev.filter((item) => item.id !== id);
+      saveProductsCatalog(updated, accountId);
+      return updated;
+    });
+  };
+
+  // Calculations for dashboard and quick monitors
   const allStations = rooms.flatMap((r) => r.stations);
   const totalRooms = INITIAL_ROOMS_COUNT;
   const totalStations = INITIAL_ROOMS_COUNT * STATIONS_PER_ROOM;
-  const occupiedStationsCount = allStations.filter((s) => s.status === 'occupied').length;
+  const occupiedStations = allStations.filter((s) => s.status === 'occupied');
+  const occupiedStationsCount = occupiedStations.length;
   const availableStationsCount = totalStations - occupiedStationsCount;
 
   // Today's stats
@@ -236,8 +395,16 @@ export function AppProvider({ children }) {
         rooms,
         transactions,
         settings,
+        productsCatalog,
+        addProductToCatalog,
+        updateProductInCatalog,
+        deleteProductFromCatalog,
+        cloudStatus,
+        cloudMessage,
         totalRooms,
         totalStations,
+        occupiedStations,
+        allStations,
         occupiedStationsCount,
         availableStationsCount,
         todayTransactions,

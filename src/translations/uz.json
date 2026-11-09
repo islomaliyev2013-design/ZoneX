@@ -55,7 +55,11 @@
     "passwordTooShort": "Parol kamida 6 ta belgidan iborat bo‘lishi kerak.",
     "usernameExists": "Ushbu foydalanuvchi nomi band. Boshqasini tanlang.",
     "emailExists": "Ushbu elektron pochta manzili allaqachon ro‘yxatdan o‘tgan.",
-    "allFieldsRequired": "Barcha maydonlarni to‘ldirish shart."
+    "allFieldsRequired": "Barcha maydonlarni to‘ldirish shart.",
+    "rememberMe": "Eslab qolish",
+    "forgotPassword": "Parolni unutdingizmi?",
+    "tabLogin": "Kirish",
+    "tabRegister": "Ro'yxatdan o'tish"
   },
   "dashboard": {
     "title": "Boshqaruv paneli",
@@ -250,5 +254,50 @@
     "cancel": "Bekor qilish",
     "saveSettings": "Saqlash",
     "ratePerHour": "1 soat o‘yin uchun narx"
+  },
+  "cloud": {
+    "statusConnected": "Bulut ulangan",
+    "statusNotReady": "Bazani sozlash",
+    "statusOffline": "Lokal rejim",
+    "modalTitle": "Supabase Bulutli Baza Sozlamalari",
+    "modalSubtitle": "Bulutli sinxronizatsiyani yoqish uchun ushbu SQL skriptni Supabase SQL Editor-da ishga tushiring.",
+    "copySql": "SQL skriptni nusxalash",
+    "copied": "Xotiraga nusxalandi!",
+    "openSupabase": "Supabase SQL Editor-ni ochish",
+    "connectedDesc": "Ilovangiz Supabase bulutiga ulangan. Xonalar, jonli taymerlar va savdolar avtomatik sinxronlanadi."
+  },
+  "catalog": {
+    "title": "Mahsulotlar ombori va menyusi (Nimalar bor)",
+    "subtitle": "Mavjud tovarlar ro‘yxati, tannarxi va sotuv narxlarini boshqarish hamda yangi tovar qo‘shish.",
+    "tabSales": "Mahsulot sotish (Kassa)",
+    "tabCatalog": "Nimalar bor & Yangi qo‘shish",
+    "addNewTitle": "Yangi mahsulot qo‘shish",
+    "name": "Mahsulot nomi",
+    "namePlaceholder": "masalan: Monster, Pista, Flash, Suv",
+    "cost": "Tannarxi (Olingan narxi)",
+    "sell": "Sotish narxi",
+    "margin": "Dona foydasi",
+    "addButton": "Mahsulotni qo‘shish",
+    "listTitle": "Mavjud tovarlar ro‘yxati (Nimalar bor)",
+    "totalItems": "{count} xil mahsulot bor",
+    "empty": "Hozircha katalogda mahsulot yo‘q. Yangi tovar qo‘shing.",
+    "sellThis": "Savdoga qo‘shish",
+    "deleteConfirm": "Ushbu mahsulotni katalogdan o‘chirmoqchimisiz?",
+    "addedSuccess": "Mahsulot menyuga muvaffaqiyatli qo‘shildi!",
+    "deletedSuccess": "Mahsulot o‘chirildi!"
+  },
+  "occupiedMonitor": {
+    "title": "Band xonalar va konsollar nazorati (Zanyat)",
+    "subtitle": "Hozirda faol o‘ynalayotgan konsollar, vaqt hisobi va buyurtmalar.",
+    "noOccupied": "Hozirda barcha 25 ta konsol bo‘sh. Barcha xonalar mijozlar uchun tayyor.",
+    "allConsoles": "Barcha konsollar ({count})",
+    "onlyOccupied": "Band konsollar ({count})",
+    "onlyFree": "Bo‘sh konsollar ({count})",
+    "currentAccrued": "Joriy o‘yin summasi:",
+    "addProductsShort": "+ Mahsulot qo‘shish",
+    "finishShort": "Hisoblash va yakunlash",
+    "orderedProducts": "Buyurtmalar:",
+    "totalDue": "Jami to‘lov:"
   }
 }
+

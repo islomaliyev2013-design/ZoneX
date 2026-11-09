@@ -55,7 +55,11 @@
     "passwordTooShort": "Password must be at least 6 characters long.",
     "usernameExists": "This username is already taken. Please choose another.",
     "emailExists": "This email address is already registered.",
-    "allFieldsRequired": "All fields are required."
+    "allFieldsRequired": "All fields are required.",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot Password?",
+    "tabLogin": "Login",
+    "tabRegister": "Register"
   },
   "dashboard": {
     "title": "Business Dashboard",
@@ -250,5 +254,50 @@
     "cancel": "Cancel",
     "saveSettings": "Save Settings",
     "ratePerHour": "Rate charged per hour"
+  },
+  "cloud": {
+    "statusConnected": "Cloud Connected",
+    "statusNotReady": "Setup DB",
+    "statusOffline": "Local Mode",
+    "modalTitle": "Supabase Cloud Database Setup",
+    "modalSubtitle": "Run this SQL script in your Supabase SQL Editor to enable real-time cloud data sync.",
+    "copySql": "Copy SQL Script",
+    "copied": "Copied to Clipboard!",
+    "openSupabase": "Open Supabase SQL Editor",
+    "connectedDesc": "Your app is connected to Supabase cloud. Rooms, active timers, and sales sync automatically."
+  },
+  "catalog": {
+    "title": "Product Catalog & Inventory (What's in Stock)",
+    "subtitle": "Manage available items, purchase costs, selling prices, and add new stock.",
+    "tabSales": "Sell Products (Cashier)",
+    "tabCatalog": "In Stock & Add New Item",
+    "addNewTitle": "Add New Product",
+    "name": "Product Name",
+    "namePlaceholder": "e.g.: Red Bull, Chips, Cola, Water",
+    "cost": "Purchase Cost",
+    "sell": "Selling Price",
+    "margin": "Unit Profit",
+    "addButton": "Add to Catalog",
+    "listTitle": "Available Products in Stock (What's in Stock)",
+    "totalItems": "{count} product types in stock",
+    "empty": "Catalog is currently empty. Add a product using the form above.",
+    "sellThis": "Add to Sale",
+    "deleteConfirm": "Are you sure you want to delete this product?",
+    "addedSuccess": "Product added to catalog successfully!",
+    "deletedSuccess": "Product removed!"
+  },
+  "occupiedMonitor": {
+    "title": "Live Occupied Rooms & Consoles (Active Sessions)",
+    "subtitle": "Real-time overview of active consoles, playing duration, and orders.",
+    "noOccupied": "All 25 PlayStation consoles are currently available and ready for players.",
+    "allConsoles": "All Consoles ({count})",
+    "onlyOccupied": "Occupied Consoles ({count})",
+    "onlyFree": "Available Consoles ({count})",
+    "currentAccrued": "Current Game Cost:",
+    "addProductsShort": "+ Add Snack/Drink",
+    "finishShort": "Finish & Bill",
+    "orderedProducts": "Orders:",
+    "totalDue": "Total Due:"
   }
 }
+

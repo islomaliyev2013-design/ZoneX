@@ -1,38 +1,25 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  Gamepad2,
   LayoutDashboard,
   Tv,
   ShoppingBag,
   History,
   BarChart3,
-  Coins,
   LogOut,
-  User,
   Menu,
   X,
 } from 'lucide-react';
-import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSelector from './LanguageSelector';
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const {
-    occupiedStationsCount,
-    availableStationsCount,
-    settings,
-    updateSettings,
-  } = useApp();
-  const { currentUser, logout, isAdmin } = useAuth();
+  const { currentUser, logout } = useAuth();
   const { t } = useLanguage();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showCurrencyModal, setShowCurrencyModal] = useState(false);
-  const [tempCurrency, setTempCurrency] = useState(settings.currency || '$');
-  const [tempDefaultRate, setTempDefaultRate] = useState(settings.defaultHourlyRate || 15);
 
   const navItems = [
     { to: '/', label: t('nav.dashboard'), icon: LayoutDashboard },
@@ -42,147 +29,55 @@ export default function Navbar() {
     { to: '/reports', label: t('nav.reports'), icon: BarChart3 },
   ];
 
-  const handleSaveSettings = (e) => {
-    e.preventDefault();
-    updateSettings({
-      currency: tempCurrency.trim() || '$',
-      defaultHourlyRate: Number(tempDefaultRate) || 15,
-    });
-    setShowCurrencyModal(false);
-  };
-
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
+  const userInitial = (
+    currentUser?.fullName?.[0] ||
+    currentUser?.username?.[0] ||
+    'A'
+  ).toUpperCase();
+  const userDisplayName = currentUser?.username || currentUser?.fullName || 'admin';
+
   return (
-    <>
-      <header className="sticky top-0 z-30 bg-navy-950/95 backdrop-blur-md border-b border-navy-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            
-            {/* Logo */}
-            <NavLink to="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-600/30 group-hover:scale-105 transition-transform">
-                <Gamepad2 className="w-6 h-6" />
-              </div>
-              <div>
-                <span className="text-lg font-bold tracking-tight text-white flex items-center gap-1.5">
-                  PlayStation <span className="text-blue-500">Manager</span>
+    <header className="sticky top-0 z-30 bg-[#12111c]/95 backdrop-blur-xl border-b border-[#2d283e] shadow-[0_4px_25px_rgba(0,0,0,0.45)] select-none">
+      {/* Subtle top purple glowing accent line */}
+      <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-brand-purple/70 to-transparent" />
+
+      <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-[72px] gap-4">
+          
+          {/* 1. Left Side: Brand Logo with Neon Gamepad Icon */}
+          <NavLink
+            to="/"
+            className="flex items-center gap-3.5 group flex-shrink-0 transition-transform active:scale-95"
+          >
+            <div className="relative w-11 h-11 rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(59,130,246,0.35)] border border-blue-500/40 flex-shrink-0 group-hover:scale-105 transition-all">
+              <img
+                src="/app-icon.jpg"
+                alt="PlayStation Manager"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="leading-none">
+              <div className="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-1.5 whitespace-nowrap">
+                <span>PlayStation</span>
+                <span className="bg-gradient-to-r from-brand-purpleLight to-brand-lavender bg-clip-text text-transparent font-extrabold">
+                  Manager
                 </span>
-                <span className="hidden sm:block text-[10px] text-slate-400 font-medium tracking-wide uppercase">
-                  {t('common.appSubtitle')}
-                </span>
               </div>
-            </NavLink>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1 bg-navy-900/80 p-1.5 rounded-xl border border-navy-800">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={item.to === '/'}
-                    className={({ isActive }) =>
-                      `flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 ${
-                        isActive
-                          ? 'bg-blue-600 text-white shadow-sm'
-                          : 'text-slate-300 hover:text-white hover:bg-navy-800'
-                      }`
-                    }
-                  >
-                    <Icon className="w-4 h-4" />
-                    {item.label}
-                  </NavLink>
-                );
-              })}
-            </nav>
-
-            {/* Right side: Language Selector + Status pill + Settings + User / Logout */}
-            <div className="hidden sm:flex items-center gap-2.5">
-              {/* Language Selector */}
-              <LanguageSelector variant="header" />
-
-              {/* Occupancy pill */}
-              <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-navy-900 border border-navy-800 text-xs">
-                <span className="relative flex h-2 w-2">
-                  {occupiedStationsCount > 0 && (
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                  )}
-                  <span
-                    className={`relative inline-flex rounded-full h-2 w-2 ${
-                      occupiedStationsCount > 0 ? 'bg-rose-500' : 'bg-emerald-500'
-                    }`}
-                  ></span>
-                </span>
-                <span className="text-rose-400 font-bold">{occupiedStationsCount}</span>
-                <span className="text-slate-500">/</span>
-                <span className="text-emerald-400 font-bold">{availableStationsCount}</span>
-                <span className="text-slate-400 text-[11px] font-medium">{t('nav.free')}</span>
-              </div>
-
-              {/* Pricing Settings Button */}
-              <button
-                onClick={() => {
-                  setTempCurrency(settings.currency || '$');
-                  setTempDefaultRate(settings.defaultHourlyRate || 15);
-                  setShowCurrencyModal(true);
-                }}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-navy-900 hover:bg-navy-800 text-slate-300 hover:text-white border border-navy-800 text-xs font-semibold transition"
-                title={t('settings.pricingTitle')}
-              >
-                <Coins className="w-3.5 h-3.5 text-blue-400" />
-                <span>{settings.currency}</span>
-              </button>
-
-              {/* User badge & Logout */}
-              <div className="flex items-center gap-1 pl-1 border-l border-navy-800">
-                <div
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-navy-900 border border-navy-800 text-xs text-slate-300 font-medium"
-                  title={`${t('nav.loggedInAs')} ${currentUser?.username || ''}`}
-                >
-                  <User className="w-3.5 h-3.5 text-blue-400" />
-                  <span className="max-w-[100px] truncate font-bold text-white">
-                    {currentUser?.username || 'admin'}
-                  </span>
-                  {isAdmin && (
-                    <span className="px-1.5 py-0.2 rounded bg-blue-600/30 text-blue-300 text-[9px] font-extrabold uppercase">
-                      Admin
-                    </span>
-                  )}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="p-1.5 rounded-xl bg-navy-900 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 border border-navy-800 hover:border-rose-900/50 transition"
-                  title={t('nav.logout')}
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
+              <div className="text-[10px] text-slate-400 font-bold tracking-wider uppercase mt-1 flex items-center gap-1.5 whitespace-nowrap">
+                <span>5 {t('common.roomPrefix')}</span>
+                <span className="w-1 h-1 rounded-full bg-brand-purpleLight/60" />
+                <span>25 {t('common.stationPrefix')}</span>
               </div>
             </div>
+          </NavLink>
 
-            {/* Mobile menu and language toggle */}
-            <div className="flex items-center gap-2 lg:hidden">
-              <LanguageSelector variant="header" />
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-lg bg-navy-900 text-slate-300 hover:text-white border border-navy-800"
-              >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
-            </div>
-
-          </div>
-        </div>
-
-        {/* Mobile menu dropdown */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden bg-navy-950 border-b border-navy-800 px-4 pt-2 pb-4 space-y-1.5 animate-in slide-in-from-top-2">
+          {/* 2. Center: Floating Sleek Navigation Island */}
+          <nav className="hidden lg:flex items-center gap-1.5 bg-[#181628]/90 border border-[#312c44] p-1.5 rounded-2xl shadow-inner">
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -190,120 +85,123 @@ export default function Navbar() {
                   key={item.to}
                   to={item.to}
                   end={item.to === '/'}
-                  onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-semibold transition ${
+                    `flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 ${
                       isActive
-                        ? 'bg-blue-600 text-white'
-                        : 'text-slate-300 hover:bg-navy-800 hover:text-white'
+                        ? 'bg-gradient-to-r from-brand-purple to-[#6D28D9] text-white shadow-lg shadow-brand-purple/35 scale-[1.02]'
+                        : 'text-slate-300 hover:text-white hover:bg-white/5'
                     }`
                   }
                 >
-                  <Icon className="w-4 h-4" />
-                  {item.label}
+                  <Icon className="w-4 h-4 flex-shrink-0" />
+                  <span>{item.label}</span>
                 </NavLink>
               );
             })}
+          </nav>
 
-            <div className="pt-3 border-t border-navy-800 flex items-center justify-between text-xs text-slate-400 px-2">
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-white">{currentUser?.username}</span>
-                <span>({occupiedStationsCount} {t('nav.busy')} • {availableStationsCount} {t('nav.free')})</span>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1.5"
+          {/* 3. Right Side: Language Selector + User Profile + Logout */}
+          <div className="hidden sm:flex items-center gap-3 flex-shrink-0">
+            {/* Language Selector Dropdown */}
+            <LanguageSelector variant="header" />
+
+            {/* User Profile Pill & Logout Button */}
+            <div className="flex items-center gap-2 pl-3 border-l border-[#312c44]">
+              <div
+                className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#181628] border border-[#312c44] text-xs shadow-xs"
+                title={`${t('nav.loggedInAs')} ${currentUser?.username || ''}`}
               >
-                <LogOut className="w-3.5 h-3.5" />
-                {t('nav.logout')}
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-brand-purple to-[#8B5CF6] flex items-center justify-center font-black text-white text-xs shadow-sm flex-shrink-0">
+                  {userInitial}
+                </div>
+                <div className="flex flex-col text-left leading-tight">
+                  <span className="font-extrabold text-white text-xs">
+                    {userDisplayName}
+                  </span>
+                  <span className="text-[10px] text-slate-400 capitalize">
+                    {currentUser?.role || 'admin'}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="p-2 rounded-xl bg-[#181628] hover:bg-red-500/20 text-slate-400 hover:text-red-400 border border-[#312c44] hover:border-red-500/30 transition shadow-xs"
+                title={t('nav.logout')}
+              >
+                <LogOut className="w-4 h-4" />
               </button>
             </div>
           </div>
-        )}
-      </header>
 
-      {/* Pricing Settings Modal */}
-      {showCurrencyModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm text-slate-800 shadow-2xl animate-in fade-in zoom-in-95">
-            <h3 className="text-lg font-bold text-slate-900 mb-1">
-              {t('settings.pricingTitle')}
-            </h3>
-            <p className="text-xs text-slate-500 mb-4">
-              {t('settings.pricingSubtitle')}
-            </p>
+          {/* Mobile Hamburger Button */}
+          <div className="flex lg:hidden items-center gap-2">
+            <LanguageSelector variant="header" />
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2.5 rounded-xl bg-[#181628] text-white border border-[#312c44] transition"
+              aria-label="Toggle Navigation Menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+        </div>
+      </div>
 
-            <form onSubmit={handleSaveSettings} className="space-y-4">
+      {/* Mobile Slide-Down Drawer */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden bg-[#161424] border-t border-[#2d283e] px-4 pt-3 pb-5 space-y-2 animate-in slide-in-from-top-2 shadow-2xl">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === '/'}
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold transition ${
+                    isActive
+                      ? 'bg-brand-purple text-white shadow-md shadow-brand-purple/30'
+                      : 'text-slate-300 hover:bg-[#1f1c33] hover:text-white'
+                  }`
+                }
+              >
+                <Icon className="w-4 h-4" />
+                <span>{item.label}</span>
+              </NavLink>
+            );
+          })}
+
+          {/* Mobile Footer User & Logout */}
+          <div className="pt-3 mt-2 border-t border-[#2d283e] flex items-center justify-between text-xs text-slate-400 px-1">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-brand-purple flex items-center justify-center font-bold text-white text-xs">
+                {userInitial}
+              </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">
-                  {t('settings.currencySymbol')}
-                </label>
-                <div className="flex gap-2">
-                  {['$', 'UZS', 'руб', '€', '£', '₸'].map((curr) => (
-                    <button
-                      type="button"
-                      key={curr}
-                      onClick={() => setTempCurrency(curr)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition ${
-                        tempCurrency === curr
-                          ? 'bg-blue-600 text-white border-blue-600'
-                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200'
-                      }`}
-                    >
-                      {curr}
-                    </button>
-                  ))}
-                </div>
-                <input
-                  type="text"
-                  value={tempCurrency}
-                  onChange={(e) => setTempCurrency(e.target.value)}
-                  className="mt-2 w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="e.g. $, UZS, руб"
-                  required
-                />
+                <span className="font-bold text-white block leading-tight">
+                  {userDisplayName}
+                </span>
+                <span className="text-[10px] text-slate-400 capitalize">
+                  {currentUser?.role || 'admin'}
+                </span>
               </div>
+            </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">
-                  {t('settings.defaultHourlyRate')}
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-slate-400 text-sm font-semibold">
-                    {tempCurrency}
-                  </span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="any"
-                    value={tempDefaultRate}
-                    onChange={(e) => setTempDefaultRate(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="15"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowCurrencyModal(false)}
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold text-sm transition"
-                >
-                  {t('settings.cancel')}
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-md transition"
-                >
-                  {t('settings.saveSettings')}
-                </button>
-              </div>
-            </form>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="px-3.5 py-1.5 rounded-xl bg-gaming-redBg text-gaming-red border border-gaming-red/30 font-bold flex items-center gap-1.5"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>{t('nav.logout')}</span>
+            </button>
           </div>
         </div>
       )}
-    </>
+    </header>
   );
 }

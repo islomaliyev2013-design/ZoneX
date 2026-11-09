@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { fetchProfilesFromCloud, saveProfileToCloud } from '../services/supabaseService';
 
 const ACCOUNTS_KEY = 'ps_accounts_v1';
 const CURRENT_USER_KEY = 'ps_current_user_v1';
@@ -23,7 +24,6 @@ export function AuthProvider({ children }) {
       if (stored) {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // Ensure default admin exists
           const adminExists = parsed.some(
             (acc) => acc.username.toLowerCase() === DEFAULT_ADMIN.username.toLowerCase()
           );
@@ -58,7 +58,42 @@ export function AuthProvider({ children }) {
     return null;
   });
 
-  // Persist accounts
+  // Sync with Supabase profiles on mount
+  useEffect(() => {
+    let isMounted = true;
+    async function syncCloudProfiles() {
+      const cloudProfiles = await fetchProfilesFromCloud();
+      if (!isMounted || !cloudProfiles || cloudProfiles.length === 0) return;
+
+      setAccounts((prevAccounts) => {
+        const mergedMap = new Map();
+        // Add local
+        prevAccounts.forEach((acc) => mergedMap.set(acc.username.toLowerCase(), acc));
+        // Add/update from cloud
+        cloudProfiles.forEach((cp) => {
+          mergedMap.set(cp.username.toLowerCase(), {
+            id: cp.id,
+            username: cp.username,
+            password: cp.password,
+            fullName: cp.full_name || cp.fullName,
+            email: cp.email,
+            role: cp.role || 'user',
+            createdAt: Number(cp.created_at || cp.createdAt || Date.now()),
+          });
+        });
+        const merged = Array.from(mergedMap.values());
+        localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(merged));
+        return merged;
+      });
+    }
+
+    syncCloudProfiles();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Persist accounts locally
   useEffect(() => {
     try {
       localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
@@ -67,7 +102,7 @@ export function AuthProvider({ children }) {
     }
   }, [accounts]);
 
-  // Persist current user
+  // Persist current user locally
   useEffect(() => {
     try {
       if (currentUser) {
@@ -93,7 +128,9 @@ export function AuthProvider({ children }) {
 
     const found = accounts.find(
       (acc) =>
-        acc.username.toLowerCase() === cleanUsername && acc.password === cleanPassword
+        (acc.username.toLowerCase() === cleanUsername ||
+          (acc.email && acc.email.toLowerCase() === cleanUsername)) &&
+        acc.password === cleanPassword
     );
 
     if (found) {
@@ -169,6 +206,10 @@ export function AuthProvider({ children }) {
     };
 
     setCurrentUser(userSession);
+
+    // Save to Supabase cloud asynchronously
+    saveProfileToCloud(newUser);
+
     return { success: true, user: userSession };
   };
 

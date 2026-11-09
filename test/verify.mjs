@@ -97,7 +97,8 @@ console.log('✅ Test 4 Passed: Combined transaction summary verified');
 
 // 5. Formatters Test
 console.log('\nTest 5: Formatters');
-assert.strictEqual(formatCurrency(15, '$'), '$ 15.00');
+assert.strictEqual(formatCurrency(15), "15 so'm");
+assert.strictEqual(formatCurrency(25000), "25 000 so'm");
 assert.strictEqual(formatTimer(3665 * 1000), '01:01:05');
 assert.strictEqual(formatDurationHuman(3665 * 1000), '1h 1m');
 assert.strictEqual(formatDurationHuman(45 * 60 * 1000), '45m');

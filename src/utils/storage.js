@@ -120,12 +120,27 @@ export function loadSettings(accountId = 'account_admin') {
     const key = getSettingsKey(accountId);
     const stored = localStorage.getItem(key);
     if (stored) {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      // Migrate from dollar to Uzbek so'm
+      if (!parsed.currency || parsed.currency === '$') {
+        parsed.currency = "so'm";
+        if (!parsed.defaultHourlyRate || parsed.defaultHourlyRate === 15) {
+          parsed.defaultHourlyRate = 20000;
+        }
+        saveSettings(parsed, accountId);
+      }
+      return parsed;
     }
     if (accountId === 'account_admin') {
       const oldV1 = localStorage.getItem('ps_settings_v1');
       if (oldV1) {
         const parsed = JSON.parse(oldV1);
+        if (!parsed.currency || parsed.currency === '$') {
+          parsed.currency = "so'm";
+          if (!parsed.defaultHourlyRate || parsed.defaultHourlyRate === 15) {
+            parsed.defaultHourlyRate = 20000;
+          }
+        }
         saveSettings(parsed, accountId);
         return parsed;
       }
@@ -133,10 +148,12 @@ export function loadSettings(accountId = 'account_admin') {
   } catch (err) {
     console.error('Failed to load settings:', err);
   }
-  return {
-    currency: '$',
-    defaultHourlyRate: 15,
+  const defaults = {
+    currency: "so'm",
+    defaultHourlyRate: 20000,
   };
+  saveSettings(defaults, accountId);
+  return defaults;
 }
 
 export function saveSettings(settings, accountId = 'account_admin') {
@@ -144,5 +161,42 @@ export function saveSettings(settings, accountId = 'account_admin') {
     localStorage.setItem(getSettingsKey(accountId), JSON.stringify(settings));
   } catch (err) {
     console.error('Failed to save settings:', err);
+  }
+}
+
+const getCatalogKey = (accountId = 'account_admin') => `ps_catalog_v1_${accountId}`;
+
+export const DEFAULT_CATALOG = [
+  { id: 'cat_1', name: 'Semichka', purchasePrice: 5000, sellingPrice: 10000 },
+  { id: 'cat_2', name: 'Coca-Cola 0.5L', purchasePrice: 7000, sellingPrice: 12000 },
+  { id: 'cat_3', name: 'Fanta 0.5L', purchasePrice: 7000, sellingPrice: 12000 },
+  { id: 'cat_4', name: 'Suv 0.5L', purchasePrice: 2000, sellingPrice: 4000 },
+  { id: 'cat_5', name: 'Red Bull', purchasePrice: 18000, sellingPrice: 25000 },
+  { id: 'cat_6', name: 'Chips Lays', purchasePrice: 12000, sellingPrice: 18000 },
+  { id: 'cat_7', name: 'Snickers', purchasePrice: 8000, sellingPrice: 12000 },
+];
+
+export function loadProductsCatalog(accountId = 'account_admin') {
+  try {
+    const key = getCatalogKey(accountId);
+    const stored = localStorage.getItem(key);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load products catalog:', err);
+  }
+  saveProductsCatalog(DEFAULT_CATALOG, accountId);
+  return DEFAULT_CATALOG;
+}
+
+export function saveProductsCatalog(catalog, accountId = 'account_admin') {
+  try {
+    localStorage.setItem(getCatalogKey(accountId), JSON.stringify(catalog));
+  } catch (err) {
+    console.error('Failed to save products catalog:', err);
   }
 }

@@ -1,11 +1,28 @@
 /**
- * Format numbers as currency with symbol
+ * Format numbers as currency with symbol (Defaults to Uzbek so'm)
  */
-export function formatCurrency(amount, currency = '$') {
+export function formatCurrency(amount, currency = "so'm") {
   const num = Number(amount) || 0;
-  // If currency is a symbol like $, €, £, prefix it; otherwise suffix or format neatly
+  // If currency is '$' or unset or so'm / UZS, format in Uzbek so'm
+  const isSom =
+    !currency ||
+    currency === '$' ||
+    currency === "so'm" ||
+    currency.toLowerCase().includes('som') ||
+    currency.toLowerCase().includes("so'") ||
+    currency.toLowerCase() === 'uzs';
+
+  if (isSom) {
+    // Uzbek national currency (so'm): space-separated integers, no cents
+    const formatted = Math.round(num)
+      .toLocaleString('ru-RU')
+      .replace(/\s/g, ' ');
+    return `${formatted} so'm`;
+  }
+
+  // Other currencies (e.g. EUR, RUB)
   const formatted = num.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
+    minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   });
 
