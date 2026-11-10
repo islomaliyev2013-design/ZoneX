@@ -33,24 +33,29 @@ const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
   const { currentUser } = useAuth();
-  // Shared PlayStation club database ID for all staff/operators (admin, jonibek, etc.)
-  // Whichever staff member logs in, they access the shared live club data!
-  const accountId = 'account_admin';
+  // Unique accountId for each user account.
+  // Admin -> 'account_admin'
+  // Any newly registered user or other account -> their own unique user ID
+  // Guest / unauthenticated -> 'guest'
+  const accountId = currentUser?.id ? String(currentUser.id) : 'guest';
 
+  // Using key={accountId} guarantees that whenever a user logs in, logs out, or switches accounts,
+  // the entire state (rooms, active sessions, transactions, timers) unmounts cleanly and remounts
+  // fresh for that specific account with 0 cross-contamination!
+  return (
+    <AppInnerProvider key={accountId} accountId={accountId}>
+      {children}
+    </AppInnerProvider>
+  );
+}
+
+function AppInnerProvider({ accountId, children }) {
   const [rooms, setRooms] = useState(() => loadRooms(accountId));
   const [transactions, setTransactions] = useState(() => loadTransactions(accountId));
   const [settings, setSettings] = useState(() => loadSettings(accountId));
   const [productsCatalog, setProductsCatalog] = useState(() => loadProductsCatalog(accountId));
   const [cloudStatus, setCloudStatus] = useState('checking'); // 'connected' | 'not_ready' | 'offline' | 'checking'
   const [cloudMessage, setCloudMessage] = useState('');
-
-  // Keep shared club data synced when logging in/out
-  useEffect(() => {
-    setRooms(loadRooms(accountId));
-    setTransactions(loadTransactions(accountId));
-    setSettings(loadSettings(accountId));
-    setProductsCatalog(loadProductsCatalog(accountId));
-  }, [currentUser?.id]);
 
   // Save changes to localStorage for active account
   useEffect(() => {
@@ -112,7 +117,7 @@ export function AppProvider({ children }) {
           saveTransactions(cloudTxs, accountId);
         } else if (transactions.length > 0) {
           // Upload local transactions to cloud
-          cloudTxs.forEach((t) => saveTransactionToCloud(accountId, t));
+          transactions.forEach((t) => saveTransactionToCloud(accountId, t));
         }
       }
 
@@ -400,6 +405,11 @@ export function AppProvider({ children }) {
     });
   };
 
+  const clearTransactions = () => {
+    setTransactions([]);
+    saveTransactions([], accountId);
+  };
+
   // Calculations for dashboard and quick monitors
   const allStations = rooms.flatMap((r) => r.stations);
   const totalRooms = INITIAL_ROOMS_COUNT;
@@ -439,6 +449,7 @@ export function AppProvider({ children }) {
         addProductsToSession,
         recordDirectSale,
         updateSettings,
+        clearTransactions,
       }}
     >
       {children}
