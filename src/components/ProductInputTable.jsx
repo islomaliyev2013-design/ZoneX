@@ -132,7 +132,7 @@ export default function ProductInputTable({
           <button
             type="button"
             onClick={() => addRow()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-purple/20 text-brand-purpleLight border border-brand-purple/30 hover:bg-brand-purple hover:text-white text-xs font-bold transition"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-purple/20 text-brand-purpleLight border border-brand-purple/30 hover:bg-brand-purple hover:text-slate-950 text-xs font-black transition cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             {t('productInput.addFirstProduct')}
@@ -174,7 +174,6 @@ export default function ProductInputTable({
                     onChange={(e) => updateRow(idx, 'name', e.target.value)}
                     placeholder={t('productInput.productPlaceholder')}
                     className="w-full px-2.5 py-1.5 text-xs font-semibold bg-midnight-card border border-midnight-border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-purple"
-                    required
                   />
                 </div>
 
@@ -191,7 +190,6 @@ export default function ProductInputTable({
                     onChange={(e) => updateRow(idx, 'quantity', e.target.value)}
                     placeholder="1"
                     className="w-full px-2 py-1.5 text-xs font-semibold text-center bg-midnight-card border border-midnight-border rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-brand-purple"
-                    required
                   />
                 </div>
 
@@ -208,7 +206,6 @@ export default function ProductInputTable({
                     onChange={(e) => updateRow(idx, 'purchasePrice', e.target.value)}
                     placeholder="0.00"
                     className="w-full px-2 py-1.5 text-xs font-semibold bg-midnight-card border border-midnight-border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-purple"
-                    required
                   />
                 </div>
 
@@ -225,7 +222,6 @@ export default function ProductInputTable({
                     onChange={(e) => updateRow(idx, 'sellingPrice', e.target.value)}
                     placeholder="0.00"
                     className="w-full px-2 py-1.5 text-xs font-semibold bg-midnight-card border border-midnight-border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-purple"
-                    required
                   />
                 </div>
 

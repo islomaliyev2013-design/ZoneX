@@ -4,22 +4,22 @@
 
 @layer base {
   body {
-    @apply bg-midnight-bg text-white min-h-screen font-sans;
+    @apply bg-[#090D14] text-[#F8FAFC] min-h-screen font-sans;
   }
 }
 
-/* Custom scrollbars */
+/* Custom scrollbars - Obsidian & Electric Cyan */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #14131C;
+  background: #0D131D;
 }
 ::-webkit-scrollbar-thumb {
-  background: #302B42;
+  background: #253449;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #7C3AED;
+  background: #06B6D4;
 }

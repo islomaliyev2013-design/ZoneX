@@ -3,6 +3,8 @@ import {
   calculateGamingPayment,
   calculateProductTotals,
   calculateTransactionsSummary,
+  calculateDurationFromBudget,
+  calculateBudgetFromDuration,
 } from '../src/utils/calculations.js';
 import {
   generateInitialRooms,
@@ -103,6 +105,20 @@ assert.strictEqual(formatTimer(3665 * 1000), '01:01:05');
 assert.strictEqual(formatDurationHuman(3665 * 1000), '1h 1m');
 assert.strictEqual(formatDurationHuman(45 * 60 * 1000), '45m');
 console.log('✅ Test 5 Passed: Formatters output as expected');
+
+// 6. Timed Session Calculations (Budget & Duration)
+console.log('\nTest 6: Timed session calculations (budget <-> duration)');
+// 20 000 so'm budget at 20 000/hr = 1 hour (3600000 ms)
+assert.strictEqual(calculateDurationFromBudget(20000, 20000), 3600000);
+// 10 000 so'm budget at 20 000/hr = 0.5 hours (1800000 ms)
+assert.strictEqual(calculateDurationFromBudget(10000, 20000), 1800000);
+// 1 so'm budget with minimum 5000 ms (quick test)
+assert.strictEqual(calculateDurationFromBudget(1, 50000, 5000), 5000);
+// 60 minutes duration at 50 000/hr = 50 000 so'm
+assert.strictEqual(calculateBudgetFromDuration(60, 50000), 50000);
+// 30 minutes duration at 50 000/hr = 25 000 so'm
+assert.strictEqual(calculateBudgetFromDuration(30, 50000), 25000);
+console.log('✅ Test 6 Passed: Timed session budget and duration calculations accurate');
 
 console.log('\n🎉 ALL TESTS PASSED SUCCESSFULLY!');
 

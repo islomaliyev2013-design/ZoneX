@@ -138,7 +138,7 @@ export default function Dashboard() {
         <div className="flex items-center gap-3">
           <Link
             to="/rooms"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-purple hover:bg-brand-purpleHover text-white text-xs font-bold shadow-md shadow-brand-purple/30 transition hover:-translate-y-0.5 active:translate-y-0"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-purple hover:bg-brand-purpleHover text-slate-950 text-xs font-black shadow-md shadow-brand-purple/30 transition hover:-translate-y-0.5 active:translate-y-0"
           >
             <Tv className="w-4 h-4" />
             {t('dashboard.manageRooms')}
@@ -451,18 +451,21 @@ export default function Dashboard() {
 
       {/* Modals */}
       <StartSessionModal
+        key={`dash_start_${activeStationForStart?.id || 'none'}`}
         station={activeStationForStart}
         isOpen={Boolean(activeStationForStart)}
         onClose={() => setActiveStationForStart(null)}
       />
 
       <FinishSessionModal
+        key={`dash_finish_${activeStationForFinish?.id || 'none'}`}
         station={activeStationForFinish}
         isOpen={Boolean(activeStationForFinish)}
         onClose={() => setActiveStationForFinish(null)}
       />
 
       <AddProductsModal
+        key={`dash_prod_${activeStationForProducts?.id || 'none'}`}
         station={activeStationForProducts}
         isOpen={Boolean(activeStationForProducts)}
         onClose={() => setActiveStationForProducts(null)}

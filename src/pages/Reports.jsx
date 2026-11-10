@@ -129,7 +129,7 @@ export default function Reports() {
             onClick={() => setReportDateMode('today')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
               reportDateMode === 'today'
-                ? 'bg-brand-purple text-white shadow-md'
+                ? 'bg-brand-purple text-slate-950 font-black shadow-md shadow-[#06B6D4]/30'
                 : 'bg-midnight-bg text-slate-300 hover:bg-midnight-hover border border-midnight-border'
             }`}
           >
@@ -141,7 +141,7 @@ export default function Reports() {
             onClick={() => setReportDateMode('yesterday')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
               reportDateMode === 'yesterday'
-                ? 'bg-brand-purple text-white shadow-md'
+                ? 'bg-brand-purple text-slate-950 font-black shadow-md shadow-[#06B6D4]/30'
                 : 'bg-midnight-bg text-slate-300 hover:bg-midnight-hover border border-midnight-border'
             }`}
           >

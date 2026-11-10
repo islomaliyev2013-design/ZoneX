@@ -85,7 +85,7 @@ export default function History() {
             onClick={() => setDateFilterMode('all')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
               dateFilterMode === 'all'
-                ? 'bg-brand-purple text-white shadow-sm'
+                ? 'bg-brand-purple text-slate-950 font-black shadow-sm'
                 : 'bg-midnight-bg text-slate-300 hover:bg-midnight-hover border border-midnight-border'
             }`}
           >
@@ -97,7 +97,7 @@ export default function History() {
             onClick={() => setDateFilterMode('today')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
               dateFilterMode === 'today'
-                ? 'bg-brand-purple text-white shadow-sm'
+                ? 'bg-brand-purple text-slate-950 font-black shadow-sm'
                 : 'bg-midnight-bg text-slate-300 hover:bg-midnight-hover border border-midnight-border'
             }`}
           >
@@ -109,7 +109,7 @@ export default function History() {
             onClick={() => setDateFilterMode('yesterday')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
               dateFilterMode === 'yesterday'
-                ? 'bg-brand-purple text-white shadow-sm'
+                ? 'bg-brand-purple text-slate-950 font-black shadow-sm'
                 : 'bg-midnight-bg text-slate-300 hover:bg-midnight-hover border border-midnight-border'
             }`}
           >

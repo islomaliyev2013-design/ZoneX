@@ -69,7 +69,7 @@ export default function Rooms() {
             onClick={() => setViewMode('by_room')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
               viewMode === 'by_room'
-                ? 'bg-brand-purple text-white shadow-md shadow-brand-purple/30'
+                ? 'bg-brand-purple text-slate-950 font-black shadow-md shadow-brand-purple/30'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -130,9 +130,9 @@ export default function Rooms() {
                   <div className="flex items-center justify-between w-full mb-3">
                     <div className="flex items-center gap-2.5">
                       <div
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs ${
                           isSelected
-                            ? 'bg-brand-purple text-white shadow-sm'
+                            ? 'bg-brand-purple text-slate-950 shadow-sm'
                             : 'bg-midnight-bg text-slate-400 border border-midnight-border'
                         }`}
                       >
@@ -292,18 +292,21 @@ export default function Rooms() {
 
       {/* Modals */}
       <StartSessionModal
+        key={`start_${activeStationForStart?.id || 'none'}`}
         station={activeStationForStart}
         isOpen={Boolean(activeStationForStart)}
         onClose={() => setActiveStationForStart(null)}
       />
 
       <FinishSessionModal
+        key={`finish_${activeStationForFinish?.id || 'none'}`}
         station={activeStationForFinish}
         isOpen={Boolean(activeStationForFinish)}
         onClose={() => setActiveStationForFinish(null)}
       />
 
       <AddProductsModal
+        key={`prod_${activeStationForProducts?.id || 'none'}`}
         station={activeStationForProducts}
         isOpen={Boolean(activeStationForProducts)}
         onClose={() => setActiveStationForProducts(null)}

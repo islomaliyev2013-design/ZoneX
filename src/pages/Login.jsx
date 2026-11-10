@@ -18,11 +18,6 @@ export default function Login({ initialMode = 'login' }) {
 
   const [mode, setMode] = useState(initialMode); // 'login' | 'register'
 
-  // Anti-autofill readOnly locks
-  const [loginUserReadOnly, setLoginUserReadOnly] = useState(true);
-  const [loginPassReadOnly, setLoginPassReadOnly] = useState(true);
-  const [regReadOnly, setRegReadOnly] = useState(true);
-
   // Login inputs - start strictly empty
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -36,13 +31,14 @@ export default function Login({ initialMode = 'login' }) {
   const [regPassword, setRegPassword] = useState('');
   const [regConfirmPassword, setRegConfirmPassword] = useState('');
   const [showRegPassword, setShowRegPassword] = useState(false);
+  const [showRegConfirmPassword, setShowRegConfirmPassword] = useState(false);
 
   // State
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Prevent browser from autofilling saved accounts on page load or mode switch
+  // Clear any state on mode change
   useEffect(() => {
     setUsername('');
     setPassword('');
@@ -52,43 +48,17 @@ export default function Login({ initialMode = 'login' }) {
     setRegPassword('');
     setRegConfirmPassword('');
     setRememberMe(false);
-    setLoginUserReadOnly(true);
-    setLoginPassReadOnly(true);
-    setRegReadOnly(true);
-
-    const t1 = setTimeout(() => {
-      setUsername('');
-      setPassword('');
-      setRegFullName('');
-      setRegUsername('');
-      setRegEmail('');
-      setRegPassword('');
-      setRegConfirmPassword('');
-    }, 80);
-
-    const t2 = setTimeout(() => {
-      setUsername('');
-      setPassword('');
-      setRegFullName('');
-      setRegUsername('');
-      setRegEmail('');
-      setRegPassword('');
-      setRegConfirmPassword('');
-    }, 300);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+    setErrorMsg('');
+    setSuccessMsg('');
   }, [mode]);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
     setIsLoading(true);
 
-    const result = login(username, password);
+    const result = await login(username, password);
     setIsLoading(false);
 
     if (result.success) {
@@ -98,13 +68,13 @@ export default function Login({ initialMode = 'login' }) {
     }
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
     setIsLoading(true);
 
-    const result = register({
+    const result = await register({
       fullName: regFullName,
       username: regUsername,
       email: regEmail,
@@ -182,36 +152,7 @@ export default function Login({ initialMode = 'login' }) {
       <main className="relative z-10 w-full flex items-center justify-center px-4 py-8">
         <div
           className="w-full max-w-[440px] px-7 py-8 sm:px-10 sm:py-10 rounded-[36px] bg-slate-950/35 backdrop-blur-2xl border border-white/20 shadow-[0_20px_60px_rgba(0,0,0,0.5),0_0_1px_1px_rgba(255,255,255,0.15)_inset] text-white transition-all"
-          data-lpignore="true"
-          data-form-type="other"
         >
-          {/* Offscreen decoy inputs to trap browser autofill */}
-          <div
-            style={{
-              position: 'absolute',
-              top: '-9999px',
-              left: '-9999px',
-              width: 0,
-              height: 0,
-              opacity: 0,
-              pointerEvents: 'none',
-            }}
-            aria-hidden="true"
-          >
-            <input
-              type="text"
-              name="decoy_browser_autofill_username"
-              tabIndex="-1"
-              autoComplete="username"
-            />
-            <input
-              type="password"
-              name="decoy_browser_autofill_password"
-              tabIndex="-1"
-              autoComplete="current-password"
-            />
-          </div>
-
           {/* Card Title & Subtitle */}
           <div className="text-center mb-5">
             <h1 className="text-2xl sm:text-3xl font-black text-white tracking-widest uppercase drop-shadow-sm">
@@ -287,17 +228,17 @@ export default function Login({ initialMode = 'login' }) {
                   </label>
                   <input
                     type="text"
-                    name="ps_admin_usr_clean"
-                    id="ps_admin_usr_clean"
+                    name="sec_acc_code_v1"
+                    id="sec_acc_code_v1"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    onFocus={() => setLoginUserReadOnly(false)}
-                    onMouseDown={() => setLoginUserReadOnly(false)}
-                    onTouchStart={() => setLoginUserReadOnly(false)}
-                    readOnly={loginUserReadOnly}
                     placeholder={t('auth.usernamePlaceholder')}
                     className="w-full px-5 py-3 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition"
-                    autoComplete="new-password"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    aria-autocomplete="none"
                     data-lpignore="true"
                     data-1p-ignore="true"
                     data-bwignore="true"
@@ -305,25 +246,28 @@ export default function Login({ initialMode = 'login' }) {
                   />
                 </div>
 
-                {/* Password Input with Eye */}
+                {/* Password Input with Security Masking (Blocks Chrome Password Popup) */}
                 <div>
                   <label className="block text-xs font-medium text-white/90 mb-1.5 ml-3">
                     {t('auth.password')}
                   </label>
                   <div className="relative">
                     <input
-                      type={showPassword ? 'text' : 'password'}
-                      name="ps_admin_pwd_clean"
-                      id="ps_admin_pwd_clean"
+                      type="text"
+                      name="sec_acc_token_v1"
+                      id="sec_acc_token_v1"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      onFocus={() => setLoginPassReadOnly(false)}
-                      onMouseDown={() => setLoginPassReadOnly(false)}
-                      onTouchStart={() => setLoginPassReadOnly(false)}
-                      readOnly={loginPassReadOnly}
                       placeholder={t('auth.passwordPlaceholder')}
-                      className="w-full pl-5 pr-12 py-3 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition"
-                      autoComplete="new-password"
+                      style={{
+                        WebkitTextSecurity: showPassword ? 'none' : 'disc',
+                      }}
+                      className="w-full pl-5 pr-12 py-3 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition tracking-wider"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                      spellCheck="false"
+                      aria-autocomplete="none"
                       data-lpignore="true"
                       data-1p-ignore="true"
                       data-bwignore="true"
@@ -377,16 +321,16 @@ export default function Login({ initialMode = 'login' }) {
                   </label>
                   <input
                     type="text"
-                    name="ps_reg_fullname_clean"
+                    name="sec_reg_name_v1"
                     value={regFullName}
                     onChange={(e) => setRegFullName(e.target.value)}
-                    onFocus={() => setRegReadOnly(false)}
-                    onMouseDown={() => setRegReadOnly(false)}
-                    onTouchStart={() => setRegReadOnly(false)}
-                    readOnly={regReadOnly}
                     placeholder={t('auth.fullNamePlaceholder')}
                     className="w-full px-5 py-2.5 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition"
-                    autoComplete="new-password"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    aria-autocomplete="none"
                     data-lpignore="true"
                     data-1p-ignore="true"
                     data-form-type="other"
@@ -399,16 +343,16 @@ export default function Login({ initialMode = 'login' }) {
                   </label>
                   <input
                     type="text"
-                    name="ps_reg_user_clean"
+                    name="sec_reg_alias_v1"
                     value={regUsername}
                     onChange={(e) => setRegUsername(e.target.value)}
-                    onFocus={() => setRegReadOnly(false)}
-                    onMouseDown={() => setRegReadOnly(false)}
-                    onTouchStart={() => setRegReadOnly(false)}
-                    readOnly={regReadOnly}
                     placeholder={t('auth.usernamePlaceholder')}
                     className="w-full px-5 py-2.5 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition"
-                    autoComplete="new-password"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    aria-autocomplete="none"
                     data-lpignore="true"
                     data-1p-ignore="true"
                     data-form-type="other"
@@ -422,39 +366,43 @@ export default function Login({ initialMode = 'login' }) {
                   <input
                     type="text"
                     inputMode="email"
-                    name="ps_reg_contact_clean"
+                    name="sec_reg_inbox_v1"
                     value={regEmail}
                     onChange={(e) => setRegEmail(e.target.value)}
-                    onFocus={() => setRegReadOnly(false)}
-                    onMouseDown={() => setRegReadOnly(false)}
-                    onTouchStart={() => setRegReadOnly(false)}
-                    readOnly={regReadOnly}
                     placeholder={t('auth.emailPlaceholder')}
                     className="w-full px-5 py-2.5 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition"
-                    autoComplete="new-password"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    aria-autocomplete="none"
                     data-lpignore="true"
                     data-1p-ignore="true"
                     data-form-type="other"
                   />
                 </div>
 
+                {/* Password Input with Security Masking (Blocks Chrome Password Popup) */}
                 <div>
                   <label className="block text-xs font-medium text-white/90 mb-1 ml-3">
                     {t('auth.password')}
                   </label>
                   <div className="relative">
                     <input
-                      type={showRegPassword ? 'text' : 'password'}
-                      name="ps_reg_pwd_clean"
+                      type="text"
+                      name="sec_reg_token_v1"
                       value={regPassword}
                       onChange={(e) => setRegPassword(e.target.value)}
-                      onFocus={() => setRegReadOnly(false)}
-                      onMouseDown={() => setRegReadOnly(false)}
-                      onTouchStart={() => setRegReadOnly(false)}
-                      readOnly={regReadOnly}
                       placeholder={t('auth.passwordPlaceholder')}
-                      className="w-full pl-5 pr-12 py-2.5 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition"
-                      autoComplete="new-password"
+                      style={{
+                        WebkitTextSecurity: showRegPassword ? 'none' : 'disc',
+                      }}
+                      className="w-full pl-5 pr-12 py-2.5 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition tracking-wider"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                      spellCheck="false"
+                      aria-autocomplete="none"
                       data-lpignore="true"
                       data-1p-ignore="true"
                       data-form-type="other"
@@ -474,26 +422,44 @@ export default function Login({ initialMode = 'login' }) {
                   </div>
                 </div>
 
+                {/* Confirm Password Input with Security Masking (Blocks Chrome Password Popup) */}
                 <div>
                   <label className="block text-xs font-medium text-white/90 mb-1 ml-3">
                     {t('auth.confirmPassword')}
                   </label>
-                  <input
-                    type="password"
-                    name="ps_reg_confirm_clean"
-                    value={regConfirmPassword}
-                    onChange={(e) => setRegConfirmPassword(e.target.value)}
-                    onFocus={() => setRegReadOnly(false)}
-                    onMouseDown={() => setRegReadOnly(false)}
-                    onTouchStart={() => setRegReadOnly(false)}
-                    readOnly={regReadOnly}
-                    placeholder={t('auth.confirmPasswordPlaceholder')}
-                    className="w-full px-5 py-2.5 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition"
-                    autoComplete="new-password"
-                    data-lpignore="true"
-                    data-1p-ignore="true"
-                    data-form-type="other"
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="sec_reg_retoken_v1"
+                      value={regConfirmPassword}
+                      onChange={(e) => setRegConfirmPassword(e.target.value)}
+                      placeholder={t('auth.confirmPasswordPlaceholder')}
+                      style={{
+                        WebkitTextSecurity: showRegConfirmPassword ? 'none' : 'disc',
+                      }}
+                      className="w-full pl-5 pr-12 py-2.5 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition tracking-wider"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                      spellCheck="false"
+                      aria-autocomplete="none"
+                      data-lpignore="true"
+                      data-1p-ignore="true"
+                      data-form-type="other"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)}
+                      className="absolute right-4 top-2.5 text-slate-400 hover:text-slate-700 transition"
+                      tabIndex="-1"
+                    >
+                      {showRegConfirmPassword ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </>
             )}

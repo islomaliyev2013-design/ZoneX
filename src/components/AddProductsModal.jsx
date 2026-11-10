@@ -54,18 +54,20 @@ export default function AddProductsModal({ station, isOpen, onClose }) {
   const localizedStationName = `${t('common.stationPrefix')} ${station.stationNumber}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      <div className="bg-midnight-card rounded-2xl p-6 w-full max-w-xl text-white shadow-2xl border border-midnight-border animate-in fade-in zoom-in-95">
-        <div className="flex items-center justify-between pb-3 border-b border-midnight-border">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-5 overflow-hidden">
+      <div className="bg-midnight-card rounded-2xl w-full max-w-xl text-white shadow-2xl border border-midnight-border flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95">
+        
+        {/* Sticky Header */}
+        <div className="shrink-0 px-5 py-3.5 bg-midnight-sidebar text-white flex items-center justify-between border-b border-midnight-border">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-purple/20 text-brand-purpleLight border border-brand-purple/30 flex items-center justify-center">
-              <ShoppingBag className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-xl bg-brand-purple/20 text-brand-purpleLight border border-brand-purple/30 flex items-center justify-center shrink-0">
+              <ShoppingBag className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white">
+              <h3 className="text-base font-bold text-white leading-tight">
                 {t('sessionModal.addProductsTitle', { station: localizedStationName })}
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 mt-0.5">
                 {t('sessionModal.addProductsSubtitle', {
                   room: localizedRoomName,
                   customer: station.session.customerName || t('common.walkIn'),
@@ -75,30 +77,37 @@ export default function AddProductsModal({ station, isOpen, onClose }) {
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-midnight-hover transition"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-midnight-hover transition"
+            title={t('common.cancel')}
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleAdd} className="mt-4 space-y-4">
-          <ProductInputTable
-            products={newProducts}
-            onChange={setNewProducts}
-            showQuickChips={true}
-          />
+        {/* Form Container */}
+        <form onSubmit={handleAdd} className="flex flex-col flex-1 overflow-hidden">
+          
+          {/* Scrollable Body */}
+          <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 custom-scrollbar">
+            <ProductInputTable
+              products={newProducts}
+              onChange={setNewProducts}
+              showQuickChips={true}
+            />
+          </div>
 
-          <div className="flex gap-3 pt-3">
+          {/* Sticky Footer */}
+          <div className="shrink-0 px-5 py-3.5 bg-midnight-sidebar/95 border-t border-midnight-border flex gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 px-4 rounded-xl border border-midnight-border text-slate-300 hover:bg-midnight-hover font-bold text-sm transition"
+              className="flex-1 py-2.5 px-4 rounded-xl border border-midnight-border text-slate-300 hover:bg-midnight-hover font-bold text-sm transition"
             >
               {t('sessionModal.cancel')}
             </button>
             <button
               type="submit"
-              className="flex-1 py-3 px-4 rounded-xl bg-brand-purple hover:bg-brand-purpleHover text-white font-bold text-sm shadow-md shadow-brand-purple/30 flex items-center justify-center gap-2 transition"
+              className="flex-1 py-2.5 px-4 rounded-xl bg-brand-purple hover:bg-brand-purpleHover text-slate-950 font-black text-sm shadow-md shadow-brand-purple/30 flex items-center justify-center gap-2 transition cursor-pointer"
             >
               <Check className="w-4 h-4" />
               {t('sessionModal.addToSessionBtn')}

@@ -17,6 +17,7 @@ import {
   calculateTransactionsSummary,
 } from '../utils/calculations';
 import { toDateKey, formatTimeDisplay } from '../utils/formatters';
+import { stopAlarm } from '../utils/audioAlert';
 import { useAuth } from './AuthContext';
 import { checkSupabaseConnection, supabase } from '../lib/supabase';
 import {
@@ -32,7 +33,9 @@ const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
   const { currentUser } = useAuth();
-  const accountId = currentUser?.id || 'account_admin';
+  // Shared PlayStation club database ID for all staff/operators (admin, jonibek, etc.)
+  // Whichever staff member logs in, they access the shared live club data!
+  const accountId = 'account_admin';
 
   const [rooms, setRooms] = useState(() => loadRooms(accountId));
   const [transactions, setTransactions] = useState(() => loadTransactions(accountId));
@@ -41,13 +44,13 @@ export function AppProvider({ children }) {
   const [cloudStatus, setCloudStatus] = useState('checking'); // 'connected' | 'not_ready' | 'offline' | 'checking'
   const [cloudMessage, setCloudMessage] = useState('');
 
-  // Switch data when active user changes
+  // Keep shared club data synced when logging in/out
   useEffect(() => {
     setRooms(loadRooms(accountId));
     setTransactions(loadTransactions(accountId));
     setSettings(loadSettings(accountId));
     setProductsCatalog(loadProductsCatalog(accountId));
-  }, [accountId]);
+  }, [currentUser?.id]);
 
   // Save changes to localStorage for active account
   useEffect(() => {
@@ -169,10 +172,25 @@ export function AppProvider({ children }) {
 
   /**
    * Start a gaming session on an available station
+   * Supports open-ended or timed/prepaid sessions (by budget or duration)
    */
-  const startSession = (stationId, { hourlyPrice, customerName }) => {
+  const startSession = (
+    stationId,
+    {
+      hourlyPrice,
+      customerName,
+      isTimed = false,
+      limitType = 'budget',
+      targetDurationMs = 0,
+      targetBudget = null,
+    } = {}
+  ) => {
+    stopAlarm(stationId);
     const rate = Number(hourlyPrice) || Number(settings.defaultHourlyRate) || 20000;
     const now = Date.now();
+    const durationMs = Number(targetDurationMs) || 0;
+    const isSessionTimed = Boolean(isTimed && durationMs > 0);
+    const targetEndTime = isSessionTimed ? now + durationMs : null;
 
     const updatedRooms = rooms.map((room) => ({
       ...room,
@@ -187,6 +205,11 @@ export function AppProvider({ children }) {
               hourlyPrice: rate,
               customerName: customerName ? customerName.trim() : '',
               products: [],
+              isTimed: isSessionTimed,
+              limitType,
+              targetDurationMs: durationMs,
+              targetBudget: targetBudget != null ? Number(targetBudget) : null,
+              targetEndTime,
             },
           };
         }
@@ -271,7 +294,8 @@ export function AppProvider({ children }) {
     setTransactions((prev) => [transaction, ...prev]);
     saveTransactionToCloud(accountId, transaction);
 
-    // Reset station
+    // Reset station and stop any alarm
+    stopAlarm(stationId);
     const updatedRooms = rooms.map((room) => ({
       ...room,
       stations: room.stations.map((st) => {

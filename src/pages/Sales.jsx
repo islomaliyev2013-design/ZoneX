@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ShoppingBag,
   CheckCircle2,
@@ -13,6 +13,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { formatCurrency } from '../utils/formatters';
 import { calculateProductTotals } from '../utils/calculations';
@@ -29,10 +30,17 @@ export default function Sales() {
     deleteProductFromCatalog,
   } = useApp();
   const { t } = useLanguage();
+  const { isAdmin } = useAuth();
   const currency = settings.currency || "so'm";
 
-  // Navigation tab: 'sales' | 'catalog'
+  // Navigation tab: 'sales' | 'catalog' (catalog only accessible by admin)
   const [activeTab, setActiveTab] = useState('sales');
+
+  useEffect(() => {
+    if (!isAdmin && activeTab !== 'sales') {
+      setActiveTab('sales');
+    }
+  }, [isAdmin, activeTab]);
 
   // Sales form state
   const [customerName, setCustomerName] = useState('');
@@ -193,36 +201,38 @@ export default function Sales() {
           </p>
         </div>
 
-        {/* Tab switcher: Savdo qilish vs Nimalar bor & Qo'shish */}
-        <div className="flex items-center bg-midnight-card p-1 rounded-xl border border-midnight-border">
-          <button
-            type="button"
-            onClick={() => setActiveTab('sales')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition ${
-              activeTab === 'sales'
-                ? 'bg-brand-purple text-white shadow-md shadow-brand-purple/30'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <ShoppingBag className="w-4 h-4" />
-            <span>{t('catalog.tabSales')}</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('catalog')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition ${
-              activeTab === 'catalog'
-                ? 'bg-brand-purple text-white shadow-md shadow-brand-purple/30'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <Package className="w-4 h-4" />
-            <span>{t('catalog.tabCatalog')}</span>
-            <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] bg-brand-purpleDark text-brand-lavender font-extrabold">
-              {productsCatalog.length}
-            </span>
-          </button>
-        </div>
+        {/* Tab switcher: Savdo qilish vs Nimalar bor & Qo'shish (Faqat Admin uchun) */}
+        {isAdmin && (
+          <div className="flex items-center bg-midnight-card p-1 rounded-xl border border-midnight-border">
+            <button
+              type="button"
+              onClick={() => setActiveTab('sales')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition ${
+                activeTab === 'sales'
+                  ? 'bg-brand-purple text-slate-950 font-black shadow-md shadow-brand-purple/30'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <ShoppingBag className="w-4 h-4" />
+              <span>{t('catalog.tabSales')}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('catalog')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition ${
+                activeTab === 'catalog'
+                  ? 'bg-brand-purple text-slate-950 font-black shadow-md shadow-brand-purple/30'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Package className="w-4 h-4" />
+              <span>{t('catalog.tabCatalog')}</span>
+              <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] bg-brand-purpleDark text-brand-lavender font-extrabold">
+                {productsCatalog.length}
+              </span>
+            </button>
+          </div>
+        )}
       </div>
 
       {successMessage && (
@@ -257,14 +267,16 @@ export default function Sales() {
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('catalog')}
-                  className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-brand-purpleLight hover:text-white transition"
-                >
-                  <Package className="w-3.5 h-3.5" />
-                  <span>{t('catalog.addNewTitle')} →</span>
-                </button>
+                {isAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('catalog')}
+                    className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-brand-purpleLight hover:text-white transition"
+                  >
+                    <Package className="w-3.5 h-3.5" />
+                    <span>{t('catalog.addNewTitle')} →</span>
+                  </button>
+                )}
               </div>
 
               {/* Customer Name & Destination */}
@@ -348,7 +360,7 @@ export default function Sales() {
                 <button
                   type="submit"
                   disabled={validProducts.length === 0}
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-brand-purple hover:bg-brand-purpleHover disabled:opacity-50 disabled:cursor-not-allowed text-white font-extrabold text-sm shadow-lg shadow-brand-purple/30 flex items-center justify-center gap-2 transition"
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-brand-purple hover:bg-brand-purpleHover disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-black text-sm shadow-lg shadow-brand-purple/30 flex items-center justify-center gap-2 transition cursor-pointer"
                 >
                   <CheckCircle2 className="w-5 h-5" />
                   {t('sales.recordSaleBtn')}
@@ -411,8 +423,8 @@ export default function Sales() {
         </>
       )}
 
-      {/* TAB 2: INVENTORY & CATALOG ("NIMALAR BOR & YANGI QO'SHISH") */}
-      {activeTab === 'catalog' && (
+      {/* TAB 2: INVENTORY & CATALOG ("NIMALAR BOR & YANGI QO'SHISH") - Faqat Admin uchun */}
+      {isAdmin && activeTab === 'catalog' && (
         <div className="space-y-6">
           {/* Add New Product Card */}
           <div className="bg-midnight-card rounded-2xl p-6 shadow-xl border border-midnight-border">
@@ -491,7 +503,7 @@ export default function Sales() {
                 <button
                   type="submit"
                   disabled={!newCatName.trim() || !newCatSell}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-brand-purple hover:bg-brand-purpleHover disabled:opacity-50 text-white font-extrabold text-xs shadow-md shadow-brand-purple/30 flex items-center justify-center gap-2 transition"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-brand-purple hover:bg-brand-purpleHover disabled:opacity-50 text-slate-950 font-black text-xs shadow-md shadow-brand-purple/30 flex items-center justify-center gap-2 transition cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   {t('catalog.addButton')}

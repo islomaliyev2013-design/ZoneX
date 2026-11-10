@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { fetchProfilesFromCloud, saveProfileToCloud } from '../services/supabaseService';
+import { supabase } from '../lib/supabase';
 
 const ACCOUNTS_KEY = 'ps_accounts_v1';
 const CURRENT_USER_KEY = 'ps_current_user_v1';
@@ -9,7 +10,17 @@ const DEFAULT_ADMIN = {
   username: 'admin',
   password: 'admin123',
   fullName: 'Administrator',
-  email: 'admin@playstation.local',
+  email: 'admin@gmail.com',
+  role: 'admin',
+  createdAt: 1731140000000,
+};
+
+const DEFAULT_JONIBEK = {
+  id: 'account_jonibek',
+  username: 'jonibek',
+  password: 'admin123',
+  fullName: 'Jonibek',
+  email: 'jonibek@gmail.com',
   role: 'admin',
   createdAt: 1731140000000,
 };
@@ -24,21 +35,21 @@ export function AuthProvider({ children }) {
       if (stored) {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          const adminExists = parsed.some(
-            (acc) => acc.username.toLowerCase() === DEFAULT_ADMIN.username.toLowerCase()
-          );
-          if (!adminExists) {
-            const updated = [DEFAULT_ADMIN, ...parsed];
-            localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(updated));
-            return updated;
+          let updated = [...parsed];
+          if (!updated.some((a) => a.username.toLowerCase() === DEFAULT_ADMIN.username.toLowerCase())) {
+            updated.push(DEFAULT_ADMIN);
           }
-          return parsed;
+          if (!updated.some((a) => a.username.toLowerCase() === DEFAULT_JONIBEK.username.toLowerCase())) {
+            updated.push(DEFAULT_JONIBEK);
+          }
+          localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(updated));
+          return updated;
         }
       }
     } catch (e) {
       console.error('Failed to load accounts from localStorage:', e);
     }
-    const initial = [DEFAULT_ADMIN];
+    const initial = [DEFAULT_ADMIN, DEFAULT_JONIBEK];
     try {
       localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(initial));
     } catch (e) {}
@@ -117,8 +128,9 @@ export function AuthProvider({ children }) {
 
   /**
    * Log in user with username and password
+   * Checks local storage and Supabase cloud so any created account can log in immediately
    */
-  const login = (username, password) => {
+  const login = async (username, password) => {
     const cleanUsername = (username || '').trim().toLowerCase();
     const cleanPassword = (password || '').trim();
 
@@ -126,12 +138,47 @@ export function AuthProvider({ children }) {
       return { success: false, errorKey: 'auth.loginErrorRequired' };
     }
 
-    const found = accounts.find(
+    // 1. Check local accounts
+    let found = accounts.find(
       (acc) =>
         (acc.username.toLowerCase() === cleanUsername ||
           (acc.email && acc.email.toLowerCase() === cleanUsername)) &&
         acc.password === cleanPassword
     );
+
+    // 2. If not found locally, query Supabase cloud profiles
+    if (!found) {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .or(`username.ilike.${cleanUsername},email.ilike.${cleanUsername}`)
+          .maybeSingle();
+
+        if (data && data.password === cleanPassword) {
+          found = {
+            id: data.id,
+            username: data.username,
+            password: data.password,
+            fullName: data.full_name || data.fullName,
+            email: data.email,
+            role: data.role || 'user',
+            createdAt: Number(data.created_at || Date.now()),
+          };
+          setAccounts((prev) => {
+            const exists = prev.some((a) => a.username.toLowerCase() === found.username.toLowerCase());
+            if (!exists) {
+              const updated = [...prev, found];
+              localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(updated));
+              return updated;
+            }
+            return prev;
+          });
+        }
+      } catch (err) {
+        console.warn('Cloud login check error:', err);
+      }
+    }
 
     if (found) {
       const userSession = {
@@ -210,6 +257,24 @@ export function AuthProvider({ children }) {
     // Save to Supabase cloud asynchronously
     saveProfileToCloud(newUser);
 
+    // Also sync to Supabase Auth so user appears in Authentication -> Users dashboard
+    try {
+      supabase.auth
+        .signUp({
+          email: cleanEmail,
+          password: cleanPassword,
+          options: {
+            data: {
+              username: cleanUsername,
+              full_name: cleanFullName,
+            },
+          },
+        })
+        .catch((e) => console.warn('Supabase auth signup notice:', e));
+    } catch (e) {
+      console.warn('Supabase auth error:', e);
+    }
+
     return { success: true, user: userSession };
   };
 
@@ -228,7 +293,11 @@ export function AuthProvider({ children }) {
       value={{
         currentUser,
         isAuthenticated: Boolean(currentUser),
-        isAdmin: currentUser?.role === 'admin',
+        isAdmin: Boolean(
+          currentUser &&
+            (currentUser.role === 'admin' ||
+              currentUser.username?.toLowerCase() === 'admin')
+        ),
         login,
         register,
         logout,

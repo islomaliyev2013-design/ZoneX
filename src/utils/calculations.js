@@ -73,3 +73,32 @@ export function calculateTransactionsSummary(transactions = []) {
   );
 }
 
+/**
+ * Calculate duration in milliseconds from budget and hourly rate
+ * @param {number} budget - Money amount
+ * @param {number} hourlyRate - Rate per hour
+ * @param {number} minimumMs - Minimum duration in ms (optional, defaults to 0)
+ * @returns {number} duration in milliseconds
+ */
+export function calculateDurationFromBudget(budget, hourlyRate, minimumMs = 0) {
+  const b = Number(budget) || 0;
+  const rate = Number(hourlyRate) || 0;
+  if (b <= 0 || rate <= 0) return 0;
+  const rawMs = Math.round((b / rate) * 3600 * 1000);
+  return Math.max(minimumMs, rawMs);
+}
+
+/**
+ * Calculate budget from duration in minutes and hourly rate
+ * @param {number} durationMinutes - Duration in minutes
+ * @param {number} hourlyRate - Rate per hour
+ * @returns {number} estimated budget
+ */
+export function calculateBudgetFromDuration(durationMinutes, hourlyRate) {
+  const mins = Number(durationMinutes) || 0;
+  const rate = Number(hourlyRate) || 0;
+  if (mins <= 0 || rate <= 0) return 0;
+  return Math.round((mins / 60) * rate);
+}
+
+

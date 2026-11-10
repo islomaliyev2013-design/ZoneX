@@ -7,20 +7,41 @@ export default {
   theme: {
     extend: {
       colors: {
+        // NexPlay — Obsidian + Electric Cyan Palette
+        obsidian: {
+          bg: '#090D14',
+          sidebar: '#0D131D',
+          card: '#151E2B',
+          cardHover: '#1B2736',
+          surface: '#1B2736',
+          border: '#253449',
+          borderLight: '#334661',
+        },
+        cyan: {
+          primary: '#06B6D4',
+          hover: '#0891B2',
+          accent: '#22D3EE',
+          light: '#67E8F9',
+        },
+        // Mapped theme tokens for backward-compatible instant propagation
         midnight: {
-          bg: '#101014',
-          sidebar: '#14131C',
-          card: '#1D1B2E',
-          cardHover: '#25233A',
-          border: '#302B42',
-          borderLight: '#3D3754',
-          input: '#161522',
+          bg: '#090D14',
+          sidebar: '#0D131D',
+          card: '#151E2B',
+          cardHover: '#1B2736',
+          surface: '#1B2736',
+          border: '#253449',
+          borderLight: '#334661',
+          input: '#0F1622',
         },
         brand: {
-          purple: '#7C3AED',
-          purpleHover: '#6D28D9',
-          purpleLight: '#A78BFA',
-          lavender: '#C4B5FD',
+          purple: '#06B6D4',         // Primary Cyan
+          purpleHover: '#0891B2',    // Primary Cyan Hover
+          purpleLight: '#22D3EE',    // Accent Cyan
+          purpleDark: '#0E7490',     // Darker Cyan
+          lavender: '#67E8F9',       // Light Cyan
+          cyan: '#06B6D4',
+          cyanAccent: '#22D3EE',
         },
         gaming: {
           green: '#22C55E',

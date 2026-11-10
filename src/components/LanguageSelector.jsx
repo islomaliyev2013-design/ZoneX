@@ -53,15 +53,15 @@ export default function LanguageSelector({ variant = 'header' }) {
                 }}
                 className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition ${
                   isSelected
-                    ? 'bg-brand-purple/20 text-brand-purpleLight font-bold'
-                    : 'text-slate-300 hover:bg-midnight-hover hover:text-white'
+                    ? 'bg-[#06B6D4]/15 text-[#22D3EE] font-bold'
+                    : 'text-slate-300 hover:bg-[#1B2736] hover:text-white'
                 }`}
               >
                 <div className="flex items-center gap-2">
                   <span className="text-sm leading-none">{lang.flag}</span>
                   <span>{lang.name}</span>
                 </div>
-                {isSelected && <Check className="w-3.5 h-3.5 text-brand-purpleLight" />}
+                {isSelected && <Check className="w-3.5 h-3.5 text-[#22D3EE]" />}
               </button>
             );
           })}
