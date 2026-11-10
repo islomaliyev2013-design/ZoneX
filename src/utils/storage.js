@@ -1,9 +1,31 @@
 export const INITIAL_ROOMS_COUNT = 5;
 export const STATIONS_PER_ROOM = 5;
 
-const getRoomsKey = (accountId = 'account_admin') => `ps_rooms_data_v2_${accountId}`;
-const getTransactionsKey = (accountId = 'account_admin') => `ps_transactions_data_v2_${accountId}`;
-const getSettingsKey = (accountId = 'account_admin') => `ps_settings_v2_${accountId}`;
+// Clean storage v3 keys - isolated per account and starts 100% from 0
+const getRoomsKey = (accountId = 'account_admin') => `ps_rooms_data_v3_${accountId}`;
+const getTransactionsKey = (accountId = 'account_admin') => `ps_transactions_data_v3_${accountId}`;
+const getSettingsKey = (accountId = 'account_admin') => `ps_settings_v3_${accountId}`;
+const getCatalogKey = (accountId = 'account_admin') => `ps_catalog_v3_${accountId}`;
+
+// Automatic cleanup of legacy test data from localStorage
+if (typeof window !== 'undefined' && window.localStorage) {
+  try {
+    const toRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (
+        k &&
+        (k.startsWith('ps_transactions_data_v1') ||
+          k.startsWith('ps_transactions_data_v2') ||
+          k.startsWith('ps_rooms_data_v1') ||
+          k.startsWith('ps_rooms_data_v2'))
+      ) {
+        toRemove.push(k);
+      }
+    }
+    toRemove.forEach((k) => localStorage.removeItem(k));
+  } catch (e) {}
+}
 
 /**
  * Generate clean initial rooms structure
@@ -46,17 +68,6 @@ export function loadRooms(accountId = 'account_admin') {
         return parsed;
       }
     }
-    // Backward compatibility migration for initial admin account
-    if (accountId === 'account_admin') {
-      const oldV1 = localStorage.getItem('ps_rooms_data_v1');
-      if (oldV1) {
-        const parsed = JSON.parse(oldV1);
-        if (Array.isArray(parsed) && parsed.length === INITIAL_ROOMS_COUNT) {
-          saveRooms(parsed, accountId);
-          return parsed;
-        }
-      }
-    }
   } catch (err) {
     console.error('Failed to load rooms from localStorage:', err);
   }
@@ -87,17 +98,6 @@ export function loadTransactions(accountId = 'account_admin') {
         return parsed;
       }
     }
-    // Backward compatibility migration for initial admin account
-    if (accountId === 'account_admin') {
-      const oldV1 = localStorage.getItem('ps_transactions_data_v1');
-      if (oldV1) {
-        const parsed = JSON.parse(oldV1);
-        if (Array.isArray(parsed)) {
-          saveTransactions(parsed, accountId);
-          return parsed;
-        }
-      }
-    }
   } catch (err) {
     console.error('Failed to load transactions from localStorage:', err);
   }
@@ -121,29 +121,7 @@ export function loadSettings(accountId = 'account_admin') {
     const stored = localStorage.getItem(key);
     if (stored) {
       const parsed = JSON.parse(stored);
-      // Migrate from dollar to Uzbek so'm
-      if (!parsed.currency || parsed.currency === '$') {
-        parsed.currency = "so'm";
-        if (!parsed.defaultHourlyRate || parsed.defaultHourlyRate === 15) {
-          parsed.defaultHourlyRate = 20000;
-        }
-        saveSettings(parsed, accountId);
-      }
       return parsed;
-    }
-    if (accountId === 'account_admin') {
-      const oldV1 = localStorage.getItem('ps_settings_v1');
-      if (oldV1) {
-        const parsed = JSON.parse(oldV1);
-        if (!parsed.currency || parsed.currency === '$') {
-          parsed.currency = "so'm";
-          if (!parsed.defaultHourlyRate || parsed.defaultHourlyRate === 15) {
-            parsed.defaultHourlyRate = 20000;
-          }
-        }
-        saveSettings(parsed, accountId);
-        return parsed;
-      }
     }
   } catch (err) {
     console.error('Failed to load settings:', err);
@@ -163,8 +141,6 @@ export function saveSettings(settings, accountId = 'account_admin') {
     console.error('Failed to save settings:', err);
   }
 }
-
-const getCatalogKey = (accountId = 'account_admin') => `ps_catalog_v1_${accountId}`;
 
 export const DEFAULT_CATALOG = [
   { id: 'cat_1', name: 'Semichka', purchasePrice: 5000, sellingPrice: 10000 },
