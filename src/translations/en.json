@@ -18,6 +18,7 @@
     "sales": "Sales",
     "history": "History",
     "reports": "Reports",
+    "info": "Information",
     "logout": "Log Out",
     "free": "Free",
     "busy": "Busy",
@@ -321,6 +322,24 @@
     "finishShort": "Finish & Bill",
     "orderedProducts": "Orders:",
     "totalDue": "Total Due:"
+  },
+  "infoPage": {
+    "title": "Club Rooms & Equipment Information",
+    "subtitle": "Discover the true PlayStation gaming atmosphere, premium comforts, 4K displays, and real room conditions.",
+    "badge": "Photo Gallery & Equipment",
+    "totalRoomsLabel": "Rooms",
+    "totalStationsLabel": "Consoles",
+    "consolesModel": "PlayStation 5 Consoles",
+    "screensQuality": "4K HDR Displays",
+    "airConditioning": "Air Conditioning & Ventilation",
+    "fastInternet": "High-Speed Fiber Internet",
+    "snackBar": "Drinks & Snack Bar",
+    "controllersCleaning": "Gamepad Sanitization",
+    "galleryTitle": "Room Showcase & Atmosphere",
+    "gallerySubtitle": "Click any image to view it in full crystal-clear high definition.",
+    "openFullImage": "View Full Resolution",
+    "goToRoom": "Go to Room",
+    "amenitiesTitle": "Amenities & Technical Specs"
   }
 }
 

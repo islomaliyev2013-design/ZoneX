@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Tv, Users, CheckCircle2, Grid } from 'lucide-react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { Tv, Users, CheckCircle2, Grid, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import StationCard from '../components/StationCard';
@@ -102,6 +102,14 @@ export default function Rooms() {
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>🟢 {t('occupiedMonitor.onlyFree', { count: availableStationsCount })}</span>
           </button>
+
+          <Link
+            to="/info"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-cyan-400 hover:text-white bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 transition ml-1"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span>📸 {t('infoPage.galleryTitle') || "Xonalar suratlari"}</span>
+          </Link>
         </div>
       </div>
 

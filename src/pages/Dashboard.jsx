@@ -271,6 +271,56 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* Club Rooms Atmosphere & Photo Gallery Preview Card */}
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-[#0F172A] via-[#142033] to-[#0D1524] border border-[#25364C] shadow-lg flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div className="max-w-md">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-2">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Klub Atmosferasi & Jihozlar</span>
+          </div>
+          <h3 className="text-xl font-black text-white tracking-tight">
+            Xonalar Ko‘rinishi va Real Suratlari
+          </h3>
+          <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+            The Platform zali, 4K ekranli Game Zone, Neon Pulse lounge va VIP kabina holatini tiniq fotogalereyada ko‘ring.
+          </p>
+          <Link
+            to="/info"
+            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 hover:text-white text-xs font-bold transition shadow-sm"
+          >
+            <span>Fotogalereya va ma'lumotlar</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {/* 4 Small Photo Thumbnails */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full lg:w-auto">
+          {[
+            { img: '/gallery/room-platform.jpg', label: 'The Platform' },
+            { img: '/gallery/room-gamezone.jpg', label: 'Game Zone' },
+            { img: '/gallery/room-neon.jpg', label: 'Neon Lounge' },
+            { img: '/gallery/room-vip.jpg', label: 'VIP Kabina' },
+          ].map((item, idx) => (
+            <Link
+              key={idx}
+              to="/info"
+              className="group relative w-full sm:w-32 lg:w-36 h-24 rounded-2xl overflow-hidden border border-[#25364C] hover:border-cyan-400/80 transition shadow-md"
+            >
+              <img
+                src={item.img}
+                alt={item.label}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2">
+                <span className="text-[10px] font-bold text-white leading-tight">
+                  {item.label}
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
       {/* Live 5 Rooms Overview Card */}
       <div className="bg-midnight-card rounded-2xl p-6 shadow-lg border border-midnight-border">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-5 border-b border-midnight-border">

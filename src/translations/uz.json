@@ -18,6 +18,7 @@
     "sales": "Mahsulot savdosi",
     "history": "Tarix",
     "reports": "Hisobotlar",
+    "info": "Ma'lumot",
     "logout": "Chiqish",
     "free": "Bo‘sh",
     "busy": "Band",
@@ -321,6 +322,24 @@
     "finishShort": "Hisoblash va yakunlash",
     "orderedProducts": "Buyurtmalar:",
     "totalDue": "Jami to‘lov:"
+  },
+  "infoPage": {
+    "title": "Klub Xonalari va Jihozlar Ma'lumoti",
+    "subtitle": "PlayStation o‘yin klubining haqiqiy atmosferasi, qulayliklari, 4K ekranlar va xonalarning real holati bilan tanishing.",
+    "badge": "Foto Galereya & Xonalar Holati",
+    "totalRoomsLabel": "Xonalar",
+    "totalStationsLabel": "Konsollar",
+    "consolesModel": "PlayStation 5 Konsollari",
+    "screensQuality": "4K HDR Displeylar",
+    "airConditioning": "Konditsioner & Shamollatish",
+    "fastInternet": "Tezkor Optik Internet",
+    "snackBar": "Ichimliklar & Snack Bar",
+    "controllersCleaning": "Pultlar Dezinfeksiyasi",
+    "galleryTitle": "Xonalar Ko‘rinishi va Muhit",
+    "gallerySubtitle": "Suratlarni to‘liq ekranda tiniq formatda ko‘rish uchun istalgan rasm ustiga bosing.",
+    "openFullImage": "Tiniq formatda ko‘rish",
+    "goToRoom": "Xonaga o'tish",
+    "amenitiesTitle": "Qulayliklar va Texnik Jihozlar"
   }
 }
 

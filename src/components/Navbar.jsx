@@ -6,6 +6,7 @@ import {
   ShoppingBag,
   History,
   BarChart3,
+  Info,
   LogOut,
   Menu,
   X,
@@ -27,6 +28,7 @@ export default function Navbar() {
     { to: '/sales', label: t('nav.sales'), icon: ShoppingBag },
     { to: '/history', label: t('nav.history'), icon: History },
     { to: '/reports', label: t('nav.reports'), icon: BarChart3 },
+    { to: '/info', label: t('nav.info'), icon: Info },
   ];
 
   const handleLogout = () => {
