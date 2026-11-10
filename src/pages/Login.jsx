@@ -58,13 +58,19 @@ export default function Login({ initialMode = 'login' }) {
     setSuccessMsg('');
     setIsLoading(true);
 
-    const result = await login(username, password);
-    setIsLoading(false);
-
-    if (result.success) {
-      navigate('/', { replace: true });
-    } else {
-      setErrorMsg(t(result.errorKey));
+    try {
+      const result = await login(username, password);
+      if (result.success) {
+        navigate('/', { replace: true });
+        return;
+      } else {
+        setErrorMsg(t(result.errorKey));
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setErrorMsg(t('auth.loginErrorInvalid'));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,19 +80,26 @@ export default function Login({ initialMode = 'login' }) {
     setSuccessMsg('');
     setIsLoading(true);
 
-    const result = await register({
-      fullName: regFullName,
-      username: regUsername,
-      email: regEmail,
-      password: regPassword,
-      confirmPassword: regConfirmPassword,
-    });
-    setIsLoading(false);
+    try {
+      const result = await register({
+        fullName: regFullName,
+        username: regUsername,
+        email: regEmail,
+        password: regPassword,
+        confirmPassword: regConfirmPassword,
+      });
 
-    if (result.success) {
-      navigate('/', { replace: true });
-    } else {
-      setErrorMsg(t(result.errorKey));
+      if (result.success) {
+        navigate('/', { replace: true });
+        return;
+      } else {
+        setErrorMsg(t(result.errorKey));
+      }
+    } catch (err) {
+      console.error('Register error:', err);
+      setErrorMsg(t('common.error'));
+    } finally {
+      setIsLoading(false);
     }
   };
 

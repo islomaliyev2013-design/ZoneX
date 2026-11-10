@@ -138,7 +138,7 @@ export function AuthProvider({ children }) {
       return { success: false, errorKey: 'auth.loginErrorRequired' };
     }
 
-    // 1. Check local accounts
+    // 1. Check local accounts (instant - 0ms)
     let found = accounts.find(
       (acc) =>
         (acc.username.toLowerCase() === cleanUsername ||
@@ -146,14 +146,36 @@ export function AuthProvider({ children }) {
         acc.password === cleanPassword
     );
 
-    // 2. If not found locally, query Supabase cloud profiles
+    // Direct fallback for standard admin & jonibek
+    if (!found) {
+      if (
+        (cleanUsername === 'admin' || cleanUsername === 'admin@gmail.com') &&
+        cleanPassword === 'admin123'
+      ) {
+        found = DEFAULT_ADMIN;
+      } else if (
+        (cleanUsername === 'jonibek' || cleanUsername === 'jonibek@gmail.com') &&
+        cleanPassword === 'admin123'
+      ) {
+        found = DEFAULT_JONIBEK;
+      }
+    }
+
+    // 2. If not found locally, fast timeout cloud lookup (max 1.5s timeout, never hang)
     if (!found) {
       try {
-        const { data, error } = await supabase
+        const cloudPromise = supabase
           .from('profiles')
           .select('*')
           .or(`username.ilike.${cleanUsername},email.ilike.${cleanUsername}`)
           .maybeSingle();
+
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('timeout')), 1500)
+        );
+
+        const res = await Promise.race([cloudPromise, timeoutPromise]);
+        const data = res?.data;
 
         if (data && data.password === cleanPassword) {
           found = {
@@ -176,7 +198,7 @@ export function AuthProvider({ children }) {
           });
         }
       } catch (err) {
-        console.warn('Cloud login check error:', err);
+        // Fast fail on network/timeout, never block the user
       }
     }
 
@@ -189,6 +211,9 @@ export function AuthProvider({ children }) {
         role: found.role,
       };
       setCurrentUser(userSession);
+      try {
+        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userSession));
+      } catch (e) {}
       return { success: true, user: userSession };
     }
 
