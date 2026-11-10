@@ -265,14 +265,6 @@ export default function Info() {
                     100% Tayyor
                   </span>
                 </div>
-
-                {/* Hover overlay hint */}
-                <div className="absolute inset-0 bg-cyan-900/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none backdrop-blur-[2px]">
-                  <div className="px-4 py-2 rounded-xl bg-black/80 border border-cyan-400/60 text-cyan-300 text-xs font-bold flex items-center gap-2 shadow-2xl transform translate-y-2 group-hover:translate-y-0 transition-transform">
-                    <ZoomIn className="w-4 h-4 text-cyan-400" />
-                    <span>{t('infoPage.openFullImage') || "Tiniq formatda ko‘rish"}</span>
-                  </div>
-                </div>
               </div>
 
               {/* Text Info Below Image */}
@@ -500,3 +492,4 @@ export default function Info() {
     </div>
   );
 }
+
