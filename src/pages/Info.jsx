@@ -15,7 +15,7 @@ import {
   ZoomIn,
   ZoomOut,
   Layers,
-  CheckCircle2,
+  Crown,
   ArrowRight,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
@@ -24,47 +24,63 @@ import { useLanguage } from '../context/LanguageContext';
 export const ROOM_GALLERY = [
   {
     id: 'platform',
-    title: 'The Platform — Katta Zal',
-    subtitle: 'PlayStation 5 Playroom & Lounge',
-    badge: 'Asosiy Zal',
+    title: 'The Platform — Standart Zal',
+    subtitle: 'Oddiy Zal & PlayStation 5 Lounge',
+    badge: 'Standart Zal',
+    price: "20 000 so'm / soat",
     image: '/gallery/room-platform.jpg',
     description:
-      'Katta zaldagi zamonaviy konsollar qatori: individual 4K devoriy displeylar, yulduzli neon shifti, qulay yumshoq divanlar va moviy neon yoritish tizimi.',
-    specs: ['PlayStation 5', '4K Ultra HD', 'Yumshoq divanlar', 'Moviy neon'],
+      'Katta zaldagi zamonaviy konsollar qatori: individual 4K devoriy displeylar, yulduzli neon shifti, qulay yumshoq divanlar va do‘stlar davrasi uchun ajoyib muhit.',
+    specs: ['5x PS5 Konsol', '4K Ultra HD', 'Yumshoq divanlar', "20 000 so'm / soat"],
     roomNumber: 1,
   },
   {
     id: 'gamezone',
-    title: 'Game Zone — 4K HDR Ekranlar',
+    title: 'Game Zone — 4K HDR Pro',
     subtitle: 'Tekken 8 • NBA 2K25 • Overcooked 2',
-    badge: "Top O'yinlar Maydoni",
+    badge: 'Pro Gaming',
+    price: "25 000 so'm / soat",
     image: '/gallery/room-gamezone.jpg',
     description:
-      "Katta 4K HDR televizorlar, qulay stullar va divanlar, mashhur o'yinlar uchun maxsus sozlangan individual zonalarga ega.",
-    specs: ['PS5 Konsollar', 'DualSense pultlar', 'Tekken 8 / NBA 2K25', 'Kuchli sovutish'],
+      "Katta 4K HDR televizorlar, professional o'yin stullari va divanlar, mashhur fayting va sport o'yinlari uchun maxsus qulay zona.",
+    specs: ['5x PS5 Pro Zallari', 'DualSense pultlar', 'Kuchli sovutish', "25 000 so'm / soat"],
     roomNumber: 2,
   },
   {
     id: 'neon',
     title: 'Neon Pulse Lounge',
     subtitle: 'eFootball & FIFA Arena',
-    badge: 'Neon & Chill Muhit',
+    badge: 'Neon & Chill',
+    price: "30 000 so'm / soat",
     image: '/gallery/room-neon.jpg',
     description:
-      "Devordagi kardiogramma neon nurlari bilan jihozlangan shinam burchak. Qulay gilam qoplamasi va yumshoq o'rindiqlar.",
-    specs: ['Shinam lounge', 'Kardiogramma neon', "Do'stlar davrasi", 'Yumshoq gilam'],
+      "Devordagi kardiogramma neon nurlari bilan jihozlangan shinam burchak. Qulay gilam qoplamasi, yumshoq o'rindiqlar va jo'shqin futbol bahslari uchun eng qulay shinam atmosfera.",
+    specs: ['Neon atmosfera', "Kardiogramma yorug'lik", "Do'stlar davrasi", "30 000 so'm / soat"],
     roomNumber: 3,
+  },
+  {
+    id: 'comfort',
+    title: 'Grand Arena — Comfort Zone',
+    subtitle: 'Katta 65" Ekran & Kiber Maydon',
+    badge: 'Comfort Arena',
+    price: "35 000 so'm / soat",
+    image: '/gallery/room-comfort.jpg',
+    description:
+      "Premium darajadagi keng va shinam zona: katta 65 dyuymli 4K Ultra HD ekranlar, kuchaytirilgan dinamik surround audio va lyuks yumshoq divanlar.",
+    specs: ['65" Katta Ekran', 'Deluxe divanlar', 'Surround ovoz', "35 000 so'm / soat"],
+    roomNumber: 4,
   },
   {
     id: 'vip',
     title: 'VIP Akustik Kabina',
-    subtitle: 'Shovqinsiz Shaxsiy Hudud',
+    subtitle: 'Shovqinsiz Shaxsiy VIP Hudud',
     badge: 'VIP Kabina',
+    price: "45 000 so'm / soat",
     image: '/gallery/room-vip.jpg',
     description:
-      'Akustik piramida panellari bilan qoplangan maxsus VIP xona. Tashqi shovqinlardan to‘liq himoyalangan, katta 4K ekran.',
-    specs: ['Akustik devorlar', 'Katta 4K ekran', 'Yuqori sifatli ovoz', 'VIP komfort'],
-    roomNumber: 4,
+      'Akustik piramida panellari bilan qoplangan maxsus VIP 5-xona. Tashqi shovqinlardan to‘liq himoyalangan, katta 75" 4K displey, mukammal surround audio va to\'liq maxfiylik.',
+    specs: ['Akustik ovoz yutish', '75" Cinema 4K', 'VIP maxfiylik', "45 000 so'm / soat"],
+    roomNumber: 5,
   },
 ];
 
@@ -77,71 +93,83 @@ export default function Info() {
   const roomGallery = [
     {
       id: 'platform',
-      title: t('infoPage.room1Title') || 'The Platform — Katta Zal',
-      subtitle: t('infoPage.room1Subtitle') || 'PlayStation 5 Playroom & Lounge',
-      badge: t('infoPage.room1Badge') || 'Asosiy Zal',
+      title: t('infoPage.room1Title'),
+      subtitle: t('infoPage.room1Subtitle'),
+      badge: t('infoPage.room1Badge'),
+      price: t('infoPage.room1Price'),
       image: '/gallery/room-platform.jpg',
-      description:
-        t('infoPage.room1Desc') ||
-        'Katta zaldagi zamonaviy konsollar qatori: individual 4K devoriy displeylar, yulduzli neon shifti, qulay yumshoq divanlar va moviy neon yoritish tizimi.',
+      description: t('infoPage.room1Desc'),
       specs: [
-        t('infoPage.room1Spec1') || 'PlayStation 5',
-        t('infoPage.room1Spec2') || '4K Ultra HD',
-        t('infoPage.room1Spec3') || 'Yumshoq divanlar',
-        t('infoPage.room1Spec4') || 'Moviy neon',
+        t('infoPage.room1Spec1'),
+        t('infoPage.room1Spec2'),
+        t('infoPage.room1Spec3'),
+        t('infoPage.room1Spec4'),
       ],
       roomNumber: 1,
     },
     {
       id: 'gamezone',
-      title: t('infoPage.room2Title') || 'Game Zone — 4K HDR Ekranlar',
-      subtitle: t('infoPage.room2Subtitle') || 'Tekken 8 • NBA 2K25 • Overcooked 2',
-      badge: t('infoPage.room2Badge') || "Top O'yinlar Maydoni",
+      title: t('infoPage.room2Title'),
+      subtitle: t('infoPage.room2Subtitle'),
+      badge: t('infoPage.room2Badge'),
+      price: t('infoPage.room2Price'),
       image: '/gallery/room-gamezone.jpg',
-      description:
-        t('infoPage.room2Desc') ||
-        "Katta 4K HDR televizorlar, qulay stullar va divanlar, mashhur o'yinlar uchun maxsus sozlangan individual zonalarga ega.",
+      description: t('infoPage.room2Desc'),
       specs: [
-        t('infoPage.room2Spec1') || 'PS5 Konsollar',
-        t('infoPage.room2Spec2') || 'DualSense pultlar',
-        t('infoPage.room2Spec3') || 'Tekken 8 / NBA 2K25',
-        t('infoPage.room2Spec4') || 'Kuchli sovutish',
+        t('infoPage.room2Spec1'),
+        t('infoPage.room2Spec2'),
+        t('infoPage.room2Spec3'),
+        t('infoPage.room2Spec4'),
       ],
       roomNumber: 2,
     },
     {
       id: 'neon',
-      title: t('infoPage.room3Title') || 'Neon Pulse Lounge',
-      subtitle: t('infoPage.room3Subtitle') || 'eFootball & FIFA Arena',
-      badge: t('infoPage.room3Badge') || 'Neon & Chill Muhit',
+      title: t('infoPage.room3Title'),
+      subtitle: t('infoPage.room3Subtitle'),
+      badge: t('infoPage.room3Badge'),
+      price: t('infoPage.room3Price'),
       image: '/gallery/room-neon.jpg',
-      description:
-        t('infoPage.room3Desc') ||
-        "Devordagi kardiogramma neon nurlari bilan jihozlangan shinam burchak. Qulay gilam qoplamasi va yumshoq o'rindiqlar.",
+      description: t('infoPage.room3Desc'),
       specs: [
-        t('infoPage.room3Spec1') || 'Shinam lounge',
-        t('infoPage.room3Spec2') || 'Kardiogramma neon',
-        t('infoPage.room3Spec3') || "Do'stlar davrasi",
-        t('infoPage.room3Spec4') || 'Yumshoq gilam',
+        t('infoPage.room3Spec1'),
+        t('infoPage.room3Spec2'),
+        t('infoPage.room3Spec3'),
+        t('infoPage.room3Spec4'),
       ],
       roomNumber: 3,
     },
     {
-      id: 'vip',
-      title: t('infoPage.room4Title') || 'VIP Akustik Kabina',
-      subtitle: t('infoPage.room4Subtitle') || 'Shovqinsiz Shaxsiy Hudud',
-      badge: t('infoPage.room4Badge') || 'VIP Kabina',
-      image: '/gallery/room-vip.jpg',
-      description:
-        t('infoPage.room4Desc') ||
-        'Akustik piramida panellari bilan qoplangan maxsus VIP xona. Tashqi shovqinlardan to‘liq himoyalangan, katta 4K ekran.',
+      id: 'comfort',
+      title: t('infoPage.room4Title'),
+      subtitle: t('infoPage.room4Subtitle'),
+      badge: t('infoPage.room4Badge'),
+      price: t('infoPage.room4Price'),
+      image: '/gallery/room-comfort.jpg',
+      description: t('infoPage.room4Desc'),
       specs: [
-        t('infoPage.room4Spec1') || 'Akustik devorlar',
-        t('infoPage.room4Spec2') || 'Katta 4K ekran',
-        t('infoPage.room4Spec3') || 'Yuqori sifatli ovoz',
-        t('infoPage.room4Spec4') || 'VIP komfort',
+        t('infoPage.room4Spec1'),
+        t('infoPage.room4Spec2'),
+        t('infoPage.room4Spec3'),
+        t('infoPage.room4Spec4'),
       ],
       roomNumber: 4,
+    },
+    {
+      id: 'vip',
+      title: t('infoPage.room5Title'),
+      subtitle: t('infoPage.room5Subtitle'),
+      badge: t('infoPage.room5Badge'),
+      price: t('infoPage.room5Price'),
+      image: '/gallery/room-vip.jpg',
+      description: t('infoPage.room5Desc'),
+      specs: [
+        t('infoPage.room5Spec1'),
+        t('infoPage.room5Spec2'),
+        t('infoPage.room5Spec3'),
+        t('infoPage.room5Spec4'),
+      ],
+      roomNumber: 5,
     },
   ];
 
@@ -294,83 +322,116 @@ export default function Info() {
           </span>
         </div>
 
-        {/* Gallery Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {roomGallery.map((item, index) => (
-            <div
-              key={item.id}
-              onClick={() => openLightbox(index)}
-              className="group relative rounded-3xl bg-[#111A29] border border-[#223247] hover:border-cyan-500/60 transition-all duration-300 overflow-hidden shadow-lg hover:shadow-[0_10px_35px_rgba(6,182,212,0.25)] cursor-pointer flex flex-col"
-            >
-              {/* Image Frame */}
-              <div className="relative w-full h-64 sm:h-72 lg:h-80 overflow-hidden bg-slate-900">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                  loading="lazy"
-                />
+        {/* Gallery Grid — 5 Rooms Tiered Showcase */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {roomGallery.map((item, index) => {
+            const isVip = item.roomNumber === 5;
+            return (
+              <div
+                key={item.id}
+                onClick={() => openLightbox(index)}
+                className={`group relative rounded-3xl transition-all duration-300 overflow-hidden shadow-lg cursor-pointer flex flex-col ${
+                  isVip
+                    ? 'bg-gradient-to-b from-[#181C2E] via-[#121626] to-[#0D101D] border-2 border-amber-500/60 shadow-[0_0_35px_rgba(245,158,11,0.25)] hover:border-amber-400 hover:shadow-[0_0_45px_rgba(245,158,11,0.35)]'
+                    : 'bg-[#111A29] border border-[#223247] hover:border-cyan-500/60 hover:shadow-[0_10px_35px_rgba(6,182,212,0.25)]'
+                }`}
+              >
+                {/* Image Frame */}
+                <div className="relative w-full h-60 sm:h-64 overflow-hidden bg-slate-900">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    loading="lazy"
+                  />
 
-                {/* Dark gradient vignette over image */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#111A29] via-transparent to-black/40" />
+                  {/* Dark gradient vignette over image */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#111A29] via-transparent to-black/40" />
 
-                {/* Badge Tag Top Left */}
-                <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#0D1522]/85 text-cyan-300 border border-cyan-500/40 backdrop-blur-md shadow-md">
-                    {item.badge}
-                  </span>
-                </div>
-
-                {/* Status Indicator Top Right */}
-                <div className="absolute top-4 right-4">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 backdrop-blur-md shadow-md">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    {t('infoPage.readyStatus')}
-                  </span>
-                </div>
-              </div>
-
-              {/* Text Info Below Image */}
-              <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-cyan-400">
-                    {item.subtitle}
-                  </div>
-                  <h3 className="text-lg font-black text-white mt-1 group-hover:text-cyan-300 transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs text-slate-300 leading-relaxed mt-2 line-clamp-3">
-                    {item.description}
-                  </p>
-                </div>
-
-                {/* Specs chips */}
-                <div className="mt-4 pt-4 border-t border-[#202E42] flex items-center justify-between gap-2 flex-wrap">
-                  <div className="flex flex-wrap gap-1.5">
-                    {item.specs.slice(0, 3).map((spec, i) => (
-                      <span
-                        key={i}
-                        className="text-[10px] font-medium bg-[#172337] text-slate-300 px-2 py-0.5 rounded-md border border-[#273952]"
-                      >
-                        {spec}
+                  {/* Badge Tag Top Left: Room number & Zone Badge */}
+                  <div className="absolute top-4 left-4 flex items-center gap-2">
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black backdrop-blur-md shadow-md border ${
+                        isVip
+                          ? 'bg-amber-950/85 text-amber-300 border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
+                          : 'bg-[#0D1522]/85 text-cyan-300 border-cyan-500/40'
+                      }`}
+                    >
+                      {isVip && <Crown className="w-3.5 h-3.5 text-amber-400" />}
+                      <span>
+                        {item.roomNumber}-xona • {item.badge}
                       </span>
-                    ))}
+                    </span>
                   </div>
 
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(`/rooms?room=${item.roomNumber}`);
-                    }}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 px-3 py-1.5 rounded-xl transition-all"
-                  >
-                    <span>{t('infoPage.goToRoom')}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  {/* Tariff Price Tag Top Right */}
+                  <div className="absolute top-4 right-4">
+                    <span
+                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black backdrop-blur-md shadow-md border ${
+                        isVip
+                          ? 'bg-amber-500/20 text-amber-300 border-amber-400/60 shadow-[0_0_15px_rgba(245,158,11,0.4)]'
+                          : 'bg-emerald-950/85 text-emerald-300 border-emerald-500/50'
+                      }`}
+                    >
+                      {item.price}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Text Info Below Image */}
+                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div
+                      className={`text-[11px] font-bold uppercase tracking-wider ${
+                        isVip ? 'text-amber-400' : 'text-cyan-400'
+                      }`}
+                    >
+                      {item.subtitle}
+                    </div>
+                    <h3
+                      className={`text-lg font-black text-white mt-1 transition-colors ${
+                        isVip ? 'group-hover:text-amber-300' : 'group-hover:text-cyan-300'
+                      }`}
+                    >
+                      {item.title}
+                    </h3>
+                    <p className="text-xs text-slate-300 leading-relaxed mt-2 line-clamp-3">
+                      {item.description}
+                    </p>
+                  </div>
+
+                  {/* Specs chips */}
+                  <div className="mt-4 pt-4 border-t border-[#202E42] flex items-center justify-between gap-2 flex-wrap">
+                    <div className="flex flex-wrap gap-1.5">
+                      {item.specs.slice(0, 3).map((spec, i) => (
+                        <span
+                          key={i}
+                          className="text-[10px] font-medium bg-[#172337] text-slate-300 px-2 py-0.5 rounded-md border border-[#273952]"
+                        >
+                          {spec}
+                        </span>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/rooms?room=${item.roomNumber}`);
+                      }}
+                      className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border transition-all ${
+                        isVip
+                          ? 'text-amber-300 hover:text-amber-200 bg-amber-500/15 hover:bg-amber-500/25 border-amber-500/40'
+                          : 'text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 hover:bg-cyan-500/20 border-cyan-500/30'
+                      }`}
+                    >
+                      <span>{t('infoPage.goToRoom')}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -447,10 +508,13 @@ export default function Info() {
           >
             <div className="flex items-center gap-3">
               <span className="px-3 py-1 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                {activeLightboxItem.badge}
+                {activeLightboxItem.roomNumber}-xona • {activeLightboxItem.badge}
               </span>
               <span className="text-sm font-bold text-white hidden sm:inline">
                 {activeLightboxItem.title}
+              </span>
+              <span className="text-xs font-black text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-lg">
+                {activeLightboxItem.price}
               </span>
             </div>
 
@@ -523,8 +587,9 @@ export default function Info() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center sm:text-left max-w-xl">
-              <h4 className="text-sm font-black text-white">
-                {activeLightboxItem.title}
+              <h4 className="text-sm font-black text-white flex items-center gap-2">
+                <span>{activeLightboxItem.title}</span>
+                <span className="text-xs text-emerald-400 font-bold">({activeLightboxItem.price})</span>
               </h4>
               <p className="text-xs text-slate-300 mt-0.5 line-clamp-1 sm:line-clamp-2">
                 {activeLightboxItem.description}

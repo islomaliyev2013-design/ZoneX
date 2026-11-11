@@ -27,6 +27,14 @@ if (typeof window !== 'undefined' && window.localStorage) {
   } catch (e) {}
 }
 
+export const ROOM_DEFAULT_CONFIGS = {
+  1: { zoneName: 'The Platform', zoneType: 'Standart Zal', hourlyRate: 20000 },
+  2: { zoneName: 'Game Zone', zoneType: 'Pro Gaming', hourlyRate: 25000 },
+  3: { zoneName: 'Neon Pulse Lounge', zoneType: 'Neon & Chill', hourlyRate: 30000 },
+  4: { zoneName: 'Grand Arena', zoneType: 'Comfort Zone', hourlyRate: 35000 },
+  5: { zoneName: 'VIP Akustik Kabina', zoneType: 'VIP Kabina', hourlyRate: 45000 },
+};
+
 /**
  * Generate clean initial rooms structure
  * 5 rooms, each with 5 PlayStation stations, all available.
@@ -34,14 +42,18 @@ if (typeof window !== 'undefined' && window.localStorage) {
 export function generateInitialRooms() {
   const rooms = [];
   for (let r = 1; r <= INITIAL_ROOMS_COUNT; r++) {
+    const config = ROOM_DEFAULT_CONFIGS[r] || { zoneName: `Room ${r}`, zoneType: 'Zal', hourlyRate: 20000 };
     const stations = [];
     for (let s = 1; s <= STATIONS_PER_ROOM; s++) {
       stations.push({
         id: `r${r}-s${s}`,
         roomId: r,
         roomName: `Room ${r}`,
+        zoneName: config.zoneName,
+        zoneType: config.zoneType,
         stationNumber: s,
         stationName: `Station ${s}`,
+        hourlyRate: config.hourlyRate,
         status: 'available', // 'available' | 'occupied'
         session: null,
       });
@@ -49,6 +61,9 @@ export function generateInitialRooms() {
     rooms.push({
       id: r,
       name: `Room ${r}`,
+      zoneName: config.zoneName,
+      zoneType: config.zoneType,
+      hourlyRate: config.hourlyRate,
       stations,
     });
   }
@@ -65,7 +80,29 @@ export function loadRooms(accountId = 'account_admin') {
     if (stored) {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed) && parsed.length === INITIAL_ROOMS_COUNT) {
-        return parsed;
+        // Guarantee every room and station reflects its proper tiered hourly rate & zone
+        const updated = parsed.map((room) => {
+          const config = ROOM_DEFAULT_CONFIGS[room.id] || {
+            zoneName: room.zoneName || `Room ${room.id}`,
+            zoneType: room.zoneType || 'Zal',
+            hourlyRate: 20000,
+          };
+          const stations = (room.stations || []).map((st) => ({
+            ...st,
+            zoneName: config.zoneName,
+            zoneType: config.zoneType,
+            hourlyRate: config.hourlyRate,
+          }));
+          return {
+            ...room,
+            zoneName: config.zoneName,
+            zoneType: config.zoneType,
+            hourlyRate: config.hourlyRate,
+            stations,
+          };
+        });
+        saveRooms(updated, accountId);
+        return updated;
       }
     }
   } catch (err) {

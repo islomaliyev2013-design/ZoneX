@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { Tv, Users, CheckCircle2, Grid, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
+import { formatCurrency } from '../utils/formatters';
 import StationCard from '../components/StationCard';
 import StartSessionModal from '../components/StartSessionModal';
 import FinishSessionModal from '../components/FinishSessionModal';
@@ -15,8 +16,10 @@ export default function Rooms() {
     allStations = [],
     occupiedStationsCount = 0,
     availableStationsCount = 25,
+    settings = {},
   } = useApp();
   const { t } = useLanguage();
+  const currency = settings?.currency || "so'm";
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Filter mode: 'by_room' | 'occupied' | 'available'
@@ -129,16 +132,16 @@ export default function Rooms() {
                   key={room.id}
                   type="button"
                   onClick={() => handleSelectRoom(room.id)}
-                  className={`p-4 rounded-2xl text-left transition-all duration-200 border flex flex-col justify-between ${
+                  className={`p-3.5 sm:p-4 rounded-2xl text-left transition-all duration-200 border flex flex-col justify-between ${
                     isSelected
                       ? 'bg-midnight-card text-white border-brand-purple shadow-xl ring-2 ring-brand-purple/50 scale-[1.02]'
                       : 'bg-midnight-card/75 text-slate-300 hover:bg-midnight-card hover:text-white border-midnight-border hover:border-brand-purple/40 shadow-sm'
                   }`}
                 >
-                  <div className="flex items-center justify-between w-full mb-3">
-                    <div className="flex items-center gap-2.5">
+                  <div className="flex items-center justify-between w-full mb-2">
+                    <div className="flex items-center gap-2">
                       <div
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs ${
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs shrink-0 ${
                           isSelected
                             ? 'bg-brand-purple text-slate-950 shadow-sm'
                             : 'bg-midnight-bg text-slate-400 border border-midnight-border'
@@ -146,7 +149,18 @@ export default function Rooms() {
                       >
                         {room.id}
                       </div>
-                      <span className="font-extrabold text-sm sm:text-base text-white">{roomLabel}</span>
+                      <div className="min-w-0">
+                        <span className="font-extrabold text-xs sm:text-sm text-white block leading-tight truncate">
+                          {roomLabel}
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold block truncate mt-0.5 ${
+                            room.id === 5 ? 'text-amber-300 font-extrabold' : 'text-cyan-400'
+                          }`}
+                        >
+                          {t(`rooms.roomZone${room.id}`)}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -174,11 +188,26 @@ export default function Rooms() {
                   <Tv className="w-6 h-6" />
                 </div>
                 <div>
-                  <h2 className="text-lg sm:text-xl font-extrabold text-white">
-                    {t('rooms.stationsHeader', { room: localizedSelectedRoomName })}
-                  </h2>
-                  <p className="text-xs text-slate-400">
-                    {t('rooms.contains5Consoles')}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h2 className="text-lg sm:text-xl font-extrabold text-white">
+                      {t('rooms.stationsHeader', { room: localizedSelectedRoomName })}
+                    </h2>
+                    <span
+                      className={`text-xs font-black px-2.5 py-0.5 rounded-full border ${
+                        selectedRoom.id === 5
+                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
+                          : 'bg-cyan-500/15 text-cyan-300 border-cyan-500/40'
+                      }`}
+                    >
+                      {t(`rooms.roomZone${selectedRoom.id}`)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    {t('rooms.contains5Consoles')} • Tarif:{' '}
+                    <span className="text-cyan-300 font-bold">
+                      {formatCurrency(selectedRoom.hourlyRate || 20000, currency)}
+                      {t('station.perHour') || '/soat'}
+                    </span>
                   </p>
                 </div>
               </div>

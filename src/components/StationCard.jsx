@@ -159,9 +159,22 @@ export default function StationCard({ station, onStartClick, onFinishClick, onAd
               <h4 className="font-extrabold text-base text-white leading-tight">
                 {localizedStationName}
               </h4>
-              <span className="text-[11px] text-slate-400 font-medium">
-                {localizedRoomName}
-              </span>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span className="text-[11px] text-slate-400 font-medium">
+                  {localizedRoomName}
+                </span>
+                {station.zoneType && (
+                  <span
+                    className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded border ${
+                      station.roomId === 5
+                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-xs'
+                        : 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30'
+                    }`}
+                  >
+                    {station.zoneType}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -325,7 +338,7 @@ export default function StationCard({ station, onStartClick, onFinishClick, onAd
             <p className="text-xs text-slate-400 mb-1">{t('station.readyForNext')}</p>
             <p className="text-sm font-bold text-white">
               {t('station.defaultRate', {
-                rate: formatCurrency(settings.defaultHourlyRate || 20000, currency),
+                rate: formatCurrency(station.hourlyRate || settings.defaultHourlyRate || 20000, currency),
               })}
             </p>
           </div>

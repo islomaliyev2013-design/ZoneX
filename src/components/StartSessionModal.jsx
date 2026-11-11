@@ -36,7 +36,7 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
       setCustomerName('');
       setSessionType('open');
       setLimitMode('budget');
-      setBudgetAmount('20000');
+      setBudgetAmount(defaultRate.toString());
       setDurationMinutes('60');
     }
   }, [isOpen, station?.id, settings.defaultHourlyRate]);
@@ -115,13 +115,32 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
               <Tv className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white leading-tight">
-                {t('sessionModal.startTitle', {
-                  room: localizedRoomName,
-                  station: localizedStationName,
-                })}
+              <h3 className="text-base font-bold text-white leading-tight flex items-center gap-2">
+                <span>
+                  {t('sessionModal.startTitle', {
+                    room: localizedRoomName,
+                    station: localizedStationName,
+                  })}
+                </span>
+                {station.zoneType && (
+                  <span
+                    className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${
+                      station.roomId === 5
+                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-xs'
+                        : 'bg-cyan-500/15 text-cyan-300 border-cyan-500/40'
+                    }`}
+                  >
+                    {station.zoneType}
+                  </span>
+                )}
               </h3>
-              <p className="text-xs text-slate-400 mt-0.5">{t('sessionModal.startSubtitle')}</p>
+              <p className="text-xs text-slate-400 mt-0.5">
+                {t('sessionModal.startSubtitle')} •{' '}
+                <span className="font-bold text-cyan-300">
+                  {formatCurrency(station.hourlyRate || 20000, currency)}
+                  {t('station.perHour') || '/soat'}
+                </span>
+              </p>
             </div>
           </div>
           <button

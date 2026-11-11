@@ -293,25 +293,26 @@ export default function Dashboard() {
           </Link>
         </div>
 
-        {/* 4 Small Photo Thumbnails */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full lg:w-auto">
+        {/* 5 Small Photo Thumbnails */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 w-full lg:w-auto">
           {[
             { img: '/gallery/room-platform.jpg', label: t('dashboard.hallTitle') },
             { img: '/gallery/room-gamezone.jpg', label: t('dashboard.gamezoneTitle') },
             { img: '/gallery/room-neon.jpg', label: t('dashboard.neonTitle') },
+            { img: '/gallery/room-comfort.jpg', label: t('dashboard.comfortTitle') },
             { img: '/gallery/room-vip.jpg', label: t('dashboard.vipTitle') },
           ].map((item, idx) => (
             <Link
               key={idx}
               to="/info"
-              className="group relative w-full sm:w-32 lg:w-36 h-24 rounded-2xl overflow-hidden border border-[#25364C] hover:border-cyan-400/80 transition shadow-md"
+              className="group relative w-full sm:w-28 lg:w-32 h-24 rounded-2xl overflow-hidden border border-[#25364C] hover:border-cyan-400/80 transition shadow-md"
             >
               <img
                 src={item.img}
                 alt={item.label}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-1.5">
                 <span className="text-[10px] font-bold text-white leading-tight">
                   {item.label}
                 </span>
@@ -355,7 +356,16 @@ export default function Dashboard() {
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="font-extrabold text-sm text-white">{localizedRoomName}</span>
+                    <div>
+                      <span className="font-extrabold text-sm text-white block leading-tight">{localizedRoomName}</span>
+                      <span
+                        className={`text-[9px] font-bold block ${
+                          room.id === 5 ? 'text-amber-300 font-extrabold' : 'text-cyan-400'
+                        }`}
+                      >
+                        {t(`rooms.roomZone${room.id}`)}
+                      </span>
+                    </div>
                     <span
                       className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
                         occupiedInRoom > 0
