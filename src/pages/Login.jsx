@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   AlertCircle,
@@ -17,6 +17,7 @@ export default function Login({ initialMode = 'login' }) {
   const { t } = useLanguage();
 
   const [mode, setMode] = useState(initialMode); // 'login' | 'register'
+  const passwordInputRef = useRef(null);
 
   // Login inputs - start strictly empty
   const [username, setUsername] = useState('');
@@ -38,19 +39,17 @@ export default function Login({ initialMode = 'login' }) {
   const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Clear any state on mode change
-  useEffect(() => {
-    setUsername('');
-    setPassword('');
-    setRegFullName('');
-    setRegUsername('');
-    setRegEmail('');
-    setRegPassword('');
-    setRegConfirmPassword('');
-    setRememberMe(false);
+  const handleSwitchToLogin = () => {
+    setMode('login');
     setErrorMsg('');
     setSuccessMsg('');
-  }, [mode]);
+  };
+
+  const handleSwitchToRegister = () => {
+    setMode('register');
+    setErrorMsg('');
+    setSuccessMsg('');
+  };
 
   const handleLogin = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
@@ -81,6 +80,7 @@ export default function Login({ initialMode = 'login' }) {
     setIsLoading(true);
 
     try {
+      const cleanUsername = (regUsername || '').trim().toLowerCase();
       const result = await register({
         fullName: regFullName,
         username: regUsername,
@@ -90,7 +90,28 @@ export default function Login({ initialMode = 'login' }) {
       });
 
       if (result.success) {
-        navigate('/', { replace: true });
+        // Clear registration fields
+        setRegFullName('');
+        setRegUsername('');
+        setRegEmail('');
+        setRegPassword('');
+        setRegConfirmPassword('');
+        setErrorMsg('');
+
+        // Switch to login tab and prefill the registered username
+        setMode('login');
+        setUsername(cleanUsername);
+        setPassword('');
+        setSuccessMsg(t('auth.registerSuccessEnterPassword'));
+
+        if (typeof window !== 'undefined' && window.history?.replaceState) {
+          window.history.replaceState(null, '', '/login');
+        }
+
+        // Focus password input for quick and seamless sign-in
+        setTimeout(() => {
+          passwordInputRef.current?.focus();
+        }, 150);
         return;
       } else {
         setErrorMsg(t(result.errorKey));
@@ -183,11 +204,7 @@ export default function Login({ initialMode = 'login' }) {
             <div className="inline-flex p-1 rounded-full bg-black/35 backdrop-blur-md border border-white/20 shadow-inner">
               <button
                 type="button"
-                onClick={() => {
-                  setMode('login');
-                  setErrorMsg('');
-                  setSuccessMsg('');
-                }}
+                onClick={handleSwitchToLogin}
                 className={`px-5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 ${
                   mode === 'login'
                     ? 'bg-white text-slate-900 shadow-md scale-[1.02]'
@@ -198,11 +215,7 @@ export default function Login({ initialMode = 'login' }) {
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  setMode('register');
-                  setErrorMsg('');
-                  setSuccessMsg('');
-                }}
+                onClick={handleSwitchToRegister}
                 className={`px-5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 ${
                   mode === 'register'
                     ? 'bg-white text-slate-900 shadow-md scale-[1.02]'
@@ -266,6 +279,7 @@ export default function Login({ initialMode = 'login' }) {
                   </label>
                   <div className="relative">
                     <input
+                      ref={passwordInputRef}
                       type="text"
                       name="sec_acc_token_v1"
                       id="sec_acc_token_v1"
@@ -508,11 +522,7 @@ export default function Login({ initialMode = 'login' }) {
                   {t('auth.dontHaveAccount')}{' '}
                   <button
                     type="button"
-                    onClick={() => {
-                      setMode('register');
-                      setErrorMsg('');
-                      setSuccessMsg('');
-                    }}
+                    onClick={handleSwitchToRegister}
                     className="text-white font-bold underline hover:text-purple-200 transition ml-1"
                   >
                     {t('auth.tabRegister')}
@@ -523,11 +533,7 @@ export default function Login({ initialMode = 'login' }) {
                   {t('auth.alreadyHaveAccount')}{' '}
                   <button
                     type="button"
-                    onClick={() => {
-                      setMode('login');
-                      setErrorMsg('');
-                      setSuccessMsg('');
-                    }}
+                    onClick={handleSwitchToLogin}
                     className="text-white font-bold underline hover:text-purple-200 transition ml-1"
                   >
                     {t('auth.tabLogin')}

@@ -60,7 +60,8 @@
     "rememberMe": "Eslab qolish",
     "forgotPassword": "Parolni unutdingizmi?",
     "tabLogin": "Kirish",
-    "tabRegister": "Ro'yxatdan o'tish"
+    "tabRegister": "Ro'yxatdan o'tish",
+    "registerSuccessEnterPassword": "Ro‘yxatdan muvaffaqiyatli o‘tdingiz! Tizimga kirish uchun parolingizni kiritib «Kirish» tugmasini bosing."
   },
   "dashboard": {
     "title": "Boshqaruv paneli",

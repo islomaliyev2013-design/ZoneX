@@ -267,17 +267,14 @@ export function AuthProvider({ children }) {
       createdAt: Date.now(),
     };
 
-    setAccounts((prev) => [...prev, newUser]);
-
-    const userSession = {
-      id: newUser.id,
-      username: newUser.username,
-      fullName: newUser.fullName,
-      email: newUser.email,
-      role: newUser.role,
-    };
-
-    setCurrentUser(userSession);
+    // Save to local accounts state and persist immediately to localStorage
+    const updatedAccounts = [...accounts, newUser];
+    setAccounts(updatedAccounts);
+    try {
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(updatedAccounts));
+    } catch (e) {
+      console.error('Failed to save accounts to localStorage:', e);
+    }
 
     // Save to Supabase cloud asynchronously
     saveProfileToCloud(newUser);
@@ -300,7 +297,7 @@ export function AuthProvider({ children }) {
       console.warn('Supabase auth error:', e);
     }
 
-    return { success: true, user: userSession };
+    return { success: true, user: newUser };
   };
 
   /**

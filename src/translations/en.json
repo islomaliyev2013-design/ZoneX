@@ -60,7 +60,8 @@
     "rememberMe": "Remember me",
     "forgotPassword": "Forgot Password?",
     "tabLogin": "Login",
-    "tabRegister": "Register"
+    "tabRegister": "Register",
+    "registerSuccessEnterPassword": "Registration successful! Now enter your password and click \"Sign In\"."
   },
   "dashboard": {
     "title": "Business Dashboard",

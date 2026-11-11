@@ -60,7 +60,8 @@
     "rememberMe": "Запомнить меня",
     "forgotPassword": "Забыли пароль?",
     "tabLogin": "Вход",
-    "tabRegister": "Регистрация"
+    "tabRegister": "Регистрация",
+    "registerSuccessEnterPassword": "Вы успешно зарегистрировались! Теперь введите пароль и нажмите «Войти»."
   },
   "dashboard": {
     "title": "Панель управления",
