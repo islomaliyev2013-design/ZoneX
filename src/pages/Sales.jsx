@@ -193,24 +193,24 @@ export default function Sales() {
       {/* Title Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#292524] tracking-tight">
             {t('sales.title')}
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-[#78716C] mt-1">
             {t('sales.subtitle')}
           </p>
         </div>
 
         {/* Tab switcher: Savdo qilish vs Nimalar bor & Qo'shish (Faqat Admin uchun) */}
         {isAdmin && (
-          <div className="flex items-center bg-midnight-card p-1 rounded-xl border border-midnight-border">
+          <div className="flex items-center bg-white p-1 rounded-xl border border-[#E7E5E4] shadow-xs">
             <button
               type="button"
               onClick={() => setActiveTab('sales')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition cursor-pointer ${
                 activeTab === 'sales'
-                  ? 'bg-brand-purple text-slate-950 font-black shadow-md shadow-brand-purple/30'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#0D9488] text-white shadow-xs'
+                  : 'text-[#78716C] hover:text-[#292524]'
               }`}
             >
               <ShoppingBag className="w-4 h-4" />
@@ -219,15 +219,19 @@ export default function Sales() {
             <button
               type="button"
               onClick={() => setActiveTab('catalog')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition cursor-pointer ${
                 activeTab === 'catalog'
-                  ? 'bg-brand-purple text-slate-950 font-black shadow-md shadow-brand-purple/30'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#0D9488] text-white shadow-xs'
+                  : 'text-[#78716C] hover:text-[#292524]'
               }`}
             >
               <Package className="w-4 h-4" />
               <span>{t('catalog.tabCatalog')}</span>
-              <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] bg-brand-purpleDark text-brand-lavender font-extrabold">
+              <span className={`ml-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-extrabold ${
+                activeTab === 'catalog'
+                  ? 'bg-white/20 text-white'
+                  : 'bg-[#F0FDFA] text-[#0D9488] border border-[#CCFBF1]'
+              }`}>
                 {productsCatalog.length}
               </span>
             </button>
@@ -236,15 +240,15 @@ export default function Sales() {
       </div>
 
       {successMessage && (
-        <div className="p-4 rounded-xl bg-gaming-greenBg border border-gaming-green/30 text-gaming-green flex items-center gap-3 animate-in fade-in">
-          <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+        <div className="p-4 rounded-xl bg-[#F0FDF4] border border-green-200 text-[#16A34A] flex items-center gap-3 animate-in fade-in">
+          <CheckCircle2 className="w-5 h-5 shrink-0 text-[#16A34A]" />
           <span className="text-sm font-bold">{successMessage}</span>
         </div>
       )}
 
       {catalogFeedback && (
-        <div className="p-4 rounded-xl bg-gaming-greenBg border border-gaming-green/30 text-gaming-green flex items-center gap-3 animate-in fade-in">
-          <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+        <div className="p-4 rounded-xl bg-[#F0FDF4] border border-green-200 text-[#16A34A] flex items-center gap-3 animate-in fade-in">
+          <CheckCircle2 className="w-5 h-5 shrink-0 text-[#16A34A]" />
           <span className="text-sm font-bold">{catalogFeedback}</span>
         </div>
       )}
@@ -252,16 +256,16 @@ export default function Sales() {
       {/* TAB 1: PRODUCT SALES FORM */}
       {activeTab === 'sales' && (
         <>
-          <div className="bg-midnight-card rounded-2xl p-6 shadow-xl border border-midnight-border">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#E7E5E4]">
             <form onSubmit={handleSubmitSale} className="space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-midnight-border">
+              <div className="flex items-center justify-between pb-4 border-b border-[#E7E5E4]">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-brand-purple/20 text-brand-purpleLight border border-brand-purple/30 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-[#F0FDFA] text-[#0D9488] border border-[#CCFBF1] flex items-center justify-center">
                     <ShoppingBag className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-bold text-white">{t('sales.newSaleTitle')}</h2>
-                    <p className="text-xs text-slate-400">
+                    <h2 className="text-lg font-bold text-[#292524]">{t('sales.newSaleTitle')}</h2>
+                    <p className="text-xs text-[#78716C]">
                       {t('sales.enterManuallyHint')}
                     </p>
                   </div>
@@ -271,7 +275,7 @@ export default function Sales() {
                   <button
                     type="button"
                     onClick={() => setActiveTab('catalog')}
-                    className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-brand-purpleLight hover:text-white transition"
+                    className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-[#0D9488] hover:text-[#0F766E] transition cursor-pointer"
                   >
                     <Package className="w-3.5 h-3.5" />
                     <span>{t('catalog.addNewTitle')} →</span>
@@ -282,12 +286,12 @@ export default function Sales() {
               {/* Customer Name & Destination */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wide mb-1.5">
+                  <label className="block text-xs font-bold text-[#78716C] uppercase tracking-wide mb-1.5">
                     {t('sales.customerName')}{' '}
-                    <span className="text-slate-400 font-normal">{t('sessionModal.optional')}</span>
+                    <span className="text-[#A8A29E] font-normal">{t('sessionModal.optional')}</span>
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3.5 top-3 text-slate-400">
+                    <span className="absolute left-3.5 top-3 text-[#A8A29E]">
                       <User className="w-4 h-4" />
                     </span>
                     <input
@@ -295,23 +299,23 @@ export default function Sales() {
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
                       placeholder="e.g. Alex, Jasur"
-                      className="w-full pl-10 pr-4 py-2.5 bg-midnight-bg border border-midnight-border rounded-xl text-sm font-medium text-white focus:outline-none focus:ring-1 focus:ring-brand-purple transition"
+                      className="w-full pl-10 pr-4 py-2.5 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-sm font-semibold text-[#292524] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wide mb-1.5">
+                  <label className="block text-xs font-bold text-[#78716C] uppercase tracking-wide mb-1.5">
                     {t('sales.saleDestination')}
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3.5 top-3 text-slate-400">
+                    <span className="absolute left-3.5 top-3 text-[#A8A29E]">
                       <Tv className="w-4 h-4" />
                     </span>
                     <select
                       value={selectedStationTarget}
                       onChange={(e) => setSelectedStationTarget(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2.5 bg-midnight-bg border border-midnight-border rounded-xl text-sm font-semibold text-white focus:outline-none focus:ring-1 focus:ring-brand-purple transition"
+                      className="w-full pl-10 pr-4 py-2.5 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-sm font-semibold text-[#292524] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition cursor-pointer"
                     >
                       <option value="direct">{t('sales.counterDirectSale')}</option>
                       {rooms.map((r) => (
@@ -330,7 +334,7 @@ export default function Sales() {
 
               {/* Products Table with Quick Catalog Chips */}
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wide mb-2">
+                <label className="block text-xs font-bold text-[#78716C] uppercase tracking-wide mb-2">
                   {t('sales.productsSold')}
                 </label>
                 <ProductInputTable
@@ -341,26 +345,26 @@ export default function Sales() {
               </div>
 
               {/* Totals & Submit */}
-              <div className="p-4 rounded-xl bg-midnight-bg border border-midnight-border text-white flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="p-4 rounded-xl bg-[#F0FDFA] border border-[#99F6E4]/80 text-[#292524] flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-6 text-sm">
                   <div>
-                    <span className="text-[11px] text-slate-400 block uppercase font-bold">{t('sales.totalCost')}</span>
-                    <span className="font-bold text-white text-base">{formatCurrency(totals.totalCost, currency)}</span>
+                    <span className="text-[11px] text-[#78716C] block uppercase font-bold">{t('sales.totalCost')}</span>
+                    <span className="font-bold text-[#292524] text-base">{formatCurrency(totals.totalCost, currency)}</span>
                   </div>
                   <div>
-                    <span className="text-[11px] text-slate-400 block uppercase font-bold">{t('sales.totalRevenue')}</span>
-                    <span className="font-bold text-brand-lavender text-lg">{formatCurrency(totals.totalRevenue, currency)}</span>
+                    <span className="text-[11px] text-[#0D9488] block uppercase font-bold">{t('sales.totalRevenue')}</span>
+                    <span className="font-extrabold text-[#0D9488] text-lg">{formatCurrency(totals.totalRevenue, currency)}</span>
                   </div>
                   <div>
-                    <span className="text-[11px] text-slate-400 block uppercase font-bold">{t('sales.netProfit')}</span>
-                    <span className="font-black text-gaming-green text-lg">{formatCurrency(totals.totalProfit, currency)}</span>
+                    <span className="text-[11px] text-[#16A34A] block uppercase font-bold">{t('sales.netProfit')}</span>
+                    <span className="font-black text-[#16A34A] text-lg">{formatCurrency(totals.totalProfit, currency)}</span>
                   </div>
                 </div>
 
                 <button
                   type="submit"
                   disabled={validProducts.length === 0}
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-brand-purple hover:bg-brand-purpleHover disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-black text-sm shadow-lg shadow-brand-purple/30 flex items-center justify-center gap-2 transition cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#0D9488] hover:bg-[#0F766E] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2 transition cursor-pointer"
                 >
                   <CheckCircle2 className="w-5 h-5" />
                   {t('sales.recordSaleBtn')}
@@ -371,15 +375,15 @@ export default function Sales() {
 
           {/* Recent Product Sales History */}
           {recentProductSales.length > 0 && (
-            <div className="bg-midnight-card rounded-2xl p-6 shadow-xl border border-midnight-border">
-              <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-                <Receipt className="w-5 h-5 text-brand-purpleLight" />
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#E7E5E4]">
+              <h3 className="text-base font-bold text-[#292524] mb-4 flex items-center gap-2">
+                <Receipt className="w-5 h-5 text-[#0D9488]" />
                 {t('sales.recentProductSales')}
               </h3>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-midnight-bg text-slate-400 uppercase tracking-wider text-[10px] font-bold border-b border-midnight-border">
+                  <thead className="bg-[#F5F5F4] text-[#78716C] uppercase tracking-wider text-[10px] font-bold border-b border-[#E7E5E4]">
                     <tr>
                       <th className="py-2.5 px-3">{t('sales.dateTime')}</th>
                       <th className="py-2.5 px-3">{t('sales.destination')}</th>
@@ -389,28 +393,28 @@ export default function Sales() {
                       <th className="py-2.5 px-3 text-right">{t('sales.profit')}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-midnight-border text-slate-300">
+                  <tbody className="divide-y divide-[#E7E5E4] text-[#292524]">
                     {recentProductSales.map((tx) => (
-                      <tr key={tx.id} className="hover:bg-midnight-bg/60 transition">
-                        <td className="py-2.5 px-3 font-medium text-white">
+                      <tr key={tx.id} className="hover:bg-[#F5F5F4]/60 transition">
+                        <td className="py-2.5 px-3 font-semibold text-[#292524]">
                           {tx.dateStr} • {tx.timeStr}
                         </td>
                         <td className="py-2.5 px-3">
-                          <span className="font-semibold text-white">{tx.roomName}</span>
+                          <span className="font-bold text-[#292524]">{tx.roomName}</span>
                           {tx.stationName && tx.stationName !== '-' && (
-                            <span className="text-slate-400"> ({tx.stationName})</span>
+                            <span className="text-[#78716C]"> ({tx.stationName})</span>
                           )}
                         </td>
-                        <td className="py-2.5 px-3 text-slate-400">
+                        <td className="py-2.5 px-3 text-[#78716C]">
                           {tx.products.map((p) => `${p.quantity}x ${p.name}`).join(', ')}
                         </td>
-                        <td className="py-2.5 px-3 text-right font-bold text-white">
+                        <td className="py-2.5 px-3 text-right font-bold text-[#292524]">
                           {formatCurrency(tx.productRevenue, currency)}
                         </td>
-                        <td className="py-2.5 px-3 text-right text-slate-400">
+                        <td className="py-2.5 px-3 text-right text-[#78716C]">
                           {formatCurrency(tx.productCost, currency)}
                         </td>
-                        <td className="py-2.5 px-3 text-right font-extrabold text-gaming-green">
+                        <td className="py-2.5 px-3 text-right font-extrabold text-[#16A34A]">
                           {formatCurrency(tx.productProfit, currency)}
                         </td>
                       </tr>
@@ -427,21 +431,21 @@ export default function Sales() {
       {isAdmin && activeTab === 'catalog' && (
         <div className="space-y-6">
           {/* Add New Product Card */}
-          <div className="bg-midnight-card rounded-2xl p-6 shadow-xl border border-midnight-border">
-            <div className="flex items-center gap-3 pb-4 border-b border-midnight-border">
-              <div className="w-10 h-10 rounded-xl bg-brand-purple/20 text-brand-purpleLight border border-brand-purple/30 flex items-center justify-center">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#E7E5E4]">
+            <div className="flex items-center gap-3 pb-4 border-b border-[#E7E5E4]">
+              <div className="w-10 h-10 rounded-xl bg-[#F0FDFA] text-[#0D9488] border border-[#CCFBF1] flex items-center justify-center">
                 <Plus className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-white">{t('catalog.addNewTitle')}</h2>
-                <p className="text-xs text-slate-400">{t('catalog.subtitle')}</p>
+                <h2 className="text-lg font-bold text-[#292524]">{t('catalog.addNewTitle')}</h2>
+                <p className="text-xs text-[#78716C]">{t('catalog.subtitle')}</p>
               </div>
             </div>
 
             <form onSubmit={handleAddCatalogItem} className="mt-5 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wide mb-1.5">
+                  <label className="block text-xs font-bold text-[#78716C] uppercase tracking-wide mb-1.5">
                     {t('catalog.name')} *
                   </label>
                   <input
@@ -449,13 +453,13 @@ export default function Sales() {
                     value={newCatName}
                     onChange={(e) => setNewCatName(e.target.value)}
                     placeholder={t('catalog.namePlaceholder')}
-                    className="w-full px-3.5 py-2.5 bg-midnight-bg border border-midnight-border rounded-xl text-sm font-semibold text-white focus:outline-none focus:ring-1 focus:ring-brand-purple transition"
+                    className="w-full px-3.5 py-2.5 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-sm font-semibold text-[#292524] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wide mb-1.5">
+                  <label className="block text-xs font-bold text-[#78716C] uppercase tracking-wide mb-1.5">
                     {t('catalog.cost')} ({currency})
                   </label>
                   <input
@@ -465,12 +469,12 @@ export default function Sales() {
                     value={newCatCost}
                     onChange={(e) => setNewCatCost(e.target.value)}
                     placeholder="0"
-                    className="w-full px-3.5 py-2.5 bg-midnight-bg border border-midnight-border rounded-xl text-sm font-semibold text-white focus:outline-none focus:ring-1 focus:ring-brand-purple transition"
+                    className="w-full px-3.5 py-2.5 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-sm font-semibold text-[#292524] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wide mb-1.5">
+                  <label className="block text-xs font-bold text-[#78716C] uppercase tracking-wide mb-1.5">
                     {t('catalog.sell')} ({currency}) *
                   </label>
                   <input
@@ -480,21 +484,21 @@ export default function Sales() {
                     value={newCatSell}
                     onChange={(e) => setNewCatSell(e.target.value)}
                     placeholder="0"
-                    className="w-full px-3.5 py-2.5 bg-midnight-bg border border-midnight-border rounded-xl text-sm font-semibold text-white focus:outline-none focus:ring-1 focus:ring-brand-purple transition"
+                    className="w-full px-3.5 py-2.5 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-sm font-semibold text-[#292524] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
                     required
                   />
                 </div>
               </div>
 
               {/* Profit preview & Submit button */}
-              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 bg-midnight-bg/60 p-3.5 rounded-xl border border-midnight-border">
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#F5F5F4] p-3.5 rounded-xl border border-[#E7E5E4]">
                 <div className="flex items-center gap-4 text-xs">
-                  <span className="text-slate-400 font-bold">{t('catalog.margin')}:</span>
-                  <span className="text-sm font-extrabold text-gaming-green">
+                  <span className="text-[#78716C] font-bold">{t('catalog.margin')}:</span>
+                  <span className="text-sm font-extrabold text-[#16A34A]">
                     +{formatCurrency(potentialUnitProfit, currency)}
                   </span>
                   {Number(newCatSell) > 0 && (
-                    <span className="text-[11px] text-brand-lavender font-semibold">
+                    <span className="text-[11px] text-[#0D9488] font-bold">
                       ({Math.round((potentialUnitProfit / Number(newCatSell)) * 100)}% marja)
                     </span>
                   )}
@@ -503,7 +507,7 @@ export default function Sales() {
                 <button
                   type="submit"
                   disabled={!newCatName.trim() || !newCatSell}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-brand-purple hover:bg-brand-purpleHover disabled:opacity-50 text-slate-950 font-black text-xs shadow-md shadow-brand-purple/30 flex items-center justify-center gap-2 transition cursor-pointer"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#0D9488] hover:bg-[#0F766E] disabled:opacity-50 text-white font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   {t('catalog.addButton')}
@@ -513,15 +517,15 @@ export default function Sales() {
           </div>
 
           {/* List of Products in Catalog ("Nimalar bor") */}
-          <div className="bg-midnight-card rounded-2xl p-6 shadow-xl border border-midnight-border">
-            <div className="flex items-center justify-between pb-4 border-b border-midnight-border">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#E7E5E4]">
+            <div className="flex items-center justify-between pb-4 border-b border-[#E7E5E4]">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-brand-purple/20 text-brand-purpleLight border border-brand-purple/30 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-[#F0FDFA] text-[#0D9488] border border-[#CCFBF1] flex items-center justify-center">
                   <Package className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white">{t('catalog.listTitle')}</h3>
-                  <p className="text-xs text-slate-400">
+                  <h3 className="text-lg font-bold text-[#292524]">{t('catalog.listTitle')}</h3>
+                  <p className="text-xs text-[#78716C]">
                     {t('catalog.totalItems', { count: productsCatalog.length })}
                   </p>
                 </div>
@@ -529,8 +533,8 @@ export default function Sales() {
             </div>
 
             {productsCatalog.length === 0 ? (
-              <div className="text-center py-10 text-slate-400 text-sm">
-                <Package className="w-10 h-10 mx-auto text-slate-600 mb-2" />
+              <div className="text-center py-10 text-[#78716C] text-sm">
+                <Package className="w-10 h-10 mx-auto text-[#A8A29E] mb-2" />
                 <p>{t('catalog.empty')}</p>
               </div>
             ) : (
@@ -543,43 +547,43 @@ export default function Sales() {
                   return (
                     <div
                       key={item.id}
-                      className="p-4 rounded-xl bg-midnight-bg border border-midnight-border hover:border-brand-purple/40 transition flex flex-col justify-between"
+                      className="p-4 rounded-xl bg-[#F5F5F4] border border-[#E7E5E4] hover:border-[#0D9488]/40 transition flex flex-col justify-between"
                     >
                       <div>
                         <div className="flex items-start justify-between gap-2 mb-2">
-                          <h4 className="font-extrabold text-base text-white">{item.name}</h4>
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-gaming-greenBg text-gaming-green border border-gaming-green/30">
+                          <h4 className="font-extrabold text-base text-[#292524]">{item.name}</h4>
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#F0FDF4] text-[#16A34A] border border-green-200">
                             +{marginPct}%
                           </span>
                         </div>
 
-                        <div className="space-y-1 text-xs text-slate-400">
+                        <div className="space-y-1 text-xs text-[#78716C]">
                           <div className="flex justify-between">
                             <span>{t('catalog.cost')}:</span>
-                            <span className="font-semibold text-slate-300">
+                            <span className="font-semibold text-[#292524]">
                               {formatCurrency(item.purchasePrice, currency)}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span>{t('catalog.sell')}:</span>
-                            <span className="font-bold text-brand-lavender text-sm">
+                            <span className="font-bold text-[#0D9488] text-sm">
                               {formatCurrency(item.sellingPrice, currency)}
                             </span>
                           </div>
-                          <div className="flex justify-between pt-1 border-t border-midnight-border/60">
+                          <div className="flex justify-between pt-1 border-t border-[#E7E5E4]">
                             <span>{t('catalog.margin')}:</span>
-                            <span className="font-extrabold text-gaming-green">
+                            <span className="font-extrabold text-[#16A34A]">
                               +{formatCurrency(profit, currency)}
                             </span>
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 pt-4 mt-3 border-t border-midnight-border/80">
+                      <div className="flex items-center gap-2 pt-4 mt-3 border-t border-[#E7E5E4]">
                         <button
                           type="button"
                           onClick={() => handleSellCatalogItem(item)}
-                          className="flex-1 py-1.5 px-3 rounded-lg bg-brand-purple/20 hover:bg-brand-purple text-brand-purpleLight hover:text-white border border-brand-purple/40 font-bold text-xs flex items-center justify-center gap-1.5 transition"
+                          className="flex-1 py-1.5 px-3 rounded-lg bg-[#F0FDFA] hover:bg-[#0D9488] text-[#0D9488] hover:text-white border border-[#99F6E4] font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
                         >
                           <ShoppingBag className="w-3.5 h-3.5" />
                           <span>{t('catalog.sellThis')}</span>
@@ -587,7 +591,7 @@ export default function Sales() {
                         <button
                           type="button"
                           onClick={() => handleDeleteCatalogItem(item.id, item.name)}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-gaming-red hover:bg-gaming-redBg/40 border border-transparent hover:border-gaming-red/30 transition"
+                          className="p-1.5 rounded-lg text-[#78716C] hover:text-[#DC2626] hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer"
                           title={t('common.delete') || 'Delete'}
                         >
                           <Trash2 className="w-4 h-4" />

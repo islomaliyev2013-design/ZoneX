@@ -4,22 +4,22 @@
 
 @layer base {
   body {
-    @apply bg-[#090D14] text-[#F8FAFC] min-h-screen font-sans;
+    @apply bg-[#F5F5F4] text-[#292524] min-h-screen font-sans antialiased;
   }
 }
 
-/* Custom scrollbars - Obsidian & Electric Cyan */
+/* Custom scrollbars - Warm Gray & Teal */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0D131D;
+  background: #F5F5F4;
 }
 ::-webkit-scrollbar-thumb {
-  background: #253449;
+  background: #D6D3D1;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #06B6D4;
+  background: #0D9488;
 }

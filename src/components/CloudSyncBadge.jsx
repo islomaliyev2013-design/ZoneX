@@ -80,23 +80,23 @@ export default function CloudSyncBadge() {
       return {
         label: t('cloud.statusConnected'),
         icon: Cloud,
-        badgeClass: 'bg-emerald-950/40 text-gaming-green border-emerald-800/60 hover:bg-emerald-900/40',
-        dotClass: 'bg-gaming-green',
+        badgeClass: 'bg-[#F0FDF4] text-[#16A34A] border-green-200 hover:bg-green-100',
+        dotClass: 'bg-[#16A34A]',
       };
     }
     if (cloudStatus === 'not_ready') {
       return {
         label: t('cloud.statusNotReady'),
         icon: Database,
-        badgeClass: 'bg-amber-950/40 text-amber-300 border-amber-800/60 hover:bg-amber-900/40',
-        dotClass: 'bg-amber-400 animate-pulse',
+        badgeClass: 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100',
+        dotClass: 'bg-amber-500 animate-pulse',
       };
     }
     return {
       label: t('cloud.statusOffline'),
       icon: CloudOff,
-      badgeClass: 'bg-midnight-card text-slate-400 border-midnight-border hover:bg-midnight-hover',
-      dotClass: 'bg-slate-500',
+      badgeClass: 'bg-[#F5F5F4] text-[#78716C] border-[#E7E5E4] hover:bg-[#E7E5E4]',
+      dotClass: 'bg-[#A8A29E]',
     };
   };
 
@@ -108,7 +108,7 @@ export default function CloudSyncBadge() {
       <button
         type="button"
         onClick={() => setShowModal(true)}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition ${currentBadge.badgeClass}`}
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition cursor-pointer ${currentBadge.badgeClass}`}
         title={`Supabase: ${cloudMessage || cloudStatus}`}
       >
         <span className={`w-2 h-2 rounded-full ${currentBadge.dotClass}`} />
@@ -118,30 +118,30 @@ export default function CloudSyncBadge() {
 
       {/* Cloud Info & SQL Setup Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="bg-midnight-card rounded-2xl w-full max-w-xl text-white shadow-2xl p-6 my-8 border border-midnight-border animate-in fade-in zoom-in-95">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/60 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl w-full max-w-xl text-[#292524] shadow-2xl p-6 my-8 border border-[#E7E5E4] animate-in fade-in zoom-in-95">
             {/* Header */}
-            <div className="flex items-start justify-between pb-3 border-b border-midnight-border">
+            <div className="flex items-start justify-between pb-3 border-b border-[#E7E5E4]">
               <div className="flex items-center gap-3">
                 <div
                   className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold ${
                     cloudStatus === 'connected'
-                      ? 'bg-gaming-greenBg text-gaming-green border border-gaming-green/30'
-                      : 'bg-brand-purple/20 text-brand-purpleLight border border-brand-purple/30'
+                      ? 'bg-[#F0FDF4] text-[#16A34A] border border-green-200'
+                      : 'bg-[#F0FDFA] text-[#0D9488] border border-[#CCFBF1]'
                   }`}
                 >
                   <Database className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white">
+                  <h3 className="text-lg font-bold text-[#292524]">
                     {t('cloud.modalTitle')}
                   </h3>
-                  <p className="text-xs text-slate-400 font-mono">{SUPABASE_URL}</p>
+                  <p className="text-xs text-[#78716C] font-mono">{SUPABASE_URL}</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-midnight-hover transition"
+                className="p-1.5 rounded-lg text-[#78716C] hover:text-[#292524] hover:bg-[#F5F5F4] transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -150,19 +150,19 @@ export default function CloudSyncBadge() {
             {/* Content */}
             <div className="mt-4 space-y-4">
               {cloudStatus === 'connected' ? (
-                <div className="p-4 rounded-xl bg-gaming-greenBg border border-gaming-green/30 text-emerald-300 text-xs flex items-center gap-3">
-                  <CheckCircle2 className="w-6 h-6 text-gaming-green flex-shrink-0" />
+                <div className="p-4 rounded-xl bg-[#F0FDF4] border border-green-200 text-[#16A34A] text-xs flex items-center gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-[#16A34A] flex-shrink-0" />
                   <p className="font-medium leading-relaxed">
                     {t('cloud.connectedDesc')}
                   </p>
                 </div>
               ) : (
-                <div className="p-3.5 rounded-xl bg-amber-950/40 border border-amber-700/50 text-amber-200 text-xs">
+                <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs">
                   <div className="flex items-center gap-2 font-bold mb-1">
-                    <AlertCircle className="w-4 h-4 text-amber-400" />
+                    <AlertCircle className="w-4 h-4 text-amber-600" />
                     <span>Supabase Connected — Database Tables Needed</span>
                   </div>
-                  <p className="text-amber-300/80 text-[11px] leading-relaxed">
+                  <p className="text-amber-700 text-[11px] leading-relaxed">
                     {t('cloud.modalSubtitle')}
                   </p>
                 </div>
@@ -171,20 +171,20 @@ export default function CloudSyncBadge() {
               {/* SQL Code Box */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs font-bold text-slate-300 uppercase tracking-wide">
+                  <span className="text-xs font-bold text-[#78716C] uppercase tracking-wide">
                     SQL Schema Script (supabase-schema.sql)
                   </span>
                   <button
                     type="button"
                     onClick={handleCopy}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-brand-purple/20 hover:bg-brand-purple text-brand-purpleLight hover:text-white text-xs font-bold transition border border-brand-purple/30"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#F0FDFA] hover:bg-[#0D9488] text-[#0D9488] hover:text-white text-xs font-bold transition border border-[#99F6E4] cursor-pointer"
                   >
-                    {copied ? <Check className="w-3.5 h-3.5 text-gaming-green" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copied ? <Check className="w-3.5 h-3.5 text-[#16A34A]" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copied ? t('cloud.copied') : t('cloud.copySql')}</span>
                   </button>
                 </div>
 
-                <div className="p-3 rounded-xl bg-midnight-bg text-slate-300 font-mono text-[11px] max-h-56 overflow-y-auto border border-midnight-border">
+                <div className="p-3 rounded-xl bg-[#F5F5F4] text-[#292524] font-mono text-[11px] max-h-56 overflow-y-auto border border-[#E7E5E4]">
                   <pre className="whitespace-pre-wrap">{SQL_SCHEMA_SCRIPT}</pre>
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default function CloudSyncBadge() {
                   href="https://supabase.com/dashboard/project/tqgcepxnarfgmgnryojc/sql/new"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex-1 py-2.5 px-4 rounded-xl bg-brand-purple hover:bg-brand-purpleHover text-white font-bold text-xs shadow-md shadow-brand-purple/30 flex items-center justify-center gap-2 transition"
+                  className="flex-1 py-2.5 px-4 rounded-xl bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition"
                 >
                   <ExternalLink className="w-4 h-4" />
                   {t('cloud.openSupabase')}
@@ -203,7 +203,7 @@ export default function CloudSyncBadge() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="py-2.5 px-5 rounded-xl border border-midnight-border text-slate-300 hover:bg-midnight-hover font-semibold text-xs transition"
+                  className="py-2.5 px-5 rounded-xl border border-[#E7E5E4] text-[#78716C] hover:bg-[#F5F5F4] hover:text-[#292524] font-semibold text-xs transition cursor-pointer"
                 >
                   {t('common.cancel')}
                 </button>

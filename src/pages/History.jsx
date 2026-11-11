@@ -63,30 +63,30 @@ export default function History() {
     <div className="space-y-6 pb-12">
       {/* Title Header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#292524] tracking-tight">
           {t('history.title')}
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">
+        <p className="text-xs sm:text-sm text-[#78716C] mt-1">
           {t('history.subtitle')}
         </p>
       </div>
 
       {/* Filter and Date Bar Card */}
-      <div className="bg-midnight-card rounded-2xl p-5 shadow-xl border border-midnight-border flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl p-5 shadow-sm border border-[#E7E5E4] flex flex-col md:flex-row items-center justify-between gap-4">
         
         {/* Date Filters */}
         <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1.5 mr-1">
-            <Calendar className="w-3.5 h-3.5 text-brand-purpleLight" /> {t('history.dateLabel')}
+          <span className="text-xs font-bold text-[#78716C] uppercase tracking-wide flex items-center gap-1.5 mr-1">
+            <Calendar className="w-3.5 h-3.5 text-[#0D9488]" /> {t('history.dateLabel')}
           </span>
 
           <button
             type="button"
             onClick={() => setDateFilterMode('all')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
               dateFilterMode === 'all'
-                ? 'bg-brand-purple text-slate-950 font-black shadow-sm'
-                : 'bg-midnight-bg text-slate-300 hover:bg-midnight-hover border border-midnight-border'
+                ? 'bg-[#0D9488] text-white shadow-xs'
+                : 'bg-[#F5F5F4] text-[#78716C] hover:text-[#292524] border border-[#E7E5E4]'
             }`}
           >
             {t('history.allDates', { count: transactions.length })}
@@ -95,10 +95,10 @@ export default function History() {
           <button
             type="button"
             onClick={() => setDateFilterMode('today')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
               dateFilterMode === 'today'
-                ? 'bg-brand-purple text-slate-950 font-black shadow-sm'
-                : 'bg-midnight-bg text-slate-300 hover:bg-midnight-hover border border-midnight-border'
+                ? 'bg-[#0D9488] text-white shadow-xs'
+                : 'bg-[#F5F5F4] text-[#78716C] hover:text-[#292524] border border-[#E7E5E4]'
             }`}
           >
             {t('history.today')}
@@ -107,10 +107,10 @@ export default function History() {
           <button
             type="button"
             onClick={() => setDateFilterMode('yesterday')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
               dateFilterMode === 'yesterday'
-                ? 'bg-brand-purple text-slate-950 font-black shadow-sm'
-                : 'bg-midnight-bg text-slate-300 hover:bg-midnight-hover border border-midnight-border'
+                ? 'bg-[#0D9488] text-white shadow-xs'
+                : 'bg-[#F5F5F4] text-[#78716C] hover:text-[#292524] border border-[#E7E5E4]'
             }`}
           >
             {t('history.yesterday')}
@@ -125,10 +125,10 @@ export default function History() {
                 setCustomDate(e.target.value);
                 setDateFilterMode('custom');
               }}
-              className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition focus:outline-none ${
+              className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition focus:outline-none cursor-pointer ${
                 dateFilterMode === 'custom'
-                  ? 'border-brand-purple bg-brand-purple/15 text-white ring-1 ring-brand-purple'
-                  : 'border-midnight-border bg-midnight-bg text-slate-300 hover:border-brand-purple/40'
+                  ? 'border-[#0D9488] bg-[#F0FDFA] text-[#0D9488] ring-1 ring-[#0D9488]'
+                  : 'border-[#E7E5E4] bg-[#F5F5F4] text-[#292524] hover:border-[#0D9488]/40'
               }`}
             />
           </div>
@@ -136,13 +136,13 @@ export default function History() {
 
         {/* Search Input */}
         <div className="w-full md:w-64 relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+          <Search className="w-4 h-4 text-[#A8A29E] absolute left-3 top-2.5" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder={t('history.searchPlaceholder')}
-            className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-midnight-border text-xs font-medium text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-purple bg-midnight-bg"
+            className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#E7E5E4] text-xs font-medium text-[#292524] placeholder-[#A8A29E] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] bg-[#F5F5F4] transition"
           />
         </div>
 
@@ -150,44 +150,44 @@ export default function History() {
 
       {/* Summary of Filtered Results */}
       {filteredTransactions.length > 0 && (
-        <div className="bg-midnight-card text-white rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 border border-midnight-border shadow-lg">
+        <div className="bg-white text-[#292524] rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 border border-[#E7E5E4] shadow-sm">
           <div className="flex items-center gap-2">
-            <Receipt className="w-5 h-5 text-brand-purpleLight" />
-            <span className="text-sm font-bold">
+            <Receipt className="w-5 h-5 text-[#0D9488]" />
+            <span className="text-sm font-bold text-[#292524]">
               {t('history.showingRecords', { count: filteredTransactions.length })}
             </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-6 text-xs sm:text-sm">
             <div>
-              <span className="text-slate-400 block text-[10px] uppercase font-bold">
+              <span className="text-[#78716C] block text-[10px] uppercase font-bold">
                 {t('history.gamingIncome')}
               </span>
-              <span className="font-extrabold text-white">
+              <span className="font-extrabold text-[#292524]">
                 {formatCurrency(summary.totalGamingIncome, currency)}
               </span>
             </div>
             <div>
-              <span className="text-slate-400 block text-[10px] uppercase font-bold">
+              <span className="text-[#0D9488] block text-[10px] uppercase font-bold">
                 {t('history.productSales')}
               </span>
-              <span className="font-extrabold text-brand-lavender">
+              <span className="font-extrabold text-[#0D9488]">
                 {formatCurrency(summary.totalProductRevenue, currency)}
               </span>
             </div>
             <div>
-              <span className="text-slate-400 block text-[10px] uppercase font-bold">
+              <span className="text-[#78716C] block text-[10px] uppercase font-bold">
                 {t('history.productCosts')}
               </span>
-              <span className="font-extrabold text-slate-300">
+              <span className="font-extrabold text-[#78716C]">
                 {formatCurrency(summary.totalProductCosts, currency)}
               </span>
             </div>
             <div>
-              <span className="text-gaming-green block text-[10px] uppercase font-bold">
+              <span className="text-[#16A34A] block text-[10px] uppercase font-bold">
                 {t('history.totalNetProfit')}
               </span>
-              <span className="font-black text-gaming-green text-base">
+              <span className="font-black text-[#16A34A] text-base">
                 {formatCurrency(summary.totalProfit, currency)}
               </span>
             </div>
@@ -196,16 +196,16 @@ export default function History() {
       )}
 
       {/* Transactions Table Card */}
-      <div className="bg-midnight-card rounded-2xl p-6 shadow-xl border border-midnight-border overflow-hidden">
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#E7E5E4] overflow-hidden">
         {filteredTransactions.length === 0 ? (
           <div className="py-16 text-center max-w-sm mx-auto">
-            <div className="w-14 h-14 rounded-2xl bg-midnight-bg border border-midnight-border text-slate-400 flex items-center justify-center mx-auto mb-4">
+            <div className="w-14 h-14 rounded-2xl bg-[#F5F5F4] border border-[#E7E5E4] text-[#A8A29E] flex items-center justify-center mx-auto mb-4">
               <HistoryIcon className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-bold text-white mb-1">
+            <h3 className="text-base font-bold text-[#292524] mb-1">
               {t('history.noTransactionsTitle')}
             </h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-[#78716C] leading-relaxed">
               {transactions.length === 0
                 ? t('history.noTransactionsFresh')
                 : t('history.noTransactionsFilter')}
@@ -214,7 +214,7 @@ export default function History() {
         ) : (
           <div className="overflow-x-auto -mx-6">
             <table className="w-full text-left text-xs">
-              <thead className="bg-midnight-bg text-slate-400 uppercase tracking-wider text-[11px] font-bold border-y border-midnight-border">
+              <thead className="bg-[#F5F5F4] text-[#78716C] uppercase tracking-wider text-[11px] font-bold border-y border-[#E7E5E4]">
                 <tr>
                   <th className="py-3 px-4">{t('history.dateTimeCol')}</th>
                   <th className="py-3 px-3">{t('history.roomCol')}</th>
@@ -228,7 +228,7 @@ export default function History() {
                   <th className="py-3 px-3 text-center">{t('history.receiptCol')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-midnight-border text-slate-300">
+              <tbody className="divide-y divide-[#E7E5E4] text-[#292524]">
                 {filteredTransactions.map((tx) => {
                   const isExpanded = expandedTxId === tx.id;
                   const hasProducts = tx.products && tx.products.length > 0;
@@ -245,64 +245,64 @@ export default function History() {
 
                   return (
                     <React.Fragment key={tx.id}>
-                      <tr className="hover:bg-midnight-bg/60 transition">
+                      <tr className="hover:bg-[#F5F5F4]/60 transition">
                         {/* Date & Time */}
-                        <td className="py-3 px-4 font-semibold text-white whitespace-nowrap">
+                        <td className="py-3 px-4 font-semibold text-[#292524] whitespace-nowrap">
                           <div>{formatDateDisplay(tx.createdAt || tx.dateStr)}</div>
-                          <div className="text-[10px] text-slate-400 font-normal">{tx.timeStr}</div>
+                          <div className="text-[10px] text-[#78716C] font-normal">{tx.timeStr}</div>
                         </td>
 
                         {/* Room */}
-                        <td className="py-3 px-3 font-semibold whitespace-nowrap text-white">
+                        <td className="py-3 px-3 font-bold whitespace-nowrap text-[#292524]">
                           {localizedRoom}
                         </td>
 
                         {/* PlayStation Station */}
                         <td className="py-3 px-3 whitespace-nowrap">
                           {localizedStation !== '—' ? (
-                            <span className="font-bold text-brand-purpleLight bg-brand-purple/15 border border-brand-purple/30 px-2 py-0.5 rounded">
+                            <span className="font-bold text-[#0D9488] bg-[#F0FDFA] border border-[#CCFBF1] px-2 py-0.5 rounded">
                               {localizedStation}
                             </span>
                           ) : (
-                            <span className="text-slate-500">—</span>
+                            <span className="text-[#A8A29E]">—</span>
                           )}
                         </td>
 
                         {/* Gaming Duration */}
                         <td className="py-3 px-3 whitespace-nowrap">
                           {tx.durationMs && tx.durationMs > 0 ? (
-                            <span className="font-medium text-slate-300">
+                            <span className="font-medium text-[#292524]">
                               {formatDurationHuman(tx.durationMs)}
                             </span>
                           ) : (
-                            <span className="text-slate-500">—</span>
+                            <span className="text-[#A8A29E]">—</span>
                           )}
                         </td>
 
                         {/* Gaming Payment */}
-                        <td className="py-3 px-3 text-right font-bold text-white whitespace-nowrap">
+                        <td className="py-3 px-3 text-right font-bold text-[#292524] whitespace-nowrap">
                           {formatCurrency(tx.gamingPayment, currency)}
                         </td>
 
                         {/* Products Sold & Quantities */}
                         <td className="py-3 px-4 max-w-xs truncate" title={productsSummary}>
-                          <span className={hasProducts ? 'font-medium text-slate-200' : 'text-slate-500'}>
+                          <span className={hasProducts ? 'font-medium text-[#292524]' : 'text-[#A8A29E]'}>
                             {productsSummary}
                           </span>
                         </td>
 
                         {/* Product Revenue */}
-                        <td className="py-3 px-3 text-right font-medium text-brand-lavender whitespace-nowrap">
+                        <td className="py-3 px-3 text-right font-semibold text-[#0D9488] whitespace-nowrap">
                           {formatCurrency(tx.productRevenue, currency)}
                         </td>
 
                         {/* Product Costs */}
-                        <td className="py-3 px-3 text-right text-slate-400 whitespace-nowrap">
+                        <td className="py-3 px-3 text-right text-[#78716C] whitespace-nowrap">
                           {formatCurrency(tx.productCost, currency)}
                         </td>
 
                         {/* Total Profit */}
-                        <td className="py-3 px-4 text-right font-extrabold text-gaming-green whitespace-nowrap">
+                        <td className="py-3 px-4 text-right font-black text-[#16A34A] whitespace-nowrap">
                           {formatCurrency(tx.totalProfit, currency)}
                         </td>
 
@@ -311,7 +311,7 @@ export default function History() {
                           <button
                             type="button"
                             onClick={() => toggleExpand(tx.id)}
-                            className="p-1 rounded text-slate-400 hover:text-brand-purpleLight hover:bg-midnight-bg transition"
+                            className="p-1 rounded text-[#78716C] hover:text-[#0D9488] hover:bg-[#F5F5F4] transition cursor-pointer"
                             title={t('history.receiptCol')}
                           >
                             {isExpanded ? (
@@ -325,11 +325,11 @@ export default function History() {
 
                       {/* Expanded Receipt Breakdown Row */}
                       {isExpanded && (
-                        <tr className="bg-midnight-bg/80">
+                        <tr className="bg-[#F5F5F4]/60">
                           <td colSpan={10} className="p-4">
-                            <div className="bg-midnight-card rounded-xl p-4 border border-midnight-border space-y-3">
-                              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-midnight-border pb-2">
-                                <div className="text-xs font-bold text-white flex items-center gap-2 flex-wrap">
+                            <div className="bg-white rounded-xl p-4 border border-[#E7E5E4] space-y-3 shadow-xs">
+                              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E7E5E4] pb-2">
+                                <div className="text-xs font-bold text-[#292524] flex items-center gap-2 flex-wrap">
                                   <span>
                                     {t('history.receiptDetails', {
                                       id: tx.id.slice(-6),
@@ -337,12 +337,12 @@ export default function History() {
                                     })}
                                   </span>
                                   {tx.durationMs > 0 && (
-                                    <span className="text-[11px] px-2 py-0.5 rounded-lg bg-brand-purple/20 text-brand-purpleLight border border-brand-purple/30 font-bold">
+                                    <span className="text-[11px] px-2 py-0.5 rounded-lg bg-[#F0FDFA] text-[#0D9488] border border-[#CCFBF1] font-bold">
                                       O‘yin: {formatDurationHuman(tx.durationMs)} ({formatCurrency(tx.gamingPayment, currency)})
                                     </span>
                                   )}
                                 </div>
-                                <div className="text-xs text-slate-300 font-bold">
+                                <div className="text-xs text-[#292524] font-bold">
                                   {t('history.totalCollected', {
                                     amount: formatCurrency(
                                       tx.totalPaid || tx.gamingPayment + tx.productRevenue,
@@ -355,19 +355,19 @@ export default function History() {
                               {/* Products itemized table */}
                               {hasProducts ? (
                                 <div>
-                                  <h5 className="text-[11px] font-bold uppercase tracking-wider text-brand-purpleLight mb-1.5">
+                                  <h5 className="text-[11px] font-bold uppercase tracking-wider text-[#0D9488] mb-1.5">
                                     {t('history.itemizedProducts')}
                                   </h5>
                                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
                                     {tx.products.map((item, idx) => (
                                       <div
                                         key={idx}
-                                        className="p-2.5 rounded-lg bg-midnight-bg border border-midnight-border text-xs"
+                                        className="p-2.5 rounded-lg bg-[#F5F5F4] border border-[#E7E5E4] text-xs"
                                       >
-                                        <div className="font-bold text-white">
+                                        <div className="font-bold text-[#292524]">
                                           {item.quantity}x {item.name}
                                         </div>
-                                        <div className="text-slate-400 text-[11px] mt-1 flex justify-between">
+                                        <div className="text-[#78716C] text-[11px] mt-1 flex justify-between">
                                           <span>
                                             {t('history.buy', {
                                               price: formatCurrency(item.purchasePrice, currency),
@@ -379,7 +379,7 @@ export default function History() {
                                             })}
                                           </span>
                                         </div>
-                                        <div className="text-gaming-green font-bold text-[11px] mt-0.5 text-right">
+                                        <div className="text-[#16A34A] font-bold text-[11px] mt-0.5 text-right">
                                           {t('history.profitItem', {
                                             profit: formatCurrency(
                                               item.profit || item.totalRevenue - item.totalCost,
@@ -392,7 +392,7 @@ export default function History() {
                                   </div>
                                 </div>
                               ) : (
-                                <p className="text-xs text-slate-500 italic">
+                                <p className="text-xs text-[#78716C] italic">
                                   {t('history.noProductsInTx')}
                                 </p>
                               )}

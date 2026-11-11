@@ -17,7 +17,7 @@ function AppLayout({ children }) {
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-midnight-bg text-white flex flex-col font-sans selection:bg-brand-purple selection:text-white">
+    <div className="min-h-screen bg-[#F5F5F4] text-[#292524] flex flex-col font-sans selection:bg-[#0D9488] selection:text-white">
       {/* Top Full Navbar with Brand, Links, Language, Profile & Settings */}
       <Navbar />
 
@@ -26,7 +26,7 @@ function AppLayout({ children }) {
         {children}
       </main>
 
-      <footer className="border-t border-midnight-border bg-midnight-card/40 py-4 text-center text-xs text-slate-500">
+      <footer className="border-t border-[#E7E5E4] bg-white py-4 text-center text-xs text-[#78716C]">
         <p>{t('common.footerText')}</p>
       </footer>
     </div>
