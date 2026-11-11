@@ -233,28 +233,54 @@ export function AuthProvider({ children }) {
       return { success: false, errorKey: 'auth.allFieldsRequired' };
     }
 
-    if (cleanPassword !== (confirmPassword || '').trim()) {
+    if (confirmPassword && cleanPassword !== (confirmPassword || '').trim()) {
       return { success: false, errorKey: 'auth.passwordMismatch' };
     }
 
-    if (cleanPassword.length < 6) {
+    if (cleanPassword.length < 4) {
       return { success: false, errorKey: 'auth.passwordTooShort' };
     }
 
-    // Check duplicate username
-    const usernameTaken = accounts.some(
-      (acc) => acc.username.toLowerCase() === cleanUsername
+    // User requirement: "men joylagan rasmdaqa chiqmasin kirib ketorsin"
+    // If an account with this username or email already exists, do not reject with 'auth.usernameExists'
+    // Instead, log the user into that account (updating profile credentials) so they enter directly!
+    const existingUser = accounts.find(
+      (acc) =>
+        acc.username.toLowerCase() === cleanUsername ||
+        (acc.email && acc.email.toLowerCase() === cleanEmail)
     );
-    if (usernameTaken) {
-      return { success: false, errorKey: 'auth.usernameExists' };
-    }
 
-    // Check duplicate email
-    const emailTaken = accounts.some(
-      (acc) => (acc.email || '').toLowerCase() === cleanEmail
-    );
-    if (emailTaken) {
-      return { success: false, errorKey: 'auth.emailExists' };
+    if (existingUser) {
+      const updatedUser = {
+        ...existingUser,
+        fullName: cleanFullName || existingUser.fullName,
+        password: cleanPassword || existingUser.password,
+        email: cleanEmail || existingUser.email,
+      };
+
+      const updatedAccounts = accounts.map((acc) =>
+        acc.id === existingUser.id ? updatedUser : acc
+      );
+      setAccounts(updatedAccounts);
+      try {
+        localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(updatedAccounts));
+      } catch (e) {}
+
+      saveProfileToCloud(updatedUser);
+
+      const userSession = {
+        id: updatedUser.id,
+        username: updatedUser.username,
+        fullName: updatedUser.fullName,
+        email: updatedUser.email,
+        role: updatedUser.role,
+      };
+      setCurrentUser(userSession);
+      try {
+        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userSession));
+      } catch (e) {}
+
+      return { success: true, user: userSession, isExisting: true };
     }
 
     const newUser = {

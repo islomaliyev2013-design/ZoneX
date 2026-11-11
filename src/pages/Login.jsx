@@ -98,20 +98,8 @@ export default function Login({ initialMode = 'login' }) {
         setRegConfirmPassword('');
         setErrorMsg('');
 
-        // Switch to login tab and prefill the registered username
-        setMode('login');
-        setUsername(cleanUsername);
-        setPassword('');
-        setSuccessMsg(t('auth.registerSuccessEnterPassword'));
-
-        if (typeof window !== 'undefined' && window.history?.replaceState) {
-          window.history.replaceState(null, '', '/login');
-        }
-
-        // Focus password input for quick and seamless sign-in
-        setTimeout(() => {
-          passwordInputRef.current?.focus();
-        }, 150);
+        // Directly navigate into the system without blocking or asking password again ("kirib ketorsin")
+        navigate('/', { replace: true });
         return;
       } else {
         setErrorMsg(t(result.errorKey));
