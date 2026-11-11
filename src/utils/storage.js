@@ -29,11 +29,42 @@ if (typeof window !== 'undefined' && window.localStorage) {
 
 export const ROOM_DEFAULT_CONFIGS = {
   1: { zoneName: 'The Platform', zoneType: 'Standart Zal', hourlyRate: 20000 },
-  2: { zoneName: 'Game Zone', zoneType: 'Pro Gaming', hourlyRate: 25000 },
-  3: { zoneName: 'Neon Pulse Lounge', zoneType: 'Neon & Chill', hourlyRate: 30000 },
-  4: { zoneName: 'Grand Arena', zoneType: 'Comfort Zone', hourlyRate: 35000 },
-  5: { zoneName: 'VIP Akustik Kabina', zoneType: 'VIP Kabina', hourlyRate: 45000 },
+  2: { zoneName: 'Game Zone', zoneType: 'Game Zone', hourlyRate: 20000 },
+  3: { zoneName: 'Neon Pulse Lounge', zoneType: 'Vaqti Cheklanmagan', hourlyRate: 30000, isUnlimitedOnly: true },
+  4: { zoneName: 'Grand Arena', zoneType: 'Comfort Zone', hourlyRate: 40000 },
+  5: { zoneName: 'VIP Akustik Kabina', zoneType: 'VIP Kabina', hourlyRate: 50000 },
 };
+
+/**
+ * Apply guaranteed room configurations and hourly rates to any rooms array.
+ */
+export function applyRoomConfigs(rawRooms) {
+  if (!Array.isArray(rawRooms) || rawRooms.length !== INITIAL_ROOMS_COUNT) {
+    return generateInitialRooms();
+  }
+  return rawRooms.map((room) => {
+    const config = ROOM_DEFAULT_CONFIGS[room.id] || {
+      zoneName: `Room ${room.id}`,
+      zoneType: 'Zal',
+      hourlyRate: 20000,
+    };
+    const stations = (room.stations || []).map((st) => ({
+      ...st,
+      zoneName: config.zoneName,
+      zoneType: config.zoneType,
+      hourlyRate: config.hourlyRate,
+      isUnlimitedOnly: config.isUnlimitedOnly || false,
+    }));
+    return {
+      ...room,
+      zoneName: config.zoneName,
+      zoneType: config.zoneType,
+      hourlyRate: config.hourlyRate,
+      isUnlimitedOnly: config.isUnlimitedOnly || false,
+      stations,
+    };
+  });
+}
 
 /**
  * Generate clean initial rooms structure
@@ -54,6 +85,7 @@ export function generateInitialRooms() {
         stationNumber: s,
         stationName: `Station ${s}`,
         hourlyRate: config.hourlyRate,
+        isUnlimitedOnly: config.isUnlimitedOnly || false,
         status: 'available', // 'available' | 'occupied'
         session: null,
       });
@@ -64,6 +96,7 @@ export function generateInitialRooms() {
       zoneName: config.zoneName,
       zoneType: config.zoneType,
       hourlyRate: config.hourlyRate,
+      isUnlimitedOnly: config.isUnlimitedOnly || false,
       stations,
     });
   }
@@ -81,26 +114,7 @@ export function loadRooms(accountId = 'account_admin') {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed) && parsed.length === INITIAL_ROOMS_COUNT) {
         // Guarantee every room and station reflects its proper tiered hourly rate & zone
-        const updated = parsed.map((room) => {
-          const config = ROOM_DEFAULT_CONFIGS[room.id] || {
-            zoneName: room.zoneName || `Room ${room.id}`,
-            zoneType: room.zoneType || 'Zal',
-            hourlyRate: 20000,
-          };
-          const stations = (room.stations || []).map((st) => ({
-            ...st,
-            zoneName: config.zoneName,
-            zoneType: config.zoneType,
-            hourlyRate: config.hourlyRate,
-          }));
-          return {
-            ...room,
-            zoneName: config.zoneName,
-            zoneType: config.zoneType,
-            hourlyRate: config.hourlyRate,
-            stations,
-          };
-        });
+        const updated = applyRoomConfigs(parsed);
         saveRooms(updated, accountId);
         return updated;
       }

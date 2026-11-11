@@ -8,6 +8,7 @@ import {
   saveSettings,
   loadProductsCatalog,
   saveProductsCatalog,
+  applyRoomConfigs,
   INITIAL_ROOMS_COUNT,
   STATIONS_PER_ROOM,
 } from '../utils/storage';
@@ -102,11 +103,16 @@ function AppInnerProvider({ accountId, children }) {
       // 1. Sync Rooms from cloud if available
       const cloudRooms = await fetchRoomsStateFromCloud(accountId);
       if (isMounted && Array.isArray(cloudRooms) && cloudRooms.length === INITIAL_ROOMS_COUNT) {
-        setRooms(cloudRooms);
-        saveRooms(cloudRooms, accountId);
+        const normalized = applyRoomConfigs(cloudRooms);
+        setRooms(normalized);
+        saveRooms(normalized, accountId);
+        saveRoomsStateToCloud(accountId, normalized);
       } else if (isMounted && cloudRooms == null) {
         // Initial sync to cloud
-        saveRoomsStateToCloud(accountId, rooms);
+        const normalized = applyRoomConfigs(rooms);
+        setRooms(normalized);
+        saveRooms(normalized, accountId);
+        saveRoomsStateToCloud(accountId, normalized);
       }
 
       // 2. Sync Transactions from cloud if available

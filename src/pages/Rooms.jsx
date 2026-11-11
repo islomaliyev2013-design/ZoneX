@@ -4,6 +4,7 @@ import { Tv, Users, CheckCircle2, Grid, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import { formatCurrency } from '../utils/formatters';
+import { ROOM_DEFAULT_CONFIGS } from '../utils/storage';
 import StationCard from '../components/StationCard';
 import StartSessionModal from '../components/StartSessionModal';
 import FinishSessionModal from '../components/FinishSessionModal';
@@ -205,8 +206,9 @@ export default function Rooms() {
                   <p className="text-xs text-slate-400 mt-0.5">
                     {t('rooms.contains5Consoles')} • Tarif:{' '}
                     <span className="text-cyan-300 font-bold">
-                      {formatCurrency(selectedRoom.hourlyRate || 20000, currency)}
-                      {t('station.perHour') || '/soat'}
+                      {selectedRoom.id === 3 || selectedRoom.isUnlimitedOnly
+                        ? `${t('infoPage.room3Badge') || 'Vaqti cheklanmagan'} (${formatCurrency(ROOM_DEFAULT_CONFIGS[3]?.hourlyRate || 30000, currency)}${t('station.perHour') || '/soat'})`
+                        : `${formatCurrency(ROOM_DEFAULT_CONFIGS[selectedRoom.id]?.hourlyRate || selectedRoom.hourlyRate || 20000, currency)}${t('station.perHour') || '/soat'}`}
                     </span>
                   </p>
                 </div>

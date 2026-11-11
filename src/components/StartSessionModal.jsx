@@ -5,6 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { formatCurrency } from '../utils/formatters';
 import { calculateDurationFromBudget, calculateBudgetFromDuration } from '../utils/calculations';
 import { testAlarmSound } from '../utils/audioAlert';
+import { ROOM_DEFAULT_CONFIGS } from '../utils/storage';
 
 export default function StartSessionModal({ station, isOpen, onClose }) {
   const { settings, startSession } = useApp();
@@ -27,7 +28,9 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
   useEffect(() => {
     if (isOpen && station) {
       const defaultRate =
-        station.hourlyRate != null
+        ROOM_DEFAULT_CONFIGS[station.roomId]?.hourlyRate != null
+          ? ROOM_DEFAULT_CONFIGS[station.roomId].hourlyRate
+          : station.hourlyRate != null
           ? station.hourlyRate
           : settings.defaultHourlyRate != null
           ? settings.defaultHourlyRate
@@ -39,7 +42,7 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
       setBudgetAmount(defaultRate.toString());
       setDurationMinutes('60');
     }
-  }, [isOpen, station?.id, settings.defaultHourlyRate]);
+  }, [isOpen, station?.id, station?.roomId, settings.defaultHourlyRate]);
 
   if (!isOpen || !station) return null;
 
@@ -137,8 +140,9 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
               <p className="text-xs text-slate-400 mt-0.5">
                 {t('sessionModal.startSubtitle')} •{' '}
                 <span className="font-bold text-cyan-300">
-                  {formatCurrency(station.hourlyRate || 20000, currency)}
-                  {t('station.perHour') || '/soat'}
+                  {station.roomId === 3 || station.isUnlimitedOnly
+                    ? `${t('infoPage.room3Badge') || 'Vaqti cheklanmagan'} (${formatCurrency(ROOM_DEFAULT_CONFIGS[3]?.hourlyRate || 30000, currency)}${t('station.perHour') || '/soat'})`
+                    : `${formatCurrency(ROOM_DEFAULT_CONFIGS[station.roomId]?.hourlyRate || station.hourlyRate || 20000, currency)}${t('station.perHour') || '/soat'}`}
                 </span>
               </p>
             </div>
@@ -210,6 +214,16 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                 </button>
               </div>
             </div>
+
+            {/* 3-xona Vaqti Cheklanmagan Notification */}
+            {(station.roomId === 3 || station.isUnlimitedOnly) && (
+              <div className="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center gap-2.5 text-cyan-300 text-xs font-semibold">
+                <Clock className="w-4 h-4 shrink-0 text-cyan-400" />
+                <span>
+                  {t('infoPage.room3Badge') || 'Vaqti cheklanmagan'}: 3-xona (Neon Pulse Lounge) ochiq cheksiz seans rejimida ishlaydi.
+                </span>
+              </div>
+            )}
 
             {/* Session Type Selector: Open vs Timed */}
             <div className="pt-1">

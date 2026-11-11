@@ -5,6 +5,7 @@ import { calculateGamingPayment } from '../utils/calculations';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import { playAlarm, stopAlarm, isAlarmActive } from '../utils/audioAlert';
+import { ROOM_DEFAULT_CONFIGS } from '../utils/storage';
 
 export default function StationCard({ station, onStartClick, onFinishClick, onAddProductsClick }) {
   const { settings } = useApp();
@@ -337,9 +338,21 @@ export default function StationCard({ station, onStartClick, onFinishClick, onAd
           <div className="my-6 text-center py-4 px-3 rounded-xl bg-midnight-bg border border-midnight-border">
             <p className="text-xs text-slate-400 mb-1">{t('station.readyForNext')}</p>
             <p className="text-sm font-bold text-white">
-              {t('station.defaultRate', {
-                rate: formatCurrency(station.hourlyRate || settings.defaultHourlyRate || 20000, currency),
-              })}
+              {station.roomId === 3 || station.isUnlimitedOnly ? (
+                <span className="text-cyan-300 font-extrabold">
+                  {t('infoPage.room3Badge') || 'Vaqti cheklanmagan'} ({formatCurrency(ROOM_DEFAULT_CONFIGS[3]?.hourlyRate || 30000, currency)}{t('station.perHour') || '/soat'})
+                </span>
+              ) : (
+                t('station.defaultRate', {
+                  rate: formatCurrency(
+                    ROOM_DEFAULT_CONFIGS[station.roomId]?.hourlyRate ||
+                      station.hourlyRate ||
+                      settings.defaultHourlyRate ||
+                      20000,
+                    currency
+                  ),
+                })
+              )}
             </p>
           </div>
         )}
