@@ -4,7 +4,16 @@ import { formatCurrency } from '../utils/formatters';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 
-const QUICK_PRODUCTS = ['Semichka', 'Coca-Cola', 'Water', 'Snacks', 'Red Bull', 'Chips'];
+const QUICK_PRODUCTS = [
+  'Chips Lays',
+  'Chips Pringles',
+  'Chips Doritos',
+  'Coca-Cola',
+  'Semichka',
+  'Flash Up',
+  'Red Bull',
+  'Snickers',
+];
 
 export default function ProductInputTable({
   products = [],

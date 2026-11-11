@@ -194,13 +194,26 @@ export function saveSettings(settings, accountId = 'account_admin') {
 }
 
 export const DEFAULT_CATALOG = [
-  { id: 'cat_1', name: 'Semichka', purchasePrice: 5000, sellingPrice: 10000 },
+  { id: 'cat_1', name: 'Semichka (Qora)', purchasePrice: 5000, sellingPrice: 10000 },
   { id: 'cat_2', name: 'Coca-Cola 0.5L', purchasePrice: 7000, sellingPrice: 12000 },
   { id: 'cat_3', name: 'Fanta 0.5L', purchasePrice: 7000, sellingPrice: 12000 },
-  { id: 'cat_4', name: 'Suv 0.5L', purchasePrice: 2000, sellingPrice: 4000 },
-  { id: 'cat_5', name: 'Red Bull', purchasePrice: 18000, sellingPrice: 25000 },
-  { id: 'cat_6', name: 'Chips Lays', purchasePrice: 12000, sellingPrice: 18000 },
-  { id: 'cat_7', name: 'Snickers', purchasePrice: 8000, sellingPrice: 12000 },
+  { id: 'cat_4', name: 'Sprite 0.5L', purchasePrice: 7000, sellingPrice: 12000 },
+  { id: 'cat_5', name: 'Pepsi 0.5L', purchasePrice: 7000, sellingPrice: 12000 },
+  { id: 'cat_6', name: 'Suv 0.5L (Gazsiz)', purchasePrice: 2000, sellingPrice: 4000 },
+  { id: 'cat_7', name: 'Flash Up Energy', purchasePrice: 8000, sellingPrice: 14000 },
+  { id: 'cat_8', name: 'Red Bull', purchasePrice: 18000, sellingPrice: 25000 },
+  { id: 'cat_9', name: 'Chips Lays', purchasePrice: 12000, sellingPrice: 18000 },
+  { id: 'cat_10', name: 'Chips Pringles', purchasePrice: 20000, sellingPrice: 30000 },
+  { id: 'cat_11', name: 'Chips Doritos', purchasePrice: 14000, sellingPrice: 22000 },
+  { id: 'cat_12', name: 'Chips Cheetos', purchasePrice: 6000, sellingPrice: 10000 },
+  { id: 'cat_13', name: 'Suxariki Flint', purchasePrice: 4000, sellingPrice: 8000 },
+  { id: 'cat_14', name: 'Popkorn', purchasePrice: 6000, sellingPrice: 12000 },
+  { id: 'cat_15', name: 'Semichka Oq (Xon)', purchasePrice: 6000, sellingPrice: 12000 },
+  { id: 'cat_16', name: 'Snickers', purchasePrice: 8000, sellingPrice: 12000 },
+  { id: 'cat_17', name: 'Twix', purchasePrice: 8000, sellingPrice: 12000 },
+  { id: 'cat_18', name: 'Bounty', purchasePrice: 8000, sellingPrice: 12000 },
+  { id: 'cat_19', name: 'KitKat', purchasePrice: 9000, sellingPrice: 14000 },
+  { id: 'cat_20', name: 'Qahva 3-in-1 (Nescafe)', purchasePrice: 3000, sellingPrice: 6000 },
 ];
 
 export function loadProductsCatalog(accountId = 'account_admin') {
@@ -209,8 +222,21 @@ export function loadProductsCatalog(accountId = 'account_admin') {
     const stored = localStorage.getItem(key);
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed)) {
-        return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        // Merge new default items by name to ensure new chips/drinks appear for existing accounts
+        const existingNames = new Set(parsed.map((p) => (p.name || '').toLowerCase()));
+        let hasNew = false;
+        const merged = [...parsed];
+        for (const item of DEFAULT_CATALOG) {
+          if (!existingNames.has(item.name.toLowerCase())) {
+            merged.push(item);
+            hasNew = true;
+          }
+        }
+        if (hasNew) {
+          saveProductsCatalog(merged, accountId);
+        }
+        return merged;
       }
     }
   } catch (err) {

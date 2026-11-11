@@ -117,14 +117,21 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
 
   const getProductEmoji = (name = '') => {
     const n = name.toLowerCase();
-    if (n.includes('cola')) return '🥤';
+    if (n.includes('pringles')) return '🥫';
+    if (n.includes('doritos')) return '🔺';
+    if (n.includes('cheetos')) return '🐆';
+    if (n.includes('chip') || n.includes('lays')) return '🥔';
+    if (n.includes('suxarik') || n.includes('flint') || n.includes('kiriyej')) return '🥖';
+    if (n.includes('popkorn') || n.includes('popcorn')) return '🍿';
     if (n.includes('semichka') || n.includes('pista')) return '🌻';
+    if (n.includes('cola') || n.includes('pepsi')) return '🥤';
     if (n.includes('fanta')) return '🍊';
+    if (n.includes('sprite')) return '🍋';
     if (n.includes('suv') || n.includes('water')) return '💧';
     if (n.includes('red bull') || n.includes('energy') || n.includes('flash')) return '⚡';
-    if (n.includes('chip') || n.includes('lays')) return '🥔';
-    if (n.includes('snicker') || n.includes('choc')) return '🍫';
-    if (n.includes('coffee') || n.includes('qahva')) return '☕';
+    if (n.includes('snicker') || n.includes('twix') || n.includes('kitkat') || n.includes('choc')) return '🍫';
+    if (n.includes('bounty')) return '🥥';
+    if (n.includes('coffee') || n.includes('qahva') || n.includes('nescafe')) return '☕';
     return '🍿';
   };
 
