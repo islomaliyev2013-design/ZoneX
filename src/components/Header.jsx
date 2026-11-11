@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Menu, Coins, Tv, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
@@ -117,8 +118,8 @@ export default function Header({ onOpenMobileMenu }) {
       </header>
 
       {/* Pricing Settings Modal (Warm Gray + Teal Theme) */}
-      {showPricingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/70 backdrop-blur-md p-4">
+      {showPricingModal && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-900/70 backdrop-blur-md p-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm text-[#292524] shadow-2xl border border-[#E7E5E4] animate-in fade-in zoom-in-95">
             <h3 className="text-lg font-extrabold text-[#292524] mb-1">
               {t('settings.pricingTitle')}
@@ -203,7 +204,8 @@ export default function Header({ onOpenMobileMenu }) {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

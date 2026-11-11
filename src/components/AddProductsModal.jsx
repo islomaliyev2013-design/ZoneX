@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { ShoppingBag, X, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -60,8 +61,8 @@ export default function AddProductsModal({ station, isOpen, onClose }) {
     .replace(/^Konsol\s*(\d+)$/i, '$1-xona')
     .replace(/^Station\s*(\d+)$/i, '$1-xona');
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/70 backdrop-blur-md p-3 sm:p-5 overflow-hidden">
+  const modalContent = (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-900/70 backdrop-blur-md p-3 sm:p-5 overflow-hidden">
       <div className="bg-white rounded-2xl w-full max-w-xl text-[#292524] shadow-2xl border border-[#E7E5E4] flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95">
         
         {/* Sticky Header */}
@@ -125,4 +126,6 @@ export default function AddProductsModal({ station, isOpen, onClose }) {
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

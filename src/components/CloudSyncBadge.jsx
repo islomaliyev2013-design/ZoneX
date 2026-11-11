@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Cloud, CloudOff, AlertCircle, Copy, Check, ExternalLink, X, Database, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -117,8 +118,8 @@ export default function CloudSyncBadge() {
       </button>
 
       {/* Cloud Info & SQL Setup Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/70 backdrop-blur-md p-4 overflow-y-auto">
+      {showModal && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-900/70 backdrop-blur-md p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl w-full max-w-xl text-[#292524] shadow-2xl p-6 my-8 border border-[#E7E5E4] animate-in fade-in zoom-in-95">
             {/* Header */}
             <div className="flex items-start justify-between pb-3 border-b border-[#E7E5E4]">
@@ -211,7 +212,8 @@ export default function CloudSyncBadge() {
             </div>
 
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
