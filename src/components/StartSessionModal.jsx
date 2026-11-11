@@ -1,16 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { Play, X, User, Tv, Clock, Timer, Coins, BellRing, Volume2 } from 'lucide-react';
+import {
+  Play,
+  X,
+  User,
+  Tv,
+  Clock,
+  Timer,
+  Coins,
+  BellRing,
+  Volume2,
+  ShoppingBag,
+  Plus,
+  Minus,
+} from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import { formatCurrency } from '../utils/formatters';
 import { calculateDurationFromBudget, calculateBudgetFromDuration } from '../utils/calculations';
 import { testAlarmSound } from '../utils/audioAlert';
-import { ROOM_DEFAULT_CONFIGS } from '../utils/storage';
+import { ROOM_DEFAULT_CONFIGS, DEFAULT_CATALOG } from '../utils/storage';
 
 export default function StartSessionModal({ station, isOpen, onClose }) {
-  const { settings, startSession } = useApp();
+  const { settings, productsCatalog = [], startSession } = useApp();
   const { t } = useLanguage();
   const currency = settings.currency || "so'm";
+
+  const catalogList =
+    Array.isArray(productsCatalog) && productsCatalog.length > 0
+      ? productsCatalog
+      : DEFAULT_CATALOG;
 
   const [hourlyPrice, setHourlyPrice] = useState(
     settings.defaultHourlyRate != null ? settings.defaultHourlyRate : 20000
@@ -23,6 +41,9 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
   const [limitMode, setLimitMode] = useState('budget');
   const [budgetAmount, setBudgetAmount] = useState('20000');
   const [durationMinutes, setDurationMinutes] = useState('60');
+
+  // Selected products state: { [productId]: quantity }
+  const [productQuantities, setProductQuantities] = useState({});
 
   // Always reset inputs when modal opens for a new station
   useEffect(() => {
@@ -41,10 +62,71 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
       setLimitMode('budget');
       setBudgetAmount(defaultRate.toString());
       setDurationMinutes('60');
+      setProductQuantities({});
     }
   }, [isOpen, station?.id, station?.roomId, settings.defaultHourlyRate]);
 
   if (!isOpen || !station) return null;
+
+  // Product selection helpers
+  const handleIncrementProduct = (item) => {
+    setProductQuantities((prev) => ({
+      ...prev,
+      [item.id]: (prev[item.id] || 0) + 1,
+    }));
+  };
+
+  const handleDecrementProduct = (itemId) => {
+    setProductQuantities((prev) => {
+      const current = prev[itemId] || 0;
+      if (current <= 1) {
+        const next = { ...prev };
+        delete next[itemId];
+        return next;
+      }
+      return {
+        ...prev,
+        [itemId]: current - 1,
+      };
+    });
+  };
+
+  const handleClearProducts = () => {
+    setProductQuantities({});
+  };
+
+  const selectedProducts = Object.entries(productQuantities)
+    .map(([id, qty]) => {
+      const item = catalogList.find((c) => c.id === id);
+      if (!item || qty <= 0) return null;
+      return {
+        id: `p_init_${id}_${Date.now()}_${Math.random().toString(36).substr(2, 3)}`,
+        name: item.name,
+        quantity: qty,
+        purchasePrice: item.purchasePrice || 0,
+        sellingPrice: item.sellingPrice || 0,
+      };
+    })
+    .filter(Boolean);
+
+  const selectedProductsCount = selectedProducts.reduce((sum, p) => sum + p.quantity, 0);
+  const selectedProductsTotal = selectedProducts.reduce(
+    (sum, p) => sum + p.quantity * p.sellingPrice,
+    0
+  );
+
+  const getProductEmoji = (name = '') => {
+    const n = name.toLowerCase();
+    if (n.includes('cola')) return '🥤';
+    if (n.includes('semichka') || n.includes('pista')) return '🌻';
+    if (n.includes('fanta')) return '🍊';
+    if (n.includes('suv') || n.includes('water')) return '💧';
+    if (n.includes('red bull') || n.includes('energy') || n.includes('flash')) return '⚡';
+    if (n.includes('chip') || n.includes('lays')) return '🥔';
+    if (n.includes('snicker') || n.includes('choc')) return '🍫';
+    if (n.includes('coffee') || n.includes('qahva')) return '☕';
+    return '🍿';
+  };
 
   // Calculate allocated duration / budget
   const numericHourlyRate = Math.max(1, Number(hourlyPrice) || 20000);
@@ -99,6 +181,7 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
       limitType: limitMode,
       targetDurationMs: sessionType === 'timed' ? computedDurationMs : 0,
       targetBudget: sessionType === 'timed' ? computedBudget : null,
+      products: selectedProducts,
     });
 
     onClose();
@@ -509,6 +592,105 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                     Ovoz
                   </button>
                 </div>
+
+                {/* Mahsulotlar (Ichimliklar & Gazaklar - Cola, Semichka va h.k.) */}
+                <div className="pt-3 border-t border-midnight-border/70 space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">
+                        <ShoppingBag className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <span className="text-xs font-bold text-white block leading-tight">
+                          {t('sessionModal.sessionProductsTitle')}
+                        </span>
+                        <span className="text-[10px] text-slate-400">
+                          {t('sessionModal.sessionProductsSubtitle')}
+                        </span>
+                      </div>
+                    </div>
+                    {selectedProductsCount > 0 && (
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded-full text-[11px] font-black bg-brand-purple/20 text-brand-purpleLight border border-brand-purple/30">
+                          {selectedProductsCount} ta • {formatCurrency(selectedProductsTotal, currency)}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={handleClearProducts}
+                          className="text-[10px] text-slate-400 hover:text-rose-400 underline font-semibold transition"
+                        >
+                          Tozalash
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Fast 1-click Products Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {catalogList.map((item) => {
+                      const qty = productQuantities[item.id] || 0;
+                      return (
+                        <div
+                          key={item.id}
+                          className={`p-2.5 rounded-xl border flex items-center justify-between transition-all duration-150 ${
+                            qty > 0
+                              ? 'bg-brand-purple/15 border-brand-purple text-white shadow-xs ring-1 ring-brand-purple/30'
+                              : 'bg-midnight-card border-midnight-border hover:border-slate-600 text-slate-300'
+                          }`}
+                        >
+                          <div className="min-w-0 pr-1.5 flex items-center gap-2 flex-1">
+                            <span className="text-base select-none shrink-0">
+                              {getProductEmoji(item.name)}
+                            </span>
+                            <div className="min-w-0">
+                              <span className="text-xs font-bold text-white block truncate leading-tight">
+                                {item.name}
+                              </span>
+                              <span className="text-[11px] font-semibold text-brand-lavender/90 block mt-0.5">
+                                {formatCurrency(item.sellingPrice, currency)}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="shrink-0 flex items-center">
+                            {qty > 0 ? (
+                              <div className="flex items-center gap-1 bg-midnight-bg p-0.5 rounded-lg border border-brand-purple/50">
+                                <button
+                                  type="button"
+                                  onClick={() => handleDecrementProduct(item.id)}
+                                  className="w-5 h-5 rounded flex items-center justify-center bg-midnight-card hover:bg-rose-500/20 text-slate-300 hover:text-rose-300 text-xs font-bold transition active:scale-90"
+                                  title="1 ta kamaytirish"
+                                >
+                                  <Minus className="w-3 h-3" />
+                                </button>
+                                <span className="w-5 text-center text-xs font-black text-white">
+                                  {qty}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => handleIncrementProduct(item)}
+                                  className="w-5 h-5 rounded flex items-center justify-center bg-brand-purple hover:bg-brand-purpleHover text-slate-950 text-xs font-black transition active:scale-90"
+                                  title="1 ta qo'shish"
+                                >
+                                  <Plus className="w-3 h-3 stroke-[3]" />
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => handleIncrementProduct(item)}
+                                className="px-2 py-1 rounded-lg bg-midnight-bg hover:bg-brand-purple/20 text-slate-300 hover:text-brand-purpleLight border border-midnight-border hover:border-brand-purple/40 text-[11px] font-bold transition flex items-center gap-1 active:scale-95"
+                              >
+                                <Plus className="w-3 h-3 text-cyan-400" />
+                                <span>Qo‘shish</span>
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             )}
 
@@ -535,6 +717,22 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
             </div>
 
           </div>
+
+          {/* Summary of products & total if products selected */}
+          {selectedProductsTotal > 0 && (
+            <div className="shrink-0 px-5 py-2.5 bg-midnight-sidebar/95 border-t border-midnight-border flex items-center justify-between text-xs">
+              <span className="text-slate-400 font-semibold flex items-center gap-1.5">
+                <ShoppingBag className="w-3.5 h-3.5 text-amber-400" />
+                <span>{t('sessionModal.totalWithProducts')}</span>
+              </span>
+              <span className="font-extrabold text-cyan-300 text-sm">
+                {formatCurrency(
+                  (sessionType === 'timed' ? computedBudget : 0) + selectedProductsTotal,
+                  currency
+                )}
+              </span>
+            </div>
+          )}
 
           {/* Sticky Footer Action Buttons */}
           <div className="shrink-0 px-5 py-3.5 bg-midnight-sidebar/95 border-t border-midnight-border flex gap-3">

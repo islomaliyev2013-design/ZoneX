@@ -194,6 +194,7 @@ function AppInnerProvider({ accountId, children }) {
       limitType = 'budget',
       targetDurationMs = 0,
       targetBudget = null,
+      products = [],
     } = {}
   ) => {
     stopAlarm(stationId);
@@ -215,7 +216,7 @@ function AppInnerProvider({ accountId, children }) {
               startTime: now,
               hourlyPrice: rate,
               customerName: customerName ? customerName.trim() : '',
-              products: [],
+              products: Array.isArray(products) ? products : [],
               isTimed: isSessionTimed,
               limitType,
               targetDurationMs: durationMs,
