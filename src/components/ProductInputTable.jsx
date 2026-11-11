@@ -4,16 +4,7 @@ import { formatCurrency } from '../utils/formatters';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 
-const QUICK_PRODUCTS = [
-  'Chips Lays',
-  'Chips Pringles',
-  'Chips Doritos',
-  'Coca-Cola',
-  'Semichka',
-  'Flash Up',
-  'Red Bull',
-  'Snickers',
-];
+
 
 export default function ProductInputTable({
   products = [],
@@ -109,7 +100,7 @@ export default function ProductInputTable({
                 type="button"
                 onClick={() => addRowFromCatalog(prod)}
                 title={`${prod.name} (Tannarxi: ${formatCurrency(prod.purchasePrice, currency)}, Sotilishi: ${formatCurrency(prod.sellingPrice, currency)})`}
-                className="text-xs px-2.5 py-1 rounded-lg bg-midnight-bg hover:bg-brand-purple/20 hover:text-brand-purpleLight text-slate-300 border border-midnight-border transition font-medium flex items-center gap-1"
+                className="text-xs px-2.5 py-1 rounded-lg bg-midnight-bg hover:bg-brand-purple/20 hover:text-brand-purpleLight text-slate-300 border border-midnight-border transition font-medium flex items-center gap-1 cursor-pointer"
               >
                 <span>+ {prod.name}</span>
                 {prod.sellingPrice > 0 && (
@@ -120,16 +111,9 @@ export default function ProductInputTable({
               </button>
             ))
           ) : (
-            QUICK_PRODUCTS.map((prod) => (
-              <button
-                key={prod}
-                type="button"
-                onClick={() => addRow(prod)}
-                className="text-xs px-2.5 py-1 rounded-lg bg-midnight-bg hover:bg-brand-purple/20 hover:text-brand-purpleLight text-slate-300 border border-midnight-border transition font-medium"
-              >
-                + {prod}
-              </button>
-            ))
+            <span className="text-[11px] text-slate-400 italic">
+              {t('sessionModal.noProductsCatalog') || "Mahsulotlar mavjud emas. Mahsulot qo'shish uchun Sotuvlar bo'limiga o'ting."}
+            </span>
           )}
         </div>
       )}

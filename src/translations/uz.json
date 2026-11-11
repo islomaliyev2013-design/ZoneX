@@ -107,6 +107,10 @@
     "tableDurationItems": "Vaqt / Mahsulotlar",
     "tableRevenue": "Tushum",
     "tableProfit": "Sof foyda",
+    "tableGaming": "O‘yin vaqti va to‘lov",
+    "tableProducts": "Sotilgan mahsulotlar",
+    "noRoomsNotice": "Hozircha xonalar mavjud emas. Yangi xona va konsollarni qo‘shing.",
+    "emptyStationsInRoom": "Konsollar yo‘q",
     "allStationsFreeSubtext": "{totalStations} ta konsoldan barchasi bo‘sh • {totalRooms} ta xona faol"
   },
   "rooms": {
@@ -129,7 +133,23 @@
     "roomZone2": "Game Zone (20k)",
     "roomZone3": "Vaqti Cheklanmagan (30k)",
     "roomZone4": "Grand Arena (40k)",
-    "roomZone5": "VIP Kabina (50k)"
+    "roomZone5": "VIP Kabina (50k)",
+    "addRoomBtn": "Yangi xona qo‘shish",
+    "editRoomBtn": "Xonani tahrirlash",
+    "deleteRoomBtn": "Xonani o‘chirish",
+    "addStationBtn": "+ PlayStation qo‘shish",
+    "deleteStationBtn": "Konsolni o‘chirish",
+    "noRoomsTitle": "Hozircha xonalar yo‘q",
+    "noRoomsSubtitle": "PlayStation klubingiz uchun yangi xona va konsollarni qo‘shing",
+    "noStationsInRoom": "Ushbu xonada hali konsollar yo‘q",
+    "noStationsSubtitle": "PlayStation qo‘shish uchun quyidagi tugmani bosing",
+    "roomNameLabel": "Xona nomi",
+    "zoneTypeLabel": "Zona turi",
+    "hourlyRateLabel": "Soatlik tarif (narx)",
+    "initialStationsLabel": "Dastlabki konsollar soni",
+    "isUnlimitedLabel": "Faqat cheksiz vaqt (taymersiz)",
+    "confirmDeleteRoom": "Haqiqatan ham ushbu xonani va undagi konsollarni o‘chirmoqchimisiz?",
+    "confirmDeleteStation": "Haqiqatan ham ushbu konsolni o‘chirmoqchimisiz?"
   },
   "station": {
     "available": "Bo‘sh",
@@ -202,7 +222,8 @@
     "finishAndSaveBtn": "Seansni yakunlash va chekni saqlash",
     "addProductsTitle": "{station}ga mahsulot qo‘shish",
     "addProductsSubtitle": "{room} • Mijoz: {customer}",
-    "addToSessionBtn": "Faol seansga qo‘shish"
+    "addToSessionBtn": "Faol seansga qo‘shish",
+    "noProductsCatalog": "Mahsulotlar ro‘yxati bo‘sh. Sotuvlar bo‘limidan mahsulot qo‘shishingiz mumkin."
   },
   "sales": {
     "title": "Mahsulotlar savdosi",

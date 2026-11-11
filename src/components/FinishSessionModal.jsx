@@ -91,7 +91,7 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
   const localizedStationName = `${t('common.stationPrefix')} ${station.stationNumber}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-5 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#070b14]/92 backdrop-blur-md p-3 sm:p-5 overflow-hidden">
       <div className="bg-midnight-card rounded-2xl w-full max-w-2xl text-white shadow-2xl border border-midnight-border flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95">
         
         {/* Sticky Header — Always Visible */}

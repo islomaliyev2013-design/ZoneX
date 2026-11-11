@@ -8,9 +8,7 @@ import {
   saveSettings,
   loadProductsCatalog,
   saveProductsCatalog,
-  applyRoomConfigs,
-  INITIAL_ROOMS_COUNT,
-  STATIONS_PER_ROOM,
+  createRoomObject,
 } from '../utils/storage';
 import {
   calculateGamingPayment,
@@ -102,17 +100,12 @@ function AppInnerProvider({ accountId, children }) {
 
       // 1. Sync Rooms from cloud if available
       const cloudRooms = await fetchRoomsStateFromCloud(accountId);
-      if (isMounted && Array.isArray(cloudRooms) && cloudRooms.length === INITIAL_ROOMS_COUNT) {
-        const normalized = applyRoomConfigs(cloudRooms);
-        setRooms(normalized);
-        saveRooms(normalized, accountId);
-        saveRoomsStateToCloud(accountId, normalized);
+      if (isMounted && Array.isArray(cloudRooms)) {
+        setRooms(cloudRooms);
+        saveRooms(cloudRooms, accountId);
       } else if (isMounted && cloudRooms == null) {
         // Initial sync to cloud
-        const normalized = applyRoomConfigs(rooms);
-        setRooms(normalized);
-        saveRooms(normalized, accountId);
-        saveRoomsStateToCloud(accountId, normalized);
+        saveRoomsStateToCloud(accountId, rooms);
       }
 
       // 2. Sync Transactions from cloud if available
@@ -139,89 +132,229 @@ function AppInnerProvider({ accountId, children }) {
 
     initCloudSync();
 
-    // Set up Realtime subscription for live room updates across screens
-    let channel = null;
-    try {
-      channel = supabase
-        .channel(`rooms_channel_${accountId}`)
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'rooms_state',
-            filter: `account_id=eq.${accountId}`,
-          },
-          (payload) => {
-            if (payload.new?.rooms_data && Array.isArray(payload.new.rooms_data)) {
-              setRooms(payload.new.rooms_data);
-              saveRooms(payload.new.rooms_data, accountId);
-            }
-          }
-        )
-        .subscribe();
-    } catch (e) {
-      console.warn('Realtime subscription not active:', e);
-    }
-
     return () => {
       isMounted = false;
-      if (channel) {
-        supabase.removeChannel(channel);
-      }
     };
   }, [accountId]);
 
-  // Find a station across all rooms
-  const findStation = (stationId) => {
-    for (const room of rooms) {
-      const found = room.stations.find((s) => s.id === stationId);
-      if (found) return found;
+  // Real-time listener for multi-device sync
+  useEffect(() => {
+    const channel = supabase
+      .channel(`public:rooms_state:${accountId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'rooms_state',
+          filter: `account_id=eq.${accountId}`,
+        },
+        (payload) => {
+          if (payload.new && Array.isArray(payload.new.rooms_data)) {
+            setRooms(payload.new.rooms_data);
+            saveRooms(payload.new.rooms_data, accountId);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [accountId]);
+
+  // Helper to find a station across all rooms
+  const findStation = useCallback(
+    (stationId) => {
+      for (const room of rooms) {
+        const found = (room.stations || []).find((s) => s.id === stationId);
+        if (found) return found;
+      }
+      return null;
+    },
+    [rooms]
+  );
+
+  /**
+   * DYNAMIC ROOM MANAGEMENT:
+   * addRoom, updateRoom, deleteRoom, addStationToRoom, removeStationFromRoom
+   */
+  const addRoom = ({
+    name,
+    zoneType = 'Standart Zal',
+    hourlyRate = 20000,
+    isUnlimitedOnly = false,
+    stationCount = 0,
+  }) => {
+    const nextId =
+      rooms.length > 0 ? Math.max(...rooms.map((r) => Number(r.id) || 0)) + 1 : 1;
+    const roomName = name?.trim() || `${nextId}-xona`;
+    const newRoom = createRoomObject({
+      id: nextId,
+      name: roomName,
+      zoneName: roomName,
+      zoneType: zoneType || 'Standart Zal',
+      hourlyRate: Number(hourlyRate) || 20000,
+      isUnlimitedOnly: Boolean(isUnlimitedOnly),
+      stationCount: Number(stationCount) || 0,
+    });
+
+    const updated = [...rooms, newRoom];
+    setRooms(updated);
+    saveRooms(updated, accountId);
+    saveRoomsStateToCloud(accountId, updated);
+    return newRoom;
+  };
+
+  const updateRoom = (roomId, updates) => {
+    const updated = rooms.map((room) => {
+      if (room.id === roomId) {
+        const newName = updates.name !== undefined ? updates.name.trim() : room.name;
+        const newZoneType = updates.zoneType !== undefined ? updates.zoneType : room.zoneType;
+        const newRate =
+          updates.hourlyRate !== undefined ? Number(updates.hourlyRate) || 20000 : room.hourlyRate;
+        const newUnlimited =
+          updates.isUnlimitedOnly !== undefined
+            ? Boolean(updates.isUnlimitedOnly)
+            : room.isUnlimitedOnly;
+
+        const updatedStations = (room.stations || []).map((st) => ({
+          ...st,
+          roomName: newName,
+          zoneName: newName,
+          zoneType: newZoneType,
+          hourlyRate: newRate,
+          isUnlimitedOnly: newUnlimited,
+          session: st.session
+            ? {
+                ...st.session,
+                hourlyPrice: newRate,
+              }
+            : null,
+        }));
+
+        return {
+          ...room,
+          name: newName,
+          zoneName: newName,
+          zoneType: newZoneType,
+          hourlyRate: newRate,
+          isUnlimitedOnly: newUnlimited,
+          stations: updatedStations,
+        };
+      }
+      return room;
+    });
+
+    setRooms(updated);
+    saveRooms(updated, accountId);
+    saveRoomsStateToCloud(accountId, updated);
+  };
+
+  const deleteRoom = (roomId) => {
+    // Stop alarms for all stations in this room
+    const target = rooms.find((r) => r.id === roomId);
+    if (target?.stations) {
+      target.stations.forEach((st) => stopAlarm(st.id));
     }
-    return null;
+
+    const updated = rooms.filter((r) => r.id !== roomId);
+    setRooms(updated);
+    saveRooms(updated, accountId);
+    saveRoomsStateToCloud(accountId, updated);
+  };
+
+  const addStationToRoom = (roomId, customName) => {
+    const targetRoom = rooms.find((r) => r.id === roomId);
+    if (!targetRoom) return null;
+
+    const existingStations = targetRoom.stations || [];
+    const nextNumber =
+      existingStations.length > 0
+        ? Math.max(...existingStations.map((s) => Number(s.stationNumber) || 0)) + 1
+        : 1;
+
+    const stationName = customName?.trim() || `Konsol ${nextNumber}`;
+    const newStation = {
+      id: `r${roomId}-s${Date.now().toString(36)}_${nextNumber}`,
+      roomId,
+      roomName: targetRoom.name,
+      zoneName: targetRoom.zoneName || targetRoom.name,
+      zoneType: targetRoom.zoneType || 'Standart Zal',
+      stationNumber: nextNumber,
+      stationName,
+      hourlyRate: targetRoom.hourlyRate || 20000,
+      isUnlimitedOnly: Boolean(targetRoom.isUnlimitedOnly),
+      status: 'available',
+      session: null,
+    };
+
+    const updated = rooms.map((room) => {
+      if (room.id === roomId) {
+        return {
+          ...room,
+          stations: [...(room.stations || []), newStation],
+        };
+      }
+      return room;
+    });
+
+    setRooms(updated);
+    saveRooms(updated, accountId);
+    saveRoomsStateToCloud(accountId, updated);
+    return newStation;
+  };
+
+  const removeStationFromRoom = (roomId, stationId) => {
+    stopAlarm(stationId);
+    const updated = rooms.map((room) => {
+      if (room.id === roomId) {
+        return {
+          ...room,
+          stations: (room.stations || []).filter((st) => st.id !== stationId),
+        };
+      }
+      return room;
+    });
+
+    setRooms(updated);
+    saveRooms(updated, accountId);
+    saveRoomsStateToCloud(accountId, updated);
   };
 
   /**
-   * Start a gaming session on an available station
-   * Supports open-ended or timed/prepaid sessions (by budget or duration)
+   * Start a gaming session
    */
-  const startSession = (
-    stationId,
-    {
+  const startSession = (stationId, sessionConfig) => {
+    const {
       hourlyPrice,
-      customerName,
+      customerName = '',
       isTimed = false,
-      limitType = 'budget',
-      targetDurationMs = 0,
+      targetDurationMs = null,
       targetBudget = null,
-      products = [],
-    } = {}
-  ) => {
-    stopAlarm(stationId);
-    const rate = Number(hourlyPrice) || Number(settings.defaultHourlyRate) || 20000;
+      initialProducts = [],
+    } = sessionConfig;
+
     const now = Date.now();
-    const durationMs = Number(targetDurationMs) || 0;
-    const isSessionTimed = Boolean(isTimed && durationMs > 0);
-    const targetEndTime = isSessionTimed ? now + durationMs : null;
+    const targetEndTime = isTimed && targetDurationMs ? now + targetDurationMs : null;
 
     const updatedRooms = rooms.map((room) => ({
       ...room,
-      stations: room.stations.map((st) => {
+      stations: (room.stations || []).map((st) => {
         if (st.id === stationId) {
           return {
             ...st,
             status: 'occupied',
             session: {
-              id: `sess_${now}_${Math.random().toString(36).substr(2, 5)}`,
+              id: `sess_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
               startTime: now,
-              hourlyPrice: rate,
-              customerName: customerName ? customerName.trim() : '',
-              products: Array.isArray(products) ? products : [],
-              isTimed: isSessionTimed,
-              limitType,
-              targetDurationMs: durationMs,
-              targetBudget: targetBudget != null ? Number(targetBudget) : null,
+              hourlyPrice: Number(hourlyPrice) || st.hourlyRate || settings.defaultHourlyRate || 20000,
+              customerName: customerName.trim() || 'Walk-in',
+              isTimed: Boolean(isTimed),
+              targetDurationMs: isTimed ? targetDurationMs : null,
+              targetBudget: isTimed ? targetBudget : null,
               targetEndTime,
+              products: initialProducts || [],
             },
           };
         }
@@ -235,18 +368,21 @@ function AppInnerProvider({ accountId, children }) {
   };
 
   /**
-   * Add products to an ongoing session
+   * Add products directly into an active session
    */
-  const addProductsToSession = (stationId, newProducts = []) => {
+  const addProductsToSession = (stationId, newProducts) => {
+    if (!newProducts || newProducts.length === 0) return;
+
     const updatedRooms = rooms.map((room) => ({
       ...room,
-      stations: room.stations.map((st) => {
+      stations: (room.stations || []).map((st) => {
         if (st.id === stationId && st.session) {
+          const currentProducts = st.session.products || [];
           return {
             ...st,
             session: {
               ...st.session,
-              products: [...(st.session.products || []), ...newProducts],
+              products: [...currentProducts, ...newProducts],
             },
           };
         }
@@ -260,7 +396,7 @@ function AppInnerProvider({ accountId, children }) {
   };
 
   /**
-   * Finish a gaming session, calculate duration & money, save transaction, release station
+   * Finish session and create transaction record
    */
   const finishSession = (stationId, { finalGamingPayment, finalProducts = [] }) => {
     const station = findStation(stationId);
@@ -310,7 +446,7 @@ function AppInnerProvider({ accountId, children }) {
     stopAlarm(stationId);
     const updatedRooms = rooms.map((room) => ({
       ...room,
-      stations: room.stations.map((st) => {
+      stations: (room.stations || []).map((st) => {
         if (st.id === stationId) {
           return {
             ...st,
@@ -417,13 +553,13 @@ function AppInnerProvider({ accountId, children }) {
     saveTransactions([], accountId);
   };
 
-  // Calculations for dashboard and quick monitors
-  const allStations = rooms.flatMap((r) => r.stations);
-  const totalRooms = INITIAL_ROOMS_COUNT;
-  const totalStations = INITIAL_ROOMS_COUNT * STATIONS_PER_ROOM;
+  // Calculations for dashboard and quick monitors - purely dynamic!
+  const allStations = rooms.flatMap((r) => r.stations || []);
+  const totalRooms = rooms.length;
+  const totalStations = allStations.length;
   const occupiedStations = allStations.filter((s) => s.status === 'occupied');
   const occupiedStationsCount = occupiedStations.length;
-  const availableStationsCount = totalStations - occupiedStationsCount;
+  const availableStationsCount = allStations.filter((s) => s.status === 'available').length;
 
   // Today's stats
   const todayKey = toDateKey(new Date());
@@ -457,6 +593,12 @@ function AppInnerProvider({ accountId, children }) {
         recordDirectSale,
         updateSettings,
         clearTransactions,
+        // Dynamic room actions
+        addRoom,
+        updateRoom,
+        deleteRoom,
+        addStationToRoom,
+        removeStationFromRoom,
       }}
     >
       {children}

@@ -6,19 +6,20 @@ import {
   ShoppingBag,
   History,
   BarChart3,
-  Info,
   LogOut,
   Menu,
   X,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useApp } from '../context/AppContext';
 import LanguageSelector from './LanguageSelector';
 
 export default function Navbar() {
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
   const { t } = useLanguage();
+  const { totalRooms, totalStations } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -28,7 +29,6 @@ export default function Navbar() {
     { to: '/sales', label: t('nav.sales'), icon: ShoppingBag },
     { to: '/history', label: t('nav.history'), icon: History },
     { to: '/reports', label: t('nav.reports'), icon: BarChart3 },
-    { to: '/info', label: t('nav.info'), icon: Info },
   ];
 
   const handleLogout = () => {
@@ -71,9 +71,9 @@ export default function Navbar() {
                 </span>
               </div>
               <div className="text-[10px] text-slate-400 font-bold tracking-wider uppercase mt-1 flex items-center gap-1.5 whitespace-nowrap">
-                <span>5 {t('common.roomPrefix')}</span>
+                <span>{totalRooms} {t('common.roomPrefix')}</span>
                 <span className="w-1 h-1 rounded-full bg-[#22D3EE]" />
-                <span>25 {t('common.stationPrefix')}</span>
+                <span>{totalStations} {t('common.stationPrefix')}</span>
               </div>
             </div>
           </NavLink>

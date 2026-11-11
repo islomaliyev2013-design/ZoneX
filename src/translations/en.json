@@ -107,6 +107,10 @@
     "tableDurationItems": "Duration / Items",
     "tableRevenue": "Revenue",
     "tableProfit": "Net Profit",
+    "tableGaming": "Gaming Time & Pay",
+    "tableProducts": "Products Sold",
+    "noRoomsNotice": "No rooms added yet. Add new rooms and consoles.",
+    "emptyStationsInRoom": "No consoles",
     "allStationsFreeSubtext": "All {totalStations} consoles free • {totalRooms} rooms active"
   },
   "rooms": {
@@ -129,7 +133,23 @@
     "roomZone2": "Game Zone (20k)",
     "roomZone3": "Unlimited Time (30k)",
     "roomZone4": "Grand Arena (40k)",
-    "roomZone5": "VIP Cabin (50k)"
+    "roomZone5": "VIP Cabin (50k)",
+    "addRoomBtn": "Add New Room",
+    "editRoomBtn": "Edit Room",
+    "deleteRoomBtn": "Delete Room",
+    "addStationBtn": "+ Add PlayStation",
+    "deleteStationBtn": "Delete Console",
+    "noRoomsTitle": "No Rooms Yet",
+    "noRoomsSubtitle": "Add new rooms and consoles for your PlayStation lounge",
+    "noStationsInRoom": "No consoles in this room yet",
+    "noStationsSubtitle": "Click the button below to add a PlayStation",
+    "roomNameLabel": "Room Name",
+    "zoneTypeLabel": "Zone Type",
+    "hourlyRateLabel": "Hourly Rate",
+    "initialStationsLabel": "Initial Consoles Count",
+    "isUnlimitedLabel": "Unlimited Time Only (no timer)",
+    "confirmDeleteRoom": "Are you sure you want to delete this room and its consoles?",
+    "confirmDeleteStation": "Are you sure you want to delete this console?"
   },
   "station": {
     "available": "Available",
@@ -202,7 +222,8 @@
     "finishAndSaveBtn": "Finish Session & Save Receipt",
     "addProductsTitle": "Add Products to {station}",
     "addProductsSubtitle": "{room} • Customer: {customer}",
-    "addToSessionBtn": "Add to Active Session"
+    "addToSessionBtn": "Add to Active Session",
+    "noProductsCatalog": "Products catalog is empty. You can add products in the Sales section."
   },
   "sales": {
     "title": "Product Sales",

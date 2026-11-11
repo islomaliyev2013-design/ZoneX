@@ -107,6 +107,10 @@
     "tableDurationItems": "Время / Товары",
     "tableRevenue": "Выручка",
     "tableProfit": "Прибыль",
+    "tableGaming": "Игровое время и оплата",
+    "tableProducts": "Проданные товары",
+    "noRoomsNotice": "Комнаты пока не добавлены. Добавьте новые комнаты и консоли.",
+    "emptyStationsInRoom": "Нет консолей",
     "allStationsFreeSubtext": "Все {totalStations} консолей свободны • {totalRooms} залов активно"
   },
   "rooms": {
@@ -129,7 +133,23 @@
     "roomZone2": "Game Zone (20k)",
     "roomZone3": "Время не ограничено (30k)",
     "roomZone4": "Grand Arena (40k)",
-    "roomZone5": "VIP Кабина (50k)"
+    "roomZone5": "VIP Кабина (50k)",
+    "addRoomBtn": "Добавить комнату",
+    "editRoomBtn": "Редактировать комнату",
+    "deleteRoomBtn": "Удалить комнату",
+    "addStationBtn": "+ Добавить PlayStation",
+    "deleteStationBtn": "Удалить консоль",
+    "noRoomsTitle": "Комнаты пока отсутствуют",
+    "noRoomsSubtitle": "Добавьте новые комнаты и консоли для вашего клуба PlayStation",
+    "noStationsInRoom": "В этой комнате пока нет консолей",
+    "noStationsSubtitle": "Нажмите кнопку ниже, чтобы добавить PlayStation",
+    "roomNameLabel": "Название комнаты",
+    "zoneTypeLabel": "Тип зоны",
+    "hourlyRateLabel": "Почасовой тариф",
+    "initialStationsLabel": "Начальное количество консолей",
+    "isUnlimitedLabel": "Только без ограничений (без таймера)",
+    "confirmDeleteRoom": "Вы действительно хотите удалить эту комнату и её консоли?",
+    "confirmDeleteStation": "Вы действительно хотите удалить эту консоль?"
   },
   "station": {
     "available": "Свободно",
@@ -202,7 +222,8 @@
     "finishAndSaveBtn": "Завершить сессию и сохранить чек",
     "addProductsTitle": "Добавить товары к {station}",
     "addProductsSubtitle": "{room} • Клиент: {customer}",
-    "addToSessionBtn": "Добавить к текущей сессии"
+    "addToSessionBtn": "Добавить к текущей сессии",
+    "noProductsCatalog": "Каталог товаров пуст. Вы можете добавить товары в разделе Продажи."
   },
   "sales": {
     "title": "Продажи товаров",

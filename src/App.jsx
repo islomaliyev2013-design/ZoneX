@@ -12,7 +12,6 @@ import Rooms from './pages/Rooms';
 import Sales from './pages/Sales';
 import History from './pages/History';
 import Reports from './pages/Reports';
-import Info from './pages/Info';
 
 function AppLayout({ children }) {
   const { t } = useLanguage();
@@ -114,16 +113,6 @@ export default function App() {
                   <ProtectedRoute>
                     <AppLayout>
                       <Reports />
-                    </AppLayout>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/info"
-                element={
-                  <ProtectedRoute>
-                    <AppLayout>
-                      <Info />
                     </AppLayout>
                   </ProtectedRoute>
                 }

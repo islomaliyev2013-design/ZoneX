@@ -25,10 +25,7 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
   const { t } = useLanguage();
   const currency = settings.currency || "so'm";
 
-  const catalogList =
-    Array.isArray(productsCatalog) && productsCatalog.length > 0
-      ? productsCatalog
-      : DEFAULT_CATALOG;
+  const catalogList = Array.isArray(productsCatalog) ? productsCatalog : [];
 
   const [hourlyPrice, setHourlyPrice] = useState(
     settings.defaultHourlyRate != null ? settings.defaultHourlyRate : 20000
@@ -198,7 +195,7 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
   const localizedStationName = `${t('common.stationPrefix')} ${station.stationNumber}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-5 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#070b14]/92 backdrop-blur-md p-3 sm:p-5 overflow-hidden">
       <div className="bg-midnight-card rounded-2xl w-full max-w-lg text-white shadow-2xl border border-midnight-border flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95">
         
         {/* Sticky Header — Always Visible */}
@@ -633,70 +630,76 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                   </div>
 
                   {/* Fast 1-click Products Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {catalogList.map((item) => {
-                      const qty = productQuantities[item.id] || 0;
-                      return (
-                        <div
-                          key={item.id}
-                          className={`p-2.5 rounded-xl border flex items-center justify-between transition-all duration-150 ${
-                            qty > 0
-                              ? 'bg-brand-purple/15 border-brand-purple text-white shadow-xs ring-1 ring-brand-purple/30'
-                              : 'bg-midnight-card border-midnight-border hover:border-slate-600 text-slate-300'
-                          }`}
-                        >
-                          <div className="min-w-0 pr-1.5 flex items-center gap-2 flex-1">
-                            <span className="text-base select-none shrink-0">
-                              {getProductEmoji(item.name)}
-                            </span>
-                            <div className="min-w-0">
-                              <span className="text-xs font-bold text-white block truncate leading-tight">
-                                {item.name}
+                  {catalogList.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {catalogList.map((item) => {
+                        const qty = productQuantities[item.id] || 0;
+                        return (
+                          <div
+                            key={item.id}
+                            className={`p-2.5 rounded-xl border flex items-center justify-between transition-all duration-150 ${
+                              qty > 0
+                                ? 'bg-brand-purple/15 border-brand-purple text-white shadow-xs ring-1 ring-brand-purple/30'
+                                : 'bg-midnight-card border-midnight-border hover:border-slate-600 text-slate-300'
+                            }`}
+                          >
+                            <div className="min-w-0 pr-1.5 flex items-center gap-2 flex-1">
+                              <span className="text-base select-none shrink-0">
+                                {getProductEmoji(item.name)}
                               </span>
-                              <span className="text-[11px] font-semibold text-brand-lavender/90 block mt-0.5">
-                                {formatCurrency(item.sellingPrice, currency)}
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="shrink-0 flex items-center">
-                            {qty > 0 ? (
-                              <div className="flex items-center gap-1 bg-midnight-bg p-0.5 rounded-lg border border-brand-purple/50">
-                                <button
-                                  type="button"
-                                  onClick={() => handleDecrementProduct(item.id)}
-                                  className="w-5 h-5 rounded flex items-center justify-center bg-midnight-card hover:bg-rose-500/20 text-slate-300 hover:text-rose-300 text-xs font-bold transition active:scale-90"
-                                  title="1 ta kamaytirish"
-                                >
-                                  <Minus className="w-3 h-3" />
-                                </button>
-                                <span className="w-5 text-center text-xs font-black text-white">
-                                  {qty}
+                              <div className="min-w-0">
+                                <span className="text-xs font-bold text-white block truncate leading-tight">
+                                  {item.name}
                                 </span>
+                                <span className="text-[11px] font-semibold text-brand-lavender/90 block mt-0.5">
+                                  {formatCurrency(item.sellingPrice, currency)}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="shrink-0 flex items-center">
+                              {qty > 0 ? (
+                                <div className="flex items-center gap-1 bg-midnight-bg p-0.5 rounded-lg border border-brand-purple/50">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDecrementProduct(item.id)}
+                                    className="w-5 h-5 rounded flex items-center justify-center bg-midnight-card hover:bg-rose-500/20 text-slate-300 hover:text-rose-300 text-xs font-bold transition active:scale-90"
+                                    title="1 ta kamaytirish"
+                                  >
+                                    <Minus className="w-3 h-3" />
+                                  </button>
+                                  <span className="w-5 text-center text-xs font-black text-white">
+                                    {qty}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleIncrementProduct(item)}
+                                    className="w-5 h-5 rounded flex items-center justify-center bg-brand-purple hover:bg-brand-purpleHover text-slate-950 text-xs font-black transition active:scale-90"
+                                    title="1 ta qo'shish"
+                                  >
+                                    <Plus className="w-3 h-3 stroke-[3]" />
+                                  </button>
+                                </div>
+                              ) : (
                                 <button
                                   type="button"
                                   onClick={() => handleIncrementProduct(item)}
-                                  className="w-5 h-5 rounded flex items-center justify-center bg-brand-purple hover:bg-brand-purpleHover text-slate-950 text-xs font-black transition active:scale-90"
-                                  title="1 ta qo'shish"
+                                  className="px-2 py-1 rounded-lg bg-midnight-bg hover:bg-brand-purple/20 text-slate-300 hover:text-brand-purpleLight border border-midnight-border hover:border-brand-purple/40 text-[11px] font-bold transition flex items-center gap-1 active:scale-95"
                                 >
-                                  <Plus className="w-3 h-3 stroke-[3]" />
+                                  <Plus className="w-3 h-3 text-cyan-400" />
+                                  <span>Qo‘shish</span>
                                 </button>
-                              </div>
-                            ) : (
-                              <button
-                                type="button"
-                                onClick={() => handleIncrementProduct(item)}
-                                className="px-2 py-1 rounded-lg bg-midnight-bg hover:bg-brand-purple/20 text-slate-300 hover:text-brand-purpleLight border border-midnight-border hover:border-brand-purple/40 text-[11px] font-bold transition flex items-center gap-1 active:scale-95"
-                              >
-                                <Plus className="w-3 h-3 text-cyan-400" />
-                                <span>Qo‘shish</span>
-                              </button>
-                            )}
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="p-3.5 rounded-xl bg-midnight-card/50 border border-midnight-border text-center text-xs text-slate-400">
+                      {t('sessionModal.noProductsCatalog') || "Mahsulotlar mavjud emas. Mahsulot qo'shish uchun Sotuvlar bo'limiga o'ting."}
+                    </div>
+                  )}
                 </div>
               </div>
             )}

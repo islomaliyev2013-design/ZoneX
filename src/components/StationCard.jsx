@@ -1,16 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Square, Clock, User, PlusCircle, Gamepad2, BellRing, VolumeX, Timer, Coins } from 'lucide-react';
+import {
+  Play,
+  Square,
+  Clock,
+  User,
+  PlusCircle,
+  Gamepad2,
+  BellRing,
+  VolumeX,
+  Timer,
+  Trash2,
+} from 'lucide-react';
 import { formatTimer, formatCurrency, formatDurationHuman } from '../utils/formatters';
 import { calculateGamingPayment } from '../utils/calculations';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
-import { playAlarm, stopAlarm, isAlarmActive } from '../utils/audioAlert';
-import { ROOM_DEFAULT_CONFIGS } from '../utils/storage';
+import { playAlarm, stopAlarm } from '../utils/audioAlert';
 
-export default function StationCard({ station, onStartClick, onFinishClick, onAddProductsClick }) {
+export default function StationCard({
+  station,
+  onStartClick,
+  onFinishClick,
+  onAddProductsClick,
+  onDeleteStationClick,
+}) {
   const { settings } = useApp();
   const { t } = useLanguage();
-  const currency = settings.currency || "so'm";
+  const currency = settings?.currency || "so'm";
   const isOccupied = station.status === 'occupied' && station.session != null;
 
   const session = station.session;
@@ -88,7 +104,15 @@ export default function StationCard({ station, onStartClick, onFinishClick, onAd
     return () => {
       clearInterval(interval);
     };
-  }, [isOccupied, session?.id, session?.startTime, session?.isTimed, session?.targetEndTime, isMuted, station.id]);
+  }, [
+    isOccupied,
+    session?.id,
+    session?.startTime,
+    session?.isTimed,
+    session?.targetEndTime,
+    isMuted,
+    station.id,
+  ]);
 
   // Stop alarm on unmount
   useEffect(() => {
@@ -123,17 +147,18 @@ export default function StationCard({ station, onStartClick, onFinishClick, onAd
     : 0;
 
   const productsCount = session?.products?.length || 0;
-  const localizedRoomName = t('rooms.roomN', { n: station.roomId });
-  const localizedStationName = `${t('common.stationPrefix')} ${station.stationNumber}`;
+  const localizedRoomName = station.roomName || t('rooms.roomN', { n: station.roomId });
+  const localizedStationName = station.stationName || `${t('common.stationPrefix')} ${station.stationNumber}`;
 
   // Progress percentage for timed sessions
-  const progressPercent = isTimed && targetDurationMs > 0
-    ? Math.min(100, Math.max(0, Math.round((elapsedMs / targetDurationMs) * 100)))
-    : 0;
+  const progressPercent =
+    isTimed && targetDurationMs > 0
+      ? Math.min(100, Math.max(0, Math.round((elapsedMs / targetDurationMs) * 100)))
+      : 0;
 
   return (
     <div
-      className={`relative bg-midnight-card rounded-2xl p-5 shadow-lg border transition-all duration-200 hover:shadow-xl flex flex-col justify-between ${
+      className={`relative bg-midnight-card rounded-2xl p-5 shadow-lg border transition-all duration-200 hover:shadow-xl flex flex-col justify-between h-full w-full ${
         isExpired
           ? 'border-gaming-red ring-4 ring-gaming-red/50 shadow-2xl shadow-gaming-red/30 animate-pulse'
           : isOccupied
@@ -142,44 +167,38 @@ export default function StationCard({ station, onStartClick, onFinishClick, onAd
       }`}
     >
       {/* Top bar: Station Name & Status Badge */}
-      <div>
-        <div className="flex items-center justify-between gap-2 mb-3">
-          <div className="flex items-center gap-2.5">
-            <div
-              className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm ${
-                isExpired
-                  ? 'bg-gaming-red text-white animate-bounce'
-                  : isOccupied
-                  ? 'bg-gaming-redBg text-gaming-red border border-gaming-red/30'
-                  : 'bg-brand-purple/15 text-brand-purpleLight border border-brand-purple/30'
-              }`}
-            >
-              {isExpired ? <BellRing className="w-5 h-5" /> : <Gamepad2 className="w-5 h-5" />}
-            </div>
-            <div>
-              <h4 className="font-extrabold text-base text-white leading-tight">
-                {localizedStationName}
-              </h4>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="text-[11px] text-slate-400 font-medium">
-                  {localizedRoomName}
+      <div className="flex items-start justify-between gap-2 mb-2">
+        <div className="flex items-center gap-2.5">
+          <div
+            className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 ${
+              isExpired
+                ? 'bg-gaming-red text-white animate-bounce'
+                : isOccupied
+                ? 'bg-gaming-redBg text-gaming-red border border-gaming-red/30'
+                : 'bg-brand-purple/15 text-brand-purpleLight border border-brand-purple/30'
+            }`}
+          >
+            {isExpired ? <BellRing className="w-5 h-5" /> : <Gamepad2 className="w-5 h-5" />}
+          </div>
+          <div className="min-w-0">
+            <h4 className="font-extrabold text-base text-white leading-tight truncate">
+              {localizedStationName}
+            </h4>
+            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+              <span className="text-[11px] text-slate-400 font-medium truncate">
+                {localizedRoomName}
+              </span>
+              {station.zoneType && (
+                <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded border bg-cyan-500/10 text-cyan-300 border-cyan-500/30">
+                  {station.zoneType}
                 </span>
-                {station.zoneType && (
-                  <span
-                    className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded border ${
-                      station.roomId === 5
-                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-xs'
-                        : 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30'
-                    }`}
-                  >
-                    {station.zoneType}
-                  </span>
-                )}
-              </div>
+              )}
             </div>
           </div>
+        </div>
 
-          {/* Status Badge */}
+        {/* Status Badge + Optional Delete Console Button */}
+        <div className="flex items-center gap-1.5 shrink-0">
           {isOccupied ? (
             <div className="flex items-center gap-1.5">
               {isExpired ? (
@@ -198,16 +217,30 @@ export default function StationCard({ station, onStartClick, onFinishClick, onAd
               )}
             </div>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-gaming-greenBg text-gaming-green border border-gaming-green/40">
-              <span className="h-2 w-2 rounded-full bg-gaming-green"></span>
-              {t('station.available')}
-            </span>
+            <div className="flex items-center gap-1">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-gaming-greenBg text-gaming-green border border-gaming-green/40">
+                <span className="h-2 w-2 rounded-full bg-gaming-green"></span>
+                {t('station.available')}
+              </span>
+              {onDeleteStationClick && (
+                <button
+                  type="button"
+                  onClick={() => onDeleteStationClick(station)}
+                  className="p-1 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition"
+                  title={t('rooms.deleteStationBtn')}
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
           )}
         </div>
+      </div>
 
-        {/* Card Body */}
+      {/* Middle Card Body - Flex-1 stretches to uniform height */}
+      <div className="flex-1 flex flex-col justify-center my-3">
         {isOccupied ? (
-          <div className="space-y-3 my-2">
+          <div className="space-y-2.5 w-full">
             {/* Customer name */}
             <div className="flex items-center justify-between text-xs py-1.5 px-3 bg-midnight-bg rounded-xl border border-midnight-border">
               <span className="text-slate-400 flex items-center gap-1.5 font-medium">
@@ -262,7 +295,10 @@ export default function StationCard({ station, onStartClick, onFinishClick, onAd
                     {isExpired ? t('station.timeExpired') : t('station.timeRemaining')}
                   </span>
                   <span className="text-[11px] text-slate-400 font-mono">
-                    Limit: {session.targetBudget ? formatCurrency(session.targetBudget, currency) : formatDurationHuman(targetDurationMs)}
+                    Limit:{' '}
+                    {session.targetBudget
+                      ? formatCurrency(session.targetBudget, currency)
+                      : formatDurationHuman(targetDurationMs)}
                   </span>
                 </div>
 
@@ -335,20 +371,19 @@ export default function StationCard({ station, onStartClick, onFinishClick, onAd
             )}
           </div>
         ) : (
-          <div className="my-6 text-center py-4 px-3 rounded-xl bg-midnight-bg border border-midnight-border">
+          <div className="text-center py-6 px-3 rounded-xl bg-midnight-bg border border-midnight-border w-full">
             <p className="text-xs text-slate-400 mb-1">{t('station.readyForNext')}</p>
             <p className="text-sm font-bold text-white">
-              {station.roomId === 3 || station.isUnlimitedOnly ? (
+              {station.isUnlimitedOnly ? (
                 <span className="text-cyan-300 font-extrabold">
-                  {t('infoPage.room3Badge') || 'Vaqti cheklanmagan'} ({formatCurrency(ROOM_DEFAULT_CONFIGS[3]?.hourlyRate || 30000, currency)}{t('station.perHour') || '/soat'})
+                  {t('rooms.isUnlimitedLabel') || 'Vaqti cheklanmagan'} (
+                  {formatCurrency(station.hourlyRate || settings?.defaultHourlyRate || 20000, currency)}
+                  {t('station.perHour') || '/soat'})
                 </span>
               ) : (
                 t('station.defaultRate', {
                   rate: formatCurrency(
-                    ROOM_DEFAULT_CONFIGS[station.roomId]?.hourlyRate ||
-                      station.hourlyRate ||
-                      settings.defaultHourlyRate ||
-                      20000,
+                    station.hourlyRate || settings?.defaultHourlyRate || 20000,
                     currency
                   ),
                 })
@@ -358,15 +393,15 @@ export default function StationCard({ station, onStartClick, onFinishClick, onAd
         )}
       </div>
 
-      {/* Buttons */}
-      <div className="pt-3 border-t border-midnight-border">
+      {/* Buttons — Pinned cleanly at bottom with mt-auto */}
+      <div className="pt-3 border-t border-midnight-border mt-auto w-full">
         {isOccupied ? (
           <div className="flex gap-2">
             {onAddProductsClick && (
               <button
                 type="button"
                 onClick={() => onAddProductsClick(station)}
-                className="px-2.5 py-2.5 rounded-xl bg-midnight-bg hover:bg-midnight-hover text-slate-300 hover:text-white border border-midnight-border text-xs font-bold transition flex items-center justify-center"
+                className="px-2.5 py-2.5 rounded-xl bg-midnight-bg hover:bg-midnight-hover text-slate-300 hover:text-white border border-midnight-border text-xs font-bold transition flex items-center justify-center cursor-pointer"
                 title={t('station.addProduct')}
               >
                 <PlusCircle className="w-4 h-4 text-brand-purpleLight" />

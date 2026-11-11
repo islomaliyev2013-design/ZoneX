@@ -11,11 +11,12 @@ import {
   Clock,
   Receipt,
   Sparkles,
+  Plus,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { formatCurrency, formatDurationHuman, formatDateDisplay } from '../utils/formatters';
+import { formatCurrency, formatDurationHuman } from '../utils/formatters';
 import StartSessionModal from '../components/StartSessionModal';
 import FinishSessionModal from '../components/FinishSessionModal';
 import AddProductsModal from '../components/AddProductsModal';
@@ -23,20 +24,19 @@ import StationCard from '../components/StationCard';
 
 export default function Dashboard() {
   const {
-    rooms,
-    totalRooms,
-    totalStations,
+    rooms = [],
+    totalRooms = 0,
+    totalStations = 0,
     occupiedStations = [],
-    occupiedStationsCount,
-    availableStationsCount,
+    occupiedStationsCount = 0,
+    availableStationsCount = 0,
     todaySummary,
-    transactions,
+    transactions = [],
     settings,
   } = useApp();
-  const { currentUser } = useAuth();
   const { t } = useLanguage();
 
-  const currency = settings.currency || "so'm";
+  const currency = settings?.currency || "so'm";
 
   // Modals state
   const [activeStationForStart, setActiveStationForStart] = useState(null);
@@ -48,7 +48,7 @@ export default function Dashboard() {
       id: 'rooms',
       label: t('dashboard.totalRooms'),
       value: totalRooms,
-      subtext: t('dashboard.fiveRoomsSubtext'),
+      subtext: `${totalRooms} ${t('common.roomPrefix')}`,
       icon: Tv,
       color: 'text-brand-purpleLight',
       bgColor: 'bg-brand-purple/15 border-brand-purple/30',
@@ -57,7 +57,7 @@ export default function Dashboard() {
       id: 'stations',
       label: t('dashboard.totalStations'),
       value: totalStations,
-      subtext: t('dashboard.fivePerRoom'),
+      subtext: `${totalStations} ${t('common.stationPrefix')}`,
       icon: Gamepad2,
       color: 'text-brand-lavender',
       bgColor: 'bg-brand-purple/15 border-brand-purple/30',
@@ -76,7 +76,7 @@ export default function Dashboard() {
       label: t('dashboard.occupiedStations'),
       value: occupiedStationsCount,
       subtext: t('dashboard.utilization', {
-        percent: Math.round((occupiedStationsCount / totalStations) * 100),
+        percent: totalStations > 0 ? Math.round((occupiedStationsCount / totalStations) * 100) : 0,
       }),
       icon: Users,
       color: 'text-gaming-red',
@@ -86,7 +86,7 @@ export default function Dashboard() {
     {
       id: 'gaming_income',
       label: t('dashboard.todayGamingIncome'),
-      value: formatCurrency(todaySummary.totalGamingIncome, currency),
+      value: formatCurrency(todaySummary?.totalGamingIncome || 0, currency),
       subtext: t('dashboard.fromPlaystationSessions'),
       icon: Clock,
       color: 'text-brand-purpleLight',
@@ -95,9 +95,9 @@ export default function Dashboard() {
     {
       id: 'product_sales',
       label: t('dashboard.todayProductSales'),
-      value: formatCurrency(todaySummary.totalProductRevenue, currency),
+      value: formatCurrency(todaySummary?.totalProductRevenue || 0, currency),
       subtext: t('dashboard.costPrefix', {
-        cost: formatCurrency(todaySummary.totalProductCosts, currency),
+        cost: formatCurrency(todaySummary?.totalProductCosts || 0, currency),
       }),
       icon: ShoppingBag,
       color: 'text-brand-lavender',
@@ -106,7 +106,7 @@ export default function Dashboard() {
     {
       id: 'total_profit',
       label: t('dashboard.todayTotalProfit'),
-      value: formatCurrency(todaySummary.totalProfit, currency),
+      value: formatCurrency(todaySummary?.totalProfit || 0, currency),
       subtext: t('dashboard.gamingAndProductProfits'),
       icon: TrendingUp,
       color: 'text-gaming-green',
@@ -138,7 +138,7 @@ export default function Dashboard() {
         <div className="flex items-center gap-3">
           <Link
             to="/rooms"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-purple hover:bg-brand-purpleHover text-slate-950 text-xs font-black shadow-md shadow-brand-purple/30 transition hover:-translate-y-0.5 active:translate-y-0"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-purple to-cyan-500 hover:from-brand-purpleHover hover:to-cyan-400 text-slate-950 text-xs font-black shadow-md shadow-brand-purple/30 transition hover:-translate-y-0.5 active:translate-y-0"
           >
             <Tv className="w-4 h-4" />
             {t('dashboard.manageRooms')}
@@ -203,8 +203,8 @@ export default function Dashboard() {
         })}
       </div>
 
-      {/* Active Occupied Consoles Monitor ("Qaysilari xonalar zanyat") */}
-      {occupiedStations.length > 0 ? (
+      {/* Active Occupied Consoles Monitor */}
+      {occupiedStations.length > 0 && (
         <div className="bg-midnight-card rounded-2xl p-6 shadow-xl border border-gaming-red/40 bg-gradient-to-br from-midnight-card via-midnight-card to-gaming-red/5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-midnight-border">
             <div className="flex items-center gap-3">
@@ -235,7 +235,7 @@ export default function Dashboard() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5 items-stretch">
             {occupiedStations.map((st) => (
               <StationCard
                 key={st.id}
@@ -246,89 +246,15 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
-      ) : (
-        <div className="bg-midnight-card rounded-2xl p-4 sm:p-5 shadow-sm border border-midnight-border flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gaming-greenBg text-gaming-green border border-gaming-green/30 flex items-center justify-center">
-              <CheckCircle2 className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-xs sm:text-sm font-bold text-white">
-                {t('occupiedMonitor.noOccupied')}
-              </h3>
-              <p className="text-[11px] text-slate-400">
-                {t('dashboard.allStationsFreeSubtext', { totalStations, totalRooms })}
-              </p>
-            </div>
-          </div>
-          <Link
-            to="/rooms"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-purple/20 text-brand-purpleLight hover:bg-brand-purple hover:text-white text-xs font-bold transition"
-          >
-            <span>{t('dashboard.manageRooms')}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
       )}
 
-      {/* Club Rooms Atmosphere & Photo Gallery Preview Card */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-[#0F172A] via-[#142033] to-[#0D1524] border border-[#25364C] shadow-lg flex flex-col lg:flex-row items-center justify-between gap-6">
-        <div className="max-w-md">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-2">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{t('dashboard.clubAtmosphereBadge')}</span>
-          </div>
-          <h3 className="text-xl font-black text-white tracking-tight">
-            {t('dashboard.clubAtmosphereTitle')}
-          </h3>
-          <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-            {t('dashboard.clubAtmosphereDesc')}
-          </p>
-          <Link
-            to="/info"
-            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 hover:text-white text-xs font-bold transition shadow-sm"
-          >
-            <span>{t('dashboard.viewGalleryBtn')}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-
-        {/* 5 Small Photo Thumbnails */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 w-full lg:w-auto">
-          {[
-            { img: '/gallery/room-platform.jpg', label: t('dashboard.hallTitle') },
-            { img: '/gallery/room-gamezone.jpg', label: t('dashboard.gamezoneTitle') },
-            { img: '/gallery/room-neon.jpg', label: t('dashboard.neonTitle') },
-            { img: '/gallery/room-comfort.jpg', label: t('dashboard.comfortTitle') },
-            { img: '/gallery/room-vip.jpg', label: t('dashboard.vipTitle') },
-          ].map((item, idx) => (
-            <Link
-              key={idx}
-              to="/info"
-              className="group relative w-full sm:w-28 lg:w-32 h-24 rounded-2xl overflow-hidden border border-[#25364C] hover:border-cyan-400/80 transition shadow-md"
-            >
-              <img
-                src={item.img}
-                alt={item.label}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-1.5">
-                <span className="text-[10px] font-bold text-white leading-tight">
-                  {item.label}
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Live 5 Rooms Overview Card */}
+      {/* Live Rooms Overview Card */}
       <div className="bg-midnight-card rounded-2xl p-6 shadow-lg border border-midnight-border">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-5 border-b border-midnight-border">
           <div>
             <h2 className="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
               <Tv className="w-5 h-5 text-brand-purpleLight" />
-              {t('dashboard.liveRoomOverview')}
+              <span>{totalRooms} {t('common.roomPrefix')} • {totalStations} {t('common.stationPrefix')}</span>
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
               {t('dashboard.clickStationHint')}
@@ -338,107 +264,129 @@ export default function Dashboard() {
             to="/rooms"
             className="text-xs font-bold text-brand-purpleLight hover:text-white flex items-center gap-1 group"
           >
-            {t('dashboard.openFullRoomView')}
+            <span>{t('dashboard.openFullRoomView')}</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
 
-        {/* 5 Rooms Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
-          {rooms.map((room) => {
-            const occupiedInRoom = room.stations.filter((s) => s.status === 'occupied').length;
-            const localizedRoomName = t('rooms.roomN', { n: room.id });
+        {/* Dynamic Rooms Grid or Zero Rooms Callout */}
+        {rooms.length === 0 ? (
+          <div className="py-12 px-4 rounded-xl border border-dashed border-midnight-border bg-midnight-bg/40 text-center space-y-3 my-4">
+            <div className="w-12 h-12 rounded-2xl bg-midnight-card border border-midnight-border text-slate-400 flex items-center justify-center mx-auto">
+              <Gamepad2 className="w-6 h-6" />
+            </div>
+            <h3 className="text-base font-bold text-white">
+              {t('dashboard.noRoomsNotice')}
+            </h3>
+            <Link
+              to="/rooms"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-purple to-cyan-500 hover:from-brand-purpleHover hover:to-cyan-400 text-slate-950 font-black text-xs transition cursor-pointer shadow-md"
+            >
+              <Plus className="w-4 h-4" />
+              <span>{t('rooms.addRoomBtn')}</span>
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
+            {rooms.map((room) => {
+              const roomStations = room.stations || [];
+              const occupiedInRoom = roomStations.filter((s) => s.status === 'occupied').length;
 
-            return (
-              <div
-                key={room.id}
-                className="bg-midnight-bg rounded-xl p-4 border border-midnight-border flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <span className="font-extrabold text-sm text-white block leading-tight">{localizedRoomName}</span>
+              return (
+                <div
+                  key={room.id}
+                  className="bg-midnight-bg rounded-xl p-4 border border-midnight-border flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="min-w-0 pr-1">
+                        <span className="font-extrabold text-sm text-white block leading-tight truncate">
+                          {room.name || `${room.id}-xona`}
+                        </span>
+                        <span className="text-[10px] font-bold block truncate mt-0.5 text-cyan-400">
+                          {room.zoneType || 'Standart'}
+                        </span>
+                      </div>
                       <span
-                        className={`text-[9px] font-bold block ${
-                          room.id === 5 ? 'text-amber-300 font-extrabold' : 'text-cyan-400'
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 ${
+                          occupiedInRoom > 0
+                            ? 'bg-gaming-redBg text-gaming-red border-gaming-red/30'
+                            : 'bg-gaming-greenBg text-gaming-green border-gaming-green/30'
                         }`}
                       >
-                        {t(`rooms.roomZone${room.id}`)}
+                        {occupiedInRoom} / {roomStations.length} {t('dashboard.active')}
                       </span>
                     </div>
-                    <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                        occupiedInRoom > 0
-                          ? 'bg-gaming-redBg text-gaming-red border-gaming-red/30'
-                          : 'bg-gaming-greenBg text-gaming-green border-gaming-green/30'
-                      }`}
-                    >
-                      {occupiedInRoom} / 5 {t('dashboard.active')}
-                    </span>
-                  </div>
 
-                  {/* 5 Station Mini Rows */}
-                  <div className="space-y-1.5">
-                    {room.stations.map((st) => {
-                      const isOcc = st.status === 'occupied';
-                      const localizedStationName = `${t('common.stationPrefix')} ${st.stationNumber}`;
+                    {/* Station Mini Rows */}
+                    {roomStations.length === 0 ? (
+                      <div className="py-4 text-center text-xs text-slate-500 italic">
+                        {t('dashboard.emptyStationsInRoom')}
+                      </div>
+                    ) : (
+                      <div className="space-y-1.5">
+                        {roomStations.map((st) => {
+                          const isOcc = st.status === 'occupied';
+                          const localizedStationName = st.stationName || `${t('common.stationPrefix')} ${st.stationNumber}`;
 
-                      return (
-                        <div
-                          key={st.id}
-                          className={`p-2 rounded-lg text-xs flex items-center justify-between border transition ${
-                            isOcc
-                              ? 'bg-gaming-redBg/60 border-gaming-red/30 text-rose-200'
-                              : 'bg-midnight-card border-midnight-border text-slate-300 hover:border-brand-purple/40'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2 truncate">
-                            <span
-                              className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                                isOcc ? 'bg-gaming-red animate-pulse' : 'bg-gaming-green'
+                          return (
+                            <div
+                              key={st.id}
+                              className={`p-2 rounded-lg text-xs flex items-center justify-between border transition ${
+                                isOcc
+                                  ? 'bg-gaming-redBg/60 border-gaming-red/30 text-rose-200'
+                                  : 'bg-midnight-card border-midnight-border text-slate-300 hover:border-brand-purple/40'
                               }`}
-                            />
-                            <span className="font-bold truncate text-[11px]">{localizedStationName}</span>
-                          </div>
+                            >
+                              <div className="flex items-center gap-2 truncate">
+                                <span
+                                  className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                                    isOcc ? 'bg-gaming-red animate-pulse' : 'bg-gaming-green'
+                                  }`}
+                                />
+                                <span className="font-bold truncate text-[11px]">{localizedStationName}</span>
+                              </div>
 
-                          {isOcc ? (
-                            <button
-                              type="button"
-                              onClick={() => setActiveStationForFinish(st)}
-                              className="px-2 py-0.5 rounded bg-gaming-red hover:bg-rose-600 text-white text-[10px] font-bold transition"
-                            >
-                              {t('dashboard.finish')}
-                            </button>
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() => setActiveStationForStart(st)}
-                              className="px-2 py-0.5 rounded bg-brand-purple hover:bg-brand-purpleHover text-white text-[10px] font-bold transition"
-                            >
-                              {t('dashboard.start')}
-                            </button>
-                          )}
-                        </div>
-                      );
-                    })}
+                              {isOcc ? (
+                                <button
+                                  type="button"
+                                  onClick={() => setActiveStationForFinish(st)}
+                                  className="px-2 py-0.5 rounded bg-gaming-red hover:bg-rose-600 text-white text-[10px] font-bold transition cursor-pointer"
+                                >
+                                  {t('dashboard.finish')}
+                                </button>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => setActiveStationForStart(st)}
+                                  className="px-2 py-0.5 rounded bg-brand-purple hover:bg-brand-purpleHover text-slate-950 text-[10px] font-black transition cursor-pointer"
+                                >
+                                  {t('dashboard.start')}
+                                </button>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-midnight-border text-center">
+                    <Link
+                      to={`/rooms?room=${room.id}`}
+                      className="text-[11px] font-bold text-brand-purpleLight hover:text-brand-lavender transition"
+                    >
+                      {t('dashboard.viewRoomStations', { room: room.name || `${room.id}-xona` })}
+                    </Link>
                   </div>
                 </div>
-
-                <div className="mt-4 pt-3 border-t border-midnight-border text-center">
-                  <Link
-                    to={`/rooms?room=${room.id}`}
-                    className="text-[11px] font-bold text-brand-purpleLight hover:text-brand-lavender transition"
-                  >
-                    {t('dashboard.viewRoomStations', { room: localizedRoomName })}
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
-      {/* Simple Recent Transactions Section (Real Data) */}
+      {/* Simple Recent Transactions Section with Separate Duration and Products Columns */}
       <div className="bg-midnight-card rounded-2xl p-6 shadow-lg border border-midnight-border">
         <div className="flex items-center justify-between pb-4 border-b border-midnight-border mb-4">
           <div className="flex items-center gap-2">
@@ -465,7 +413,8 @@ export default function Dashboard() {
                 <tr>
                   <th className="py-2.5 px-3">{t('dashboard.tableDateTime')}</th>
                   <th className="py-2.5 px-3">{t('dashboard.tableDestination')}</th>
-                  <th className="py-2.5 px-3">{t('dashboard.tableDurationItems')}</th>
+                  <th className="py-2.5 px-3">{t('dashboard.tableGaming')}</th>
+                  <th className="py-2.5 px-3">{t('dashboard.tableProducts')}</th>
                   <th className="py-2.5 px-3 text-right">{t('dashboard.tableRevenue')}</th>
                   <th className="py-2.5 px-3 text-right">{t('dashboard.tableProfit')}</th>
                 </tr>
@@ -481,23 +430,51 @@ export default function Dashboard() {
                       ? `${t('common.stationPrefix')} ${tx.stationId}`
                       : '';
 
+                  const hasDuration = tx.durationMs > 0;
+                  const hasProducts = tx.products && tx.products.length > 0;
+
                   return (
                     <tr key={tx.id} className="hover:bg-midnight-bg/60 transition">
-                      <td className="py-2.5 px-3 font-medium text-white">
+                      <td className="py-2.5 px-3 font-medium text-white whitespace-nowrap">
                         {tx.dateStr} • {tx.timeStr}
                       </td>
-                      <td className="py-2.5 px-3 font-semibold">
+                      <td className="py-2.5 px-3 font-semibold whitespace-nowrap">
                         {localizedRoom} {localizedStation ? `(${localizedStation})` : ''}
                       </td>
-                      <td className="py-2.5 px-3 text-slate-400">
-                        {tx.durationMs > 0
-                          ? formatDurationHuman(tx.durationMs)
-                          : tx.products?.map((p) => `${p.quantity}x ${p.name}`).join(', ') || '—'}
+                      {/* O'yin vaqti va o'yin to'lovi */}
+                      <td className="py-2.5 px-3 whitespace-nowrap">
+                        {hasDuration ? (
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-bold text-white">
+                              {formatDurationHuman(tx.durationMs)}
+                            </span>
+                            <span className="text-[11px] text-slate-400 font-mono">
+                              ({formatCurrency(tx.gamingPayment, currency)})
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-slate-500">—</span>
+                        )}
                       </td>
-                      <td className="py-2.5 px-3 text-right font-bold text-white">
+                      {/* Sotilgan mahsulotlar */}
+                      <td className="py-2.5 px-3 max-w-xs truncate" title={hasProducts ? tx.products.map(p => `${p.quantity}x ${p.name}`).join(', ') : ''}>
+                        {hasProducts ? (
+                          <div className="truncate">
+                            <span className="text-slate-200 font-medium">
+                              {tx.products.map(p => `${p.quantity}x ${p.name}`).join(', ')}
+                            </span>
+                            <span className="text-brand-lavender text-[11px] font-bold ml-1.5 font-mono">
+                              ({formatCurrency(tx.productRevenue, currency)})
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-slate-500">—</span>
+                        )}
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-bold text-white whitespace-nowrap">
                         {formatCurrency(tx.totalPaid || tx.gamingPayment + tx.productRevenue, currency)}
                       </td>
-                      <td className="py-2.5 px-3 text-right font-extrabold text-gaming-green">
+                      <td className="py-2.5 px-3 text-right font-extrabold text-gaming-green whitespace-nowrap">
                         {formatCurrency(tx.totalProfit, currency)}
                       </td>
                     </tr>

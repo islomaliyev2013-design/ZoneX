@@ -329,13 +329,20 @@ export default function History() {
                           <td colSpan={10} className="p-4">
                             <div className="bg-midnight-card rounded-xl p-4 border border-midnight-border space-y-3">
                               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-midnight-border pb-2">
-                                <div className="text-xs font-bold text-white">
-                                  {t('history.receiptDetails', {
-                                    id: tx.id.slice(-6),
-                                    customer: tx.customerName || t('common.walkIn'),
-                                  })}
+                                <div className="text-xs font-bold text-white flex items-center gap-2 flex-wrap">
+                                  <span>
+                                    {t('history.receiptDetails', {
+                                      id: tx.id.slice(-6),
+                                      customer: tx.customerName || t('common.walkIn'),
+                                    })}
+                                  </span>
+                                  {tx.durationMs > 0 && (
+                                    <span className="text-[11px] px-2 py-0.5 rounded-lg bg-brand-purple/20 text-brand-purpleLight border border-brand-purple/30 font-bold">
+                                      O‘yin: {formatDurationHuman(tx.durationMs)} ({formatCurrency(tx.gamingPayment, currency)})
+                                    </span>
+                                  )}
                                 </div>
-                                <div className="text-xs text-slate-400">
+                                <div className="text-xs text-slate-300 font-bold">
                                   {t('history.totalCollected', {
                                     amount: formatCurrency(
                                       tx.totalPaid || tx.gamingPayment + tx.productRevenue,
