@@ -28,17 +28,17 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
   useEffect(() => {
     if (isOpen) {
       if (mode === 'edit' && initialRoom) {
-        setName(initialRoom.name || `${initialRoom.id}-xona`);
+        setName(initialRoom.name || `${initialRoom.id}-PlayStation`);
         setZoneType(initialRoom.zoneType || 'Standart Zal');
         setHourlyRate(String(initialRoom.hourlyRate || 20000));
         setIsUnlimitedOnly(Boolean(initialRoom.isUnlimitedOnly));
         setStationCount(initialRoom.stations?.length || 0);
       } else {
-        setName(`${nextDefaultNumber}-xona`);
+        setName(`${nextDefaultNumber}-PlayStation`);
         setZoneType('Standart Zal');
         setHourlyRate('20000');
         setIsUnlimitedOnly(false);
-        setStationCount(0); // Starts from 0 consoles by default as user requested!
+        setStationCount(0); // Starts from 0 stations by default
       }
     }
   }, [isOpen, mode, initialRoom, nextDefaultNumber]);
@@ -58,7 +58,7 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
       });
     } else {
       addRoom({
-        name: name.trim() || `${nextDefaultNumber}-xona`,
+        name: name.trim() || `${nextDefaultNumber}-PlayStation`,
         zoneType: zoneType.trim() || 'Standart Zal',
         hourlyRate: rateNum,
         isUnlimitedOnly,
@@ -113,7 +113,7 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="masalan: 1-xona, VIP Zal, Cyber Lounge"
+              placeholder="masalan: 1-PlayStation, VIP Kabina, Cyber Lounge"
               className="w-full px-4 py-2.5 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-sm font-semibold text-[#292524] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
             />
           </div>
@@ -227,12 +227,12 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
                         : 'bg-white text-[#78716C] border-[#E7E5E4] hover:border-[#0D9488]/40 hover:text-[#292524]'
                     }`}
                   >
-                    {num === 0 ? '0 ta' : `${num} ta`}
+                    {num === 0 ? '0 ta' : `${num} ta xona`}
                   </button>
                 ))}
               </div>
               <p className="text-[11px] text-[#78716C] mt-1.5">
-                Konsollarni keyinchalik ham istalgan paytda «+ PlayStation qo‘shish» tugmasi orqali qo‘shishingiz mumkin.
+                Xonalarni keyinchalik ham istalgan paytda «+ Xona qo‘shish» tugmasi orqali qo‘shishingiz mumkin.
               </p>
             </div>
           )}

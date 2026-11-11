@@ -237,7 +237,7 @@ export default function Rooms() {
                           </div>
                           <div className="min-w-0">
                             <span className="font-bold text-xs sm:text-sm text-[#292524] block leading-tight truncate">
-                              {room.name || `${room.id}-xona`}
+                              {room.name ? room.name.replace(/^(\d+)-xona$/i, '$1-PlayStation') : `${room.id}-PlayStation`}
                             </span>
                             <span className="text-[10px] font-semibold block truncate mt-0.5 text-[#0D9488]">
                               {room.zoneType || 'Standart'}
@@ -274,7 +274,7 @@ export default function Rooms() {
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
                         <h2 className="text-lg sm:text-xl font-extrabold text-[#292524]">
-                          {selectedRoom.name || `${selectedRoom.id}-xona`}
+                          {selectedRoom.name ? selectedRoom.name.replace(/^(\d+)-xona$/i, '$1-PlayStation') : `${selectedRoom.id}-PlayStation`}
                         </h2>
                         {selectedRoom.zoneType && (
                           <span className="text-xs font-bold px-2.5 py-0.5 rounded-full border bg-[#F0FDFA] text-[#0D9488] border-[#99F6E4]/70">
@@ -283,7 +283,7 @@ export default function Rooms() {
                         )}
                       </div>
                       <p className="text-xs text-[#78716C] mt-0.5">
-                        {selectedRoom.stations?.length || 0} ta PlayStation konsoli • Tarif:{' '}
+                        {selectedRoom.stations?.length || 0} ta xona • Tarif:{' '}
                         <span className="text-[#0D9488] font-bold">
                           {selectedRoom.isUnlimitedOnly ? (
                             <span>{t('rooms.isUnlimitedLabel')} ({formatCurrency(selectedRoom.hourlyRate || 20000, currency)}/soat)</span>

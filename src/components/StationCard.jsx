@@ -147,8 +147,15 @@ export default function StationCard({
     : 0;
 
   const productsCount = session?.products?.length || 0;
-  const localizedRoomName = station.roomName || t('rooms.roomN', { n: station.roomId });
-  const localizedStationName = station.stationName || `${t('common.stationPrefix')} ${station.stationNumber}`;
+  const rawRoomName = station.roomName || `${station.roomId}-PlayStation`;
+  const localizedRoomName = rawRoomName
+    .replace(/^(\d+)-xona$/i, '$1-PlayStation')
+    .replace(/^Room\s*(\d+)$/i, 'PlayStation $1');
+
+  const rawStationName = station.stationName || `${station.stationNumber}-xona`;
+  const localizedStationName = rawStationName
+    .replace(/^Konsol\s*(\d+)$/i, '$1-xona')
+    .replace(/^Station\s*(\d+)$/i, '$1-xona');
 
   // Progress percentage for timed sessions
   const progressPercent =

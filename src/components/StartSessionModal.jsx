@@ -191,8 +191,15 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
     onClose();
   };
 
-  const localizedRoomName = t('rooms.roomN', { n: station.roomId });
-  const localizedStationName = `${t('common.stationPrefix')} ${station.stationNumber}`;
+  const rawRoomName = station.roomName || `${station.roomId}-PlayStation`;
+  const localizedRoomName = rawRoomName
+    .replace(/^(\d+)-xona$/i, '$1-PlayStation')
+    .replace(/^Room\s*(\d+)$/i, 'PlayStation $1');
+
+  const rawStationName = station.stationName || `${station.stationNumber}-xona`;
+  const localizedStationName = rawStationName
+    .replace(/^Konsol\s*(\d+)$/i, '$1-xona')
+    .replace(/^Station\s*(\d+)$/i, '$1-xona');
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/60 backdrop-blur-sm p-3 sm:p-5 overflow-hidden">

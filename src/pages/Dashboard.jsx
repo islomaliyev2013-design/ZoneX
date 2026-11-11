@@ -300,7 +300,7 @@ export default function Dashboard() {
                     <div className="flex items-center justify-between mb-3">
                       <div className="min-w-0 pr-1">
                         <span className="font-extrabold text-sm text-[#292524] block leading-tight truncate">
-                          {room.name || `${room.id}-xona`}
+                          {room.name ? room.name.replace(/^(\d+)-xona$/i, '$1-PlayStation') : `${room.id}-PlayStation`}
                         </span>
                         <span className="text-[10px] font-bold block truncate mt-0.5 text-[#0D9488]">
                           {room.zoneType || 'Standart'}
@@ -326,7 +326,10 @@ export default function Dashboard() {
                       <div className="space-y-1.5">
                         {roomStations.map((st) => {
                           const isOcc = st.status === 'occupied';
-                          const localizedStationName = st.stationName || `${t('common.stationPrefix')} ${st.stationNumber}`;
+                          const rawStationName = st.stationName || `${st.stationNumber}-xona`;
+                          const localizedStationName = rawStationName
+                            .replace(/^Konsol\s*(\d+)$/i, '$1-xona')
+                            .replace(/^Station\s*(\d+)$/i, '$1-xona');
 
                           return (
                             <div
@@ -375,7 +378,7 @@ export default function Dashboard() {
                       to={`/rooms?room=${room.id}`}
                       className="text-[11px] font-bold text-[#0D9488] hover:text-[#0F766E] transition"
                     >
-                      {t('dashboard.viewRoomStations', { room: room.name || `${room.id}-xona` })}
+                      {t('dashboard.viewRoomStations', { room: room.name ? room.name.replace(/^(\d+)-xona$/i, '$1-PlayStation') : `${room.id}-PlayStation` })}
                     </Link>
                   </div>
                 </div>

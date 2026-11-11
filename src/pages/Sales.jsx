@@ -318,15 +318,23 @@ export default function Sales() {
                       className="w-full pl-10 pr-4 py-2.5 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-sm font-semibold text-[#292524] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition cursor-pointer"
                     >
                       <option value="direct">{t('sales.counterDirectSale')}</option>
-                      {rooms.map((r) => (
-                        <optgroup key={r.id} label={t('rooms.roomN', { n: r.id })}>
-                          {r.stations.map((s) => (
-                            <option key={s.id} value={s.id}>
-                              {t('rooms.roomN', { n: r.id })} — {t('common.stationPrefix')} {s.stationNumber} {s.status === 'occupied' ? '🔴' : '🟢'}
-                            </option>
-                          ))}
-                        </optgroup>
-                      ))}
+                      {rooms.map((r) => {
+                        const optRoomName = r.name ? r.name.replace(/^(\d+)-xona$/i, '$1-PlayStation') : `${r.id}-PlayStation`;
+                        return (
+                          <optgroup key={r.id} label={optRoomName}>
+                            {r.stations.map((s) => {
+                              const optStationName = s.stationName
+                                ? s.stationName.replace(/^Konsol\s*(\d+)$/i, '$1-xona')
+                                : `${s.stationNumber}-xona`;
+                              return (
+                                <option key={s.id} value={s.id}>
+                                  {optRoomName} — {optStationName} {s.status === 'occupied' ? '🔴' : '🟢'}
+                                </option>
+                              );
+                            })}
+                          </optgroup>
+                        );
+                      })}
                     </select>
                   </div>
                 </div>

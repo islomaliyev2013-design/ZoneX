@@ -188,7 +188,7 @@ function AppInnerProvider({ accountId, children }) {
   }) => {
     const nextId =
       rooms.length > 0 ? Math.max(...rooms.map((r) => Number(r.id) || 0)) + 1 : 1;
-    const roomName = name?.trim() || `${nextId}-xona`;
+    const roomName = name?.trim() || `${nextId}-PlayStation`;
     const newRoom = createRoomObject({
       id: nextId,
       name: roomName,
@@ -274,7 +274,7 @@ function AppInnerProvider({ accountId, children }) {
         ? Math.max(...existingStations.map((s) => Number(s.stationNumber) || 0)) + 1
         : 1;
 
-    const stationName = customName?.trim() || `Konsol ${nextNumber}`;
+    const stationName = customName?.trim() || `${nextNumber}-xona`;
     const newStation = {
       id: `r${roomId}-s${Date.now().toString(36)}_${nextNumber}`,
       roomId,

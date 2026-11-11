@@ -236,12 +236,10 @@ export default function History() {
                     ? tx.products.map((p) => `${p.quantity}x ${p.name}`).join(', ')
                     : '—';
 
-                  const localizedRoom =
-                    tx.roomId != null ? t('rooms.roomN', { n: tx.roomId }) : tx.roomName || 'Store';
-                  const localizedStation =
-                    tx.stationId && tx.stationId !== '-'
-                      ? `${t('common.stationPrefix')} ${tx.stationId}`
-                      : '—';
+                  const rawRoom = tx.roomName || (tx.roomId != null ? `${tx.roomId}-PlayStation` : 'Store');
+                  const localizedRoom = rawRoom.replace(/^(\d+)-xona$/i, '$1-PlayStation');
+                  const rawStation = tx.stationName || (tx.stationId && tx.stationId !== '-' ? `${tx.stationId}-xona` : '—');
+                  const localizedStation = rawStation.replace(/^Konsol\s*(\d+)$/i, '$1-xona');
 
                   return (
                     <React.Fragment key={tx.id}>
