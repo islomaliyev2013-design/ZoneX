@@ -70,7 +70,7 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/60 backdrop-blur-sm p-3 sm:p-5 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/70 backdrop-blur-md p-3 sm:p-5 overflow-hidden">
       <div className="bg-white rounded-2xl w-full max-w-lg text-[#292524] shadow-2xl border border-[#E7E5E4] flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95">
         
         {/* Sticky Header */}

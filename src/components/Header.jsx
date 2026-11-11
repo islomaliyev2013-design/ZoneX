@@ -118,7 +118,7 @@ export default function Header({ onOpenMobileMenu }) {
 
       {/* Pricing Settings Modal (Warm Gray + Teal Theme) */}
       {showPricingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/60 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/70 backdrop-blur-md p-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm text-[#292524] shadow-2xl border border-[#E7E5E4] animate-in fade-in zoom-in-95">
             <h3 className="text-lg font-extrabold text-[#292524] mb-1">
               {t('settings.pricingTitle')}
