@@ -112,10 +112,13 @@ export default function StationCard({ station, onStartClick, onFinishClick, onAd
   const isExpired = isTimed && remainingMs <= 0;
 
   // Calculate live gaming cost
+  const rawGamingCost = isOccupied ? calculateGamingPayment(elapsedMs, session.hourlyPrice) : 0;
   const liveGamingCost = isOccupied
-    ? session.isTimed && session.targetBudget != null && isExpired
-      ? session.targetBudget
-      : calculateGamingPayment(elapsedMs, session.hourlyPrice)
+    ? session.isTimed && session.targetBudget != null
+      ? isExpired
+        ? session.targetBudget
+        : Math.min(session.targetBudget, rawGamingCost)
+      : rawGamingCost
     : 0;
 
   const productsCount = session?.products?.length || 0;
@@ -270,10 +273,17 @@ export default function StationCard({ station, onStartClick, onFinishClick, onAd
                   />
                 </div>
 
-                <div className="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
-                  <span>O'tgan: {formatTimer(elapsedMs)}</span>
+                <div
+                  className="text-[11px] text-slate-400 mt-1 flex items-center justify-center gap-2"
+                  title={`O'tgan: ${formatTimer(elapsedMs)}`}
+                >
+                  <span>
+                    {formatCurrency(session.hourlyPrice, currency)}{' '}
+                    {t('station.perHour') || '/ soat'}
+                  </span>
+                  <span>•</span>
                   <span className="font-bold text-brand-lavender">
-                    {formatCurrency(session.targetBudget || liveGamingCost, currency)}
+                    {t('station.total', { amount: formatCurrency(liveGamingCost, currency) })}
                   </span>
                 </div>
               </div>
@@ -288,7 +298,10 @@ export default function StationCard({ station, onStartClick, onFinishClick, onAd
                   {formatTimer(elapsedMs)}
                 </div>
                 <div className="text-[11px] text-slate-400 mt-1 flex items-center justify-center gap-2">
-                  <span>{formatCurrency(session.hourlyPrice, currency)} / soat</span>
+                  <span>
+                    {formatCurrency(session.hourlyPrice, currency)}{' '}
+                    {t('station.perHour') || '/ soat'}
+                  </span>
                   <span>•</span>
                   <span className="font-bold text-brand-lavender">
                     {t('station.total', { amount: formatCurrency(liveGamingCost, currency) })}

@@ -74,7 +74,7 @@ export default function Rooms() {
             }`}
           >
             <Grid className="w-3.5 h-3.5" />
-            <span>5 Xona</span>
+            <span>{t('rooms.allRoomsTab')}</span>
           </button>
 
           <button
@@ -228,7 +228,7 @@ export default function Rooms() {
             </div>
 
             <span className="px-3 py-1.5 rounded-xl bg-gaming-red text-white text-xs font-black self-start sm:self-auto">
-              🔴 {occupiedStations.length} ta konsol band
+              {t('rooms.occupiedStationsList', { count: occupiedStations.length })}
             </span>
           </div>
 
@@ -243,7 +243,7 @@ export default function Rooms() {
                 onClick={() => setViewMode('by_room')}
                 className="px-4 py-2 rounded-xl bg-brand-purple hover:bg-brand-purpleHover text-white text-xs font-bold transition"
               >
-                Xonalar ro‘yxatiga qaytish
+                {t('rooms.backToRoomsList')}
               </button>
             </div>
           ) : (
@@ -271,16 +271,16 @@ export default function Rooms() {
               </div>
               <div>
                 <h2 className="text-lg sm:text-xl font-extrabold text-white">
-                  Bo‘sh konsollar ro‘yxati
+                  {t('rooms.freeStationsTitle')}
                 </h2>
                 <p className="text-xs text-slate-400">
-                  Mijozlarni qabul qilishga tayyor konsollar
+                  {t('rooms.freeStationsSubtitle')}
                 </p>
               </div>
             </div>
 
             <span className="px-3 py-1.5 rounded-xl bg-gaming-greenBg text-gaming-green border border-gaming-green/30 text-xs font-black self-start sm:self-auto">
-              🟢 {availableStationsCount} ta konsol bo‘sh
+              {t('rooms.availableStationsList', { count: availableStationsCount })}
             </span>
           </div>
 

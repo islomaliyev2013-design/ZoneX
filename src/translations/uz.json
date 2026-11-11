@@ -130,6 +130,7 @@
     "customer": "Mijoz:",
     "elapsedTime": "O‘tgan o‘yin vaqti",
     "defaultRate": "Narx: {rate}/soat",
+    "perHour": "/ soat",
     "readyForNext": "Keyingi o‘yinchi uchun tayyor",
     "total": "Jami: {amount}",
     "startSession": "Seansni boshlash",

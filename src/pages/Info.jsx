@@ -17,9 +17,6 @@ import {
   Layers,
   CheckCircle2,
   ArrowRight,
-  Info as InfoIcon,
-  Play,
-  Volume2,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -32,9 +29,8 @@ export const ROOM_GALLERY = [
     badge: 'Asosiy Zal',
     image: '/gallery/room-platform.jpg',
     description:
-      'Katta zaldagi zamonaviy konsollar qatori: individual 4K devoriy displeylar, yulduzli neon shifti, qulay yumshoq divanlar va moviy neon yoritish tizimi. Do‘stlar davrasi va turnirlar uchun ajoyib muhit.',
-    highlight: 'Devoriy 4K displeylar & Yulduzli shift',
-    specs: ['PlayStation 5', '4K Ultra HD', 'Yumshoq divanlar', 'Moviy neon atmosfera'],
+      'Katta zaldagi zamonaviy konsollar qatori: individual 4K devoriy displeylar, yulduzli neon shifti, qulay yumshoq divanlar va moviy neon yoritish tizimi.',
+    specs: ['PlayStation 5', '4K Ultra HD', 'Yumshoq divanlar', 'Moviy neon'],
     roomNumber: 1,
   },
   {
@@ -44,8 +40,7 @@ export const ROOM_GALLERY = [
     badge: "Top O'yinlar Maydoni",
     image: '/gallery/room-gamezone.jpg',
     description:
-      "Katta 4K HDR televizorlar, qulay stullar va divanlar, mashhur o'yinlar uchun maxsus sozlangan individual zonalarga ega. Fayting, sport simulyatorlari va do'stlar bilan jamoaviy o'yinlar uchun mo'ljallangan.",
-    highlight: "Katta 4K HDR televizorlar & Individual pultlar",
+      "Katta 4K HDR televizorlar, qulay stullar va divanlar, mashhur o'yinlar uchun maxsus sozlangan individual zonalarga ega.",
     specs: ['PS5 Konsollar', 'DualSense pultlar', 'Tekken 8 / NBA 2K25', 'Kuchli sovutish'],
     roomNumber: 2,
   },
@@ -56,8 +51,7 @@ export const ROOM_GALLERY = [
     badge: 'Neon & Chill Muhit',
     image: '/gallery/room-neon.jpg',
     description:
-      "Devordagi kardiogramma neon nurlari bilan jihozlangan shinam burchak. Qulay gilam qoplamasi, yumshoq o'rindiqlar va jo'shqin futbol bahslari uchun eng qulay shinam atmosfera.",
-    highlight: 'Neon kardiogramma nurlari & Shinam muhit',
+      "Devordagi kardiogramma neon nurlari bilan jihozlangan shinam burchak. Qulay gilam qoplamasi va yumshoq o'rindiqlar.",
     specs: ['Shinam lounge', 'Kardiogramma neon', "Do'stlar davrasi", 'Yumshoq gilam'],
     roomNumber: 3,
   },
@@ -68,17 +62,88 @@ export const ROOM_GALLERY = [
     badge: 'VIP Kabina',
     image: '/gallery/room-vip.jpg',
     description:
-      'Akustik piramida panellari bilan qoplangan maxsus VIP xona. Tashqi shovqinlardan to‘liq himoyalangan, katta 4K ekran va mukammal surround audio tizimi bilan jihozlangan.',
-    highlight: 'Akustik ovoz yutuvchi devorlar & Maxfiylik',
+      'Akustik piramida panellari bilan qoplangan maxsus VIP xona. Tashqi shovqinlardan to‘liq himoyalangan, katta 4K ekran.',
     specs: ['Akustik devorlar', 'Katta 4K ekran', 'Yuqori sifatli ovoz', 'VIP komfort'],
     roomNumber: 4,
   },
 ];
 
 export default function Info() {
-  const { rooms = [], totalRooms = 5, totalStations = 25, availableStationsCount = 25, occupiedStationsCount = 0 } = useApp();
+  const { totalRooms = 5, totalStations = 25, availableStationsCount = 25 } = useApp();
   const { t } = useLanguage();
   const navigate = useNavigate();
+
+  // Dynamic gallery items that reactively update on language change
+  const roomGallery = [
+    {
+      id: 'platform',
+      title: t('infoPage.room1Title') || 'The Platform — Katta Zal',
+      subtitle: t('infoPage.room1Subtitle') || 'PlayStation 5 Playroom & Lounge',
+      badge: t('infoPage.room1Badge') || 'Asosiy Zal',
+      image: '/gallery/room-platform.jpg',
+      description:
+        t('infoPage.room1Desc') ||
+        'Katta zaldagi zamonaviy konsollar qatori: individual 4K devoriy displeylar, yulduzli neon shifti, qulay yumshoq divanlar va moviy neon yoritish tizimi.',
+      specs: [
+        t('infoPage.room1Spec1') || 'PlayStation 5',
+        t('infoPage.room1Spec2') || '4K Ultra HD',
+        t('infoPage.room1Spec3') || 'Yumshoq divanlar',
+        t('infoPage.room1Spec4') || 'Moviy neon',
+      ],
+      roomNumber: 1,
+    },
+    {
+      id: 'gamezone',
+      title: t('infoPage.room2Title') || 'Game Zone — 4K HDR Ekranlar',
+      subtitle: t('infoPage.room2Subtitle') || 'Tekken 8 • NBA 2K25 • Overcooked 2',
+      badge: t('infoPage.room2Badge') || "Top O'yinlar Maydoni",
+      image: '/gallery/room-gamezone.jpg',
+      description:
+        t('infoPage.room2Desc') ||
+        "Katta 4K HDR televizorlar, qulay stullar va divanlar, mashhur o'yinlar uchun maxsus sozlangan individual zonalarga ega.",
+      specs: [
+        t('infoPage.room2Spec1') || 'PS5 Konsollar',
+        t('infoPage.room2Spec2') || 'DualSense pultlar',
+        t('infoPage.room2Spec3') || 'Tekken 8 / NBA 2K25',
+        t('infoPage.room2Spec4') || 'Kuchli sovutish',
+      ],
+      roomNumber: 2,
+    },
+    {
+      id: 'neon',
+      title: t('infoPage.room3Title') || 'Neon Pulse Lounge',
+      subtitle: t('infoPage.room3Subtitle') || 'eFootball & FIFA Arena',
+      badge: t('infoPage.room3Badge') || 'Neon & Chill Muhit',
+      image: '/gallery/room-neon.jpg',
+      description:
+        t('infoPage.room3Desc') ||
+        "Devordagi kardiogramma neon nurlari bilan jihozlangan shinam burchak. Qulay gilam qoplamasi va yumshoq o'rindiqlar.",
+      specs: [
+        t('infoPage.room3Spec1') || 'Shinam lounge',
+        t('infoPage.room3Spec2') || 'Kardiogramma neon',
+        t('infoPage.room3Spec3') || "Do'stlar davrasi",
+        t('infoPage.room3Spec4') || 'Yumshoq gilam',
+      ],
+      roomNumber: 3,
+    },
+    {
+      id: 'vip',
+      title: t('infoPage.room4Title') || 'VIP Akustik Kabina',
+      subtitle: t('infoPage.room4Subtitle') || 'Shovqinsiz Shaxsiy Hudud',
+      badge: t('infoPage.room4Badge') || 'VIP Kabina',
+      image: '/gallery/room-vip.jpg',
+      description:
+        t('infoPage.room4Desc') ||
+        'Akustik piramida panellari bilan qoplangan maxsus VIP xona. Tashqi shovqinlardan to‘liq himoyalangan, katta 4K ekran.',
+      specs: [
+        t('infoPage.room4Spec1') || 'Akustik devorlar',
+        t('infoPage.room4Spec2') || 'Katta 4K ekran',
+        t('infoPage.room4Spec3') || 'Yuqori sifatli ovoz',
+        t('infoPage.room4Spec4') || 'VIP komfort',
+      ],
+      roomNumber: 4,
+    },
+  ];
 
   // Lightbox state for crystal clear image inspection
   const [lightboxIndex, setLightboxIndex] = useState(null);
@@ -97,13 +162,13 @@ export default function Info() {
   const nextImage = (e) => {
     if (e) e.stopPropagation();
     setIsZoomed(false);
-    setLightboxIndex((prev) => (prev + 1) % ROOM_GALLERY.length);
+    setLightboxIndex((prev) => (prev + 1) % roomGallery.length);
   };
 
   const prevImage = (e) => {
     if (e) e.stopPropagation();
     setIsZoomed(false);
-    setLightboxIndex((prev) => (prev - 1 + ROOM_GALLERY.length) % ROOM_GALLERY.length);
+    setLightboxIndex((prev) => (prev - 1 + roomGallery.length) % roomGallery.length);
   };
 
   // Keyboard navigation for lightbox
@@ -118,48 +183,48 @@ export default function Info() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [lightboxIndex]);
 
-  const activeLightboxItem = lightboxIndex !== null ? ROOM_GALLERY[lightboxIndex] : null;
+  const activeLightboxItem = lightboxIndex !== null ? roomGallery[lightboxIndex] : null;
 
   const clubFeatures = [
     {
       icon: Tv,
-      title: t('infoPage.screensQuality') || '4K HDR Displeylar',
-      desc: "Barcha xonalar yuqori chastotali, aniq tasvirli va HDR ranglarga ega katta 4K televizorlar bilan jihozlangan.",
+      title: t('infoPage.screensQuality'),
+      desc: t('infoPage.screensQualityDesc'),
       color: 'text-cyan-400',
       bg: 'bg-cyan-500/10 border-cyan-500/30',
     },
     {
       icon: Gamepad2,
-      title: t('infoPage.consolesModel') || 'PlayStation 5 Konsollari',
-      desc: "Ultra tezkor SSD xotira, Ray Tracing grafika va haptik aloqaga ega original DualSense pultlar.",
+      title: t('infoPage.consolesModel'),
+      desc: t('infoPage.consolesModelDesc'),
       color: 'text-purple-400',
       bg: 'bg-purple-500/10 border-purple-500/30',
     },
     {
       icon: Wind,
-      title: t('infoPage.airConditioning') || 'Konditsioner & Shamollatish',
-      desc: "Xonalarda har doim salqin, toza va yoqimli harorat ta'minlanadi. Uzoq o'yin seanslari uchun qulay.",
+      title: t('infoPage.airConditioning'),
+      desc: t('infoPage.airConditioningDesc'),
       color: 'text-emerald-400',
       bg: 'bg-emerald-500/10 border-emerald-500/30',
     },
     {
       icon: Wifi,
-      title: t('infoPage.fastInternet') || 'Tezkor Optik Internet',
-      desc: "Minimal ping va barqaror gigabitli internet ulanishi. Onlayn o'yinlar va yangilanishlar kechikishlarsiz ishlaydi.",
+      title: t('infoPage.fastInternet'),
+      desc: t('infoPage.fastInternetDesc'),
       color: 'text-blue-400',
       bg: 'bg-blue-500/10 border-blue-500/30',
     },
     {
       icon: Coffee,
-      title: t('infoPage.snackBar') || 'Ichimliklar & Snack Bar',
-      desc: "Red Bull, Coca-Cola, Fanta, tabiiy suv, chips, shokolad va boshqa yeguliklar doimo tayyor holatda.",
+      title: t('infoPage.snackBar'),
+      desc: t('infoPage.snackBarDesc'),
       color: 'text-amber-400',
       bg: 'bg-amber-500/10 border-amber-500/30',
     },
     {
       icon: ShieldCheck,
-      title: t('infoPage.controllersCleaning') || 'Pultlar Dezinfeksiyasi',
-      desc: "Har bir mijozdan so'ng geympadlar to'liq tozalanadi, dezinfeksiya qilinadi va 100% quvvatlanadi.",
+      title: t('infoPage.controllersCleaning'),
+      desc: t('infoPage.controllersCleaningDesc'),
       color: 'text-teal-400',
       bg: 'bg-teal-500/10 border-teal-500/30',
     },
@@ -177,14 +242,13 @@ export default function Info() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-4 shadow-[0_0_15px_rgba(6,182,212,0.25)]">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>{t('infoPage.badge') || "Foto Galereya & Xonalar Holati"}</span>
+              <span>{t('infoPage.badge')}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight">
-              {t('infoPage.title') || "Klub Xonalari va Jihozlar Ma'lumoti"}
+              {t('infoPage.title')}
             </h1>
             <p className="mt-2 text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
-              {t('infoPage.subtitle') ||
-                "PlayStation o‘yin klubining haqiqiy atmosferasi, qulayliklari, 4K ekranlar va xonalarning real holati bilan tanishing."}
+              {t('infoPage.subtitle')}
             </p>
           </div>
 
@@ -193,19 +257,19 @@ export default function Info() {
             <div className="flex-1 sm:flex-none px-4 py-3 rounded-2xl bg-[#162235]/90 border border-[#2B3D55] text-center min-w-[110px]">
               <div className="text-2xl font-black text-cyan-400">{totalRooms}</div>
               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">
-                {t('infoPage.totalRoomsLabel') || "Xonalar"}
+                {t('infoPage.totalRoomsLabel')}
               </div>
             </div>
             <div className="flex-1 sm:flex-none px-4 py-3 rounded-2xl bg-[#162235]/90 border border-[#2B3D55] text-center min-w-[110px]">
               <div className="text-2xl font-black text-white">{totalStations}</div>
               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">
-                {t('infoPage.totalStationsLabel') || "Konsollar"}
+                {t('infoPage.totalStationsLabel')}
               </div>
             </div>
             <div className="flex-1 sm:flex-none px-4 py-3 rounded-2xl bg-[#162235]/90 border border-emerald-500/30 text-center min-w-[110px]">
               <div className="text-2xl font-black text-emerald-400">{availableStationsCount}</div>
               <div className="text-[11px] font-bold text-emerald-300 uppercase tracking-wider mt-0.5">
-                {t('nav.free') || "Bo'sh"}
+                {t('nav.free')}
               </div>
             </div>
           </div>
@@ -218,22 +282,21 @@ export default function Info() {
           <div>
             <h2 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
               <Layers className="w-5 h-5 text-cyan-400" />
-              <span>{t('infoPage.galleryTitle') || "Xonalar Ko‘rinishi va Muhit"}</span>
+              <span>{t('infoPage.galleryTitle')}</span>
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              {t('infoPage.gallerySubtitle') ||
-                "Suratlarni to‘liq ekranda tiniq formatda ko‘rish uchun istalgan rasm ustiga bosing."}
+              {t('infoPage.gallerySubtitle')}
             </p>
           </div>
           <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-cyan-400 font-semibold bg-cyan-500/10 border border-cyan-500/20 px-3 py-1.5 rounded-xl">
             <Maximize2 className="w-3.5 h-3.5" />
-            4 ta xona surati
+            {t('infoPage.photosCount', { count: roomGallery.length })}
           </span>
         </div>
 
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {ROOM_GALLERY.map((item, index) => (
+          {roomGallery.map((item, index) => (
             <div
               key={item.id}
               onClick={() => openLightbox(index)}
@@ -262,7 +325,7 @@ export default function Info() {
                 <div className="absolute top-4 right-4">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 backdrop-blur-md shadow-md">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    100% Tayyor
+                    {t('infoPage.readyStatus')}
                   </span>
                 </div>
               </div>
@@ -301,7 +364,7 @@ export default function Info() {
                     }}
                     className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 px-3 py-1.5 rounded-xl transition-all"
                   >
-                    <span>{t('infoPage.goToRoom') || "Xonaga o'tish"}</span>
+                    <span>{t('infoPage.goToRoom')}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -316,10 +379,10 @@ export default function Info() {
         <div className="mb-5">
           <h2 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
             <Gamepad2 className="w-5 h-5 text-cyan-400" />
-            <span>{t('infoPage.amenitiesTitle') || "Qulayliklar va Texnik Jihozlar"}</span>
+            <span>{t('infoPage.amenitiesTitle')}</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Har bir mijoz uchun qulay o‘yin tajribasi va eng yuqori darajadagi servis.
+            {t('infoPage.amenitiesSubtitle')}
           </p>
         </div>
 
@@ -353,10 +416,10 @@ export default function Info() {
             </div>
             <div>
               <h3 className="text-base font-bold text-white">
-                Jonli Xonalar Boshqaruvi
+                {t('infoPage.liveControlTitle')}
               </h3>
               <p className="text-xs text-slate-400 mt-0.5">
-                Barcha 5 ta xona va 25 ta konsolning real vaqt rejimida bandligi va hisob-kitobini boshqaring.
+                {t('infoPage.liveControlSubtitle')}
               </p>
             </div>
           </div>
@@ -365,7 +428,7 @@ export default function Info() {
             onClick={() => navigate('/rooms')}
             className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black text-sm shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all active:scale-95"
           >
-            <span>Xonalar sahifasiga o‘tish</span>
+            <span>{t('infoPage.goToRoomsButton')}</span>
             <ArrowRight className="w-4 h-4 text-slate-950" />
           </button>
         </div>
@@ -393,14 +456,14 @@ export default function Info() {
 
             <div className="flex items-center gap-2 text-xs text-slate-400">
               <span className="font-bold text-white">
-                {lightboxIndex + 1} / {ROOM_GALLERY.length}
+                {lightboxIndex + 1} / {roomGallery.length}
               </span>
 
               {/* Zoom toggle button */}
               <button
                 onClick={() => setIsZoomed(!isZoomed)}
                 className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors ml-2"
-                title={isZoomed ? "Kichiklashtirish" : "Kattalashtirish"}
+                title={isZoomed ? t('infoPage.zoomOut') : t('infoPage.zoomIn')}
               >
                 {isZoomed ? <ZoomOut className="w-4 h-4" /> : <ZoomIn className="w-4 h-4" />}
               </button>
@@ -409,7 +472,7 @@ export default function Info() {
               <button
                 onClick={closeLightbox}
                 className="p-2 rounded-xl bg-white/10 hover:bg-red-500/80 text-white transition-colors ml-1"
-                title="Yopish (Esc)"
+                title={t('infoPage.close')}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -425,7 +488,7 @@ export default function Info() {
             <button
               onClick={prevImage}
               className="absolute left-2 sm:left-4 z-20 w-11 h-11 rounded-2xl bg-black/60 hover:bg-cyan-500 text-white hover:text-black border border-white/20 flex items-center justify-center transition-all shadow-xl active:scale-95"
-              title="Oldingi rasm (Chap strelka)"
+              title={t('infoPage.prevImage')}
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
@@ -434,13 +497,18 @@ export default function Info() {
             <button
               onClick={nextImage}
               className="absolute right-2 sm:right-4 z-20 w-11 h-11 rounded-2xl bg-black/60 hover:bg-cyan-500 text-white hover:text-black border border-white/20 flex items-center justify-center transition-all shadow-xl active:scale-95"
-              title="Keyingi rasm (O'ng strelka)"
+              title={t('infoPage.nextImage')}
             >
               <ChevronRight className="w-6 h-6" />
             </button>
 
             {/* High-Resolution Crisp Image */}
-            <div className={`transition-all duration-300 flex items-center justify-center ${isZoomed ? 'scale-125 cursor-zoom-out' : 'cursor-zoom-in'}`} onClick={() => setIsZoomed(!isZoomed)}>
+            <div
+              className={`transition-all duration-300 flex items-center justify-center ${
+                isZoomed ? 'scale-125 cursor-zoom-out' : 'cursor-zoom-in'
+              }`}
+              onClick={() => setIsZoomed(!isZoomed)}
+            >
               <img
                 src={activeLightboxItem.image}
                 alt={activeLightboxItem.title}
@@ -465,7 +533,7 @@ export default function Info() {
 
             {/* Thumbnail switcher */}
             <div className="flex items-center gap-2 overflow-x-auto py-1">
-              {ROOM_GALLERY.map((thumb, idx) => (
+              {roomGallery.map((thumb, idx) => (
                 <button
                   key={thumb.id}
                   onClick={() => {
@@ -492,4 +560,3 @@ export default function Info() {
     </div>
   );
 }
-

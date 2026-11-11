@@ -24,10 +24,19 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
       const durationMs = Math.max(0, Date.now() - station.session.startTime);
       const autoPayment = calculateGamingPayment(durationMs, station.session.hourlyPrice);
 
-      const defaultPayment =
-        station.session.isTimed && station.session.targetBudget != null
-          ? station.session.targetBudget
-          : Math.round(autoPayment);
+      const isExpired =
+        station.session.isTimed &&
+        station.session.targetEndTime &&
+        Date.now() >= station.session.targetEndTime;
+
+      let defaultPayment;
+      if (isExpired && station.session.targetBudget != null) {
+        defaultPayment = station.session.targetBudget;
+      } else if (station.session.targetBudget != null) {
+        defaultPayment = Math.min(station.session.targetBudget, Math.round(autoPayment));
+      } else {
+        defaultPayment = Math.round(autoPayment);
+      }
 
       setCustomGamingPayment(defaultPayment.toString());
     }

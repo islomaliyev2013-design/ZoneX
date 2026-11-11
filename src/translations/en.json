@@ -96,7 +96,16 @@
     "hallTitle": "The Platform Hall",
     "gamezoneTitle": "Game Zone",
     "neonTitle": "Neon Lounge",
-    "vipTitle": "VIP Cabin"
+    "vipTitle": "VIP Cabin",
+    "badge": "Gaming Business Management",
+    "recentTransactions": "Recent Transactions",
+    "viewAllHistory": "View All History",
+    "tableDateTime": "Date & Time",
+    "tableDestination": "Destination",
+    "tableDurationItems": "Duration / Items",
+    "tableRevenue": "Revenue",
+    "tableProfit": "Net Profit",
+    "allStationsFreeSubtext": "All {totalStations} consoles free • {totalRooms} rooms active"
   },
   "rooms": {
     "title": "Room Management",
@@ -107,7 +116,13 @@
     "stationsHeader": "{room} — PlayStation Stations",
     "contains5Consoles": "Contains exactly 5 gaming consoles (Station 1 through Station 5)",
     "availableBadge": "{count} Available",
-    "occupiedBadge": "{count} Occupied"
+    "occupiedBadge": "{count} Occupied",
+    "allRoomsTab": "5 Rooms",
+    "occupiedStationsList": "🔴 {count} consoles occupied",
+    "availableStationsList": "🟢 {count} consoles free",
+    "backToRoomsList": "Back to Rooms List",
+    "freeStationsTitle": "Available Consoles List",
+    "freeStationsSubtitle": "Consoles ready for guests"
   },
   "station": {
     "available": "Available",
@@ -115,6 +130,7 @@
     "customer": "Customer:",
     "elapsedTime": "Elapsed Gaming Time",
     "defaultRate": "Default rate: {rate}/hr",
+    "perHour": "/ hr",
     "readyForNext": "Ready for next player",
     "total": "Total: {amount}",
     "startSession": "Start Session",

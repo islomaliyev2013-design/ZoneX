@@ -125,7 +125,7 @@ export default function Dashboard() {
         <div>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-purple/20 text-brand-purpleLight text-xs font-semibold mb-2 border border-brand-purple/30">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Gaming Business Management</span>
+            <span>{t('dashboard.badge')}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
             {t('dashboard.title')}
@@ -257,7 +257,7 @@ export default function Dashboard() {
                 {t('occupiedMonitor.noOccupied')}
               </h3>
               <p className="text-[11px] text-slate-400">
-                {totalStations} ta konsoldan barchasi bo‘sh • {totalRooms} ta xona faol
+                {t('dashboard.allStationsFreeSubtext', { totalStations, totalRooms })}
               </p>
             </div>
           </div>
@@ -276,19 +276,19 @@ export default function Dashboard() {
         <div className="max-w-md">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-2">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Klub Atmosferasi & Jihozlar</span>
+            <span>{t('dashboard.clubAtmosphereBadge')}</span>
           </div>
           <h3 className="text-xl font-black text-white tracking-tight">
-            Xonalar Ko‘rinishi va Real Suratlari
+            {t('dashboard.clubAtmosphereTitle')}
           </h3>
           <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-            The Platform zali, 4K ekranli Game Zone, Neon Pulse lounge va VIP kabina holatini tiniq fotogalereyada ko‘ring.
+            {t('dashboard.clubAtmosphereDesc')}
           </p>
           <Link
             to="/info"
             className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 hover:text-white text-xs font-bold transition shadow-sm"
           >
-            <span>Fotogalereya va ma'lumotlar</span>
+            <span>{t('dashboard.viewGalleryBtn')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -296,10 +296,10 @@ export default function Dashboard() {
         {/* 4 Small Photo Thumbnails */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full lg:w-auto">
           {[
-            { img: '/gallery/room-platform.jpg', label: 'The Platform' },
-            { img: '/gallery/room-gamezone.jpg', label: 'Game Zone' },
-            { img: '/gallery/room-neon.jpg', label: 'Neon Lounge' },
-            { img: '/gallery/room-vip.jpg', label: 'VIP Kabina' },
+            { img: '/gallery/room-platform.jpg', label: t('dashboard.hallTitle') },
+            { img: '/gallery/room-gamezone.jpg', label: t('dashboard.gamezoneTitle') },
+            { img: '/gallery/room-neon.jpg', label: t('dashboard.neonTitle') },
+            { img: '/gallery/room-vip.jpg', label: t('dashboard.vipTitle') },
           ].map((item, idx) => (
             <Link
               key={idx}
@@ -433,13 +433,13 @@ export default function Dashboard() {
         <div className="flex items-center justify-between pb-4 border-b border-midnight-border mb-4">
           <div className="flex items-center gap-2">
             <Receipt className="w-5 h-5 text-brand-purpleLight" />
-            <h3 className="text-base font-bold text-white">Recent Transactions</h3>
+            <h3 className="text-base font-bold text-white">{t('dashboard.recentTransactions')}</h3>
           </div>
           <Link
             to="/history"
             className="text-xs font-bold text-brand-purpleLight hover:text-white flex items-center gap-1 group"
           >
-            View All History
+            {t('dashboard.viewAllHistory')}
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
@@ -453,11 +453,11 @@ export default function Dashboard() {
             <table className="w-full text-left text-xs">
               <thead className="bg-midnight-bg text-slate-400 uppercase tracking-wider text-[10px] font-bold border-b border-midnight-border">
                 <tr>
-                  <th className="py-2.5 px-3">Date & Time</th>
-                  <th className="py-2.5 px-3">Destination</th>
-                  <th className="py-2.5 px-3">Duration / Items</th>
-                  <th className="py-2.5 px-3 text-right">Revenue</th>
-                  <th className="py-2.5 px-3 text-right">Profit</th>
+                  <th className="py-2.5 px-3">{t('dashboard.tableDateTime')}</th>
+                  <th className="py-2.5 px-3">{t('dashboard.tableDestination')}</th>
+                  <th className="py-2.5 px-3">{t('dashboard.tableDurationItems')}</th>
+                  <th className="py-2.5 px-3 text-right">{t('dashboard.tableRevenue')}</th>
+                  <th className="py-2.5 px-3 text-right">{t('dashboard.tableProfit')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-midnight-border text-slate-300">

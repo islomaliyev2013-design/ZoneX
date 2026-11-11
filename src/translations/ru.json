@@ -130,6 +130,7 @@
     "customer": "Клиент:",
     "elapsedTime": "Прошло времени",
     "defaultRate": "Тариф: {rate}/час",
+    "perHour": "/ час",
     "readyForNext": "Готово к новой игре",
     "total": "Сумма: {amount}",
     "startSession": "Начать сессию",
