@@ -517,7 +517,10 @@
     "debtDeletedSuccess": "Qarz yozuvi o‘chirildi!",
     "itemsCount": "ta mahsulot",
     "selectProductPlaceholder": "Mahsulotni tanlang...",
-    "customProduct": "Boshqa mahsulot"
+    "customProduct": "Boshqa mahsulot",
+    "roomNotExists": "Bu xona mavjud emas. Avval 'Xonalar' bo‘limidan xona oching!",
+    "selectRoomPlaceholder": "Xonani tanlang...",
+    "noRoomsOpened": "Hozircha hech qanday xona ochilmagan"
   },
   "click": {
     "title": "Click to‘lovlari",
@@ -560,7 +563,10 @@
     "save": "Saqlash",
     "cancel": "Bekor qilish",
     "paymentRecordedSuccess": "Click to‘lovi muvaffaqiyatli saqlandi!",
-    "itemsCount": "ta to‘lov"
+    "itemsCount": "ta to‘lov",
+    "roomNotExists": "Bu xona mavjud emas. Avval 'Xonalar' bo‘limidan xona oching!",
+    "selectRoomPlaceholder": "Xonani tanlang...",
+    "noRoomsOpened": "Hozircha hech qanday xona ochilmagan"
   }
 }
 

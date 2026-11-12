@@ -26,6 +26,7 @@ import { formatCurrency, formatTimeDisplay, toDateKey } from '../utils/formatter
 export default function Debts() {
   const {
     debts = [],
+    rooms = [],
     settings = {},
     productsCatalog = [],
     addDebt,
@@ -480,6 +481,7 @@ export default function Debts() {
           }}
           currency={currency}
           productsCatalog={productsCatalog}
+          rooms={rooms}
           t={t}
         />
       )}
@@ -491,12 +493,13 @@ export default function Debts() {
  * Add / Edit Debt Modal Form
  * Mounted to document.body via createPortal with z-[100]
  */
-function DebtModal({ isOpen, initialData, onClose, onSave, currency, productsCatalog = [], t }) {
+function DebtModal({ isOpen, initialData, onClose, onSave, currency, productsCatalog = [], rooms = [], t }) {
   const isEditing = Boolean(initialData);
 
   const [customerName, setCustomerName] = useState(initialData?.customerName || '');
   const [phone, setPhone] = useState(initialData?.phone || '');
   const [roomStation, setRoomStation] = useState(initialData?.roomStation || '');
+  const [roomError, setRoomError] = useState('');
   const [gameplayAmount, setGameplayAmount] = useState(
     initialData?.gameplayAmount != null ? String(initialData.gameplayAmount) : ''
   );
@@ -504,6 +507,36 @@ function DebtModal({ isOpen, initialData, onClose, onSave, currency, productsCat
   const [timeStr, setTimeStr] = useState(initialData?.timeStr || formatTimeDisplay(new Date()));
   const [notes, setNotes] = useState(initialData?.notes || '');
   const [status, setStatus] = useState(initialData?.status || 'unpaid');
+
+  // Build existing rooms & stations list from opened rooms
+  const availableRoomOptions = useMemo(() => {
+    const list = [];
+    (rooms || []).forEach((room) => {
+      const rawRoomName = room.name || `${room.id}-PlayStation`;
+      const localizedRoom = rawRoomName
+        .replace(/^(\d+)-xona$/i, '$1-PlayStation')
+        .replace(/^Room\s*(\d+)$/i, 'PlayStation $1');
+
+      if (room.stations && room.stations.length > 0) {
+        room.stations.forEach((st) => {
+          const rawStName = st.stationName || `${st.stationNumber}-xona`;
+          const localizedSt = rawStName
+            .replace(/^Konsol\s*(\d+)$/i, '$1-xona')
+            .replace(/^Station\s*(\d+)$/i, '$1-xona');
+          list.push({
+            value: `${localizedRoom} - ${localizedSt}`,
+            label: `${localizedRoom} • ${localizedSt}`,
+          });
+        });
+      } else {
+        list.push({
+          value: localizedRoom,
+          label: localizedRoom,
+        });
+      }
+    });
+    return list;
+  }, [rooms]);
 
   // Products array: [ { name, quantity, price, total } ]
   const [products, setProducts] = useState(() => {
@@ -551,6 +584,35 @@ function DebtModal({ isOpen, initialData, onClose, onSave, currency, productsCat
 
   const handleSubmit = (e) => {
     if (e && e.preventDefault) e.preventDefault();
+
+    // 1. Validate if rooms exist in the system
+    if (!rooms || rooms.length === 0) {
+      setRoomError(t('debts.roomNotExists'));
+      alert(t('debts.roomNotExists'));
+      return;
+    }
+
+    // 2. Validate room selection
+    if (!roomStation || !roomStation.trim()) {
+      setRoomError(t('debts.roomNotExists'));
+      alert(t('debts.roomNotExists'));
+      return;
+    }
+
+    const trimmed = roomStation.trim().toLowerCase();
+    const exists = availableRoomOptions.some(
+      (opt) =>
+        opt.value.toLowerCase() === trimmed ||
+        opt.label.toLowerCase() === trimmed ||
+        opt.value.toLowerCase().includes(trimmed)
+    );
+
+    if (!exists) {
+      setRoomError(t('debts.roomNotExists'));
+      alert(t('debts.roomNotExists'));
+      return;
+    }
+
     if (!customerName.trim()) {
       alert(t('debts.customerNamePlaceholder'));
       return;
@@ -647,15 +709,39 @@ function DebtModal({ isOpen, initialData, onClose, onSave, currency, productsCat
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-bold text-[#44403C] block mb-1">
-                {t('debts.roomStation')}
+                {t('debts.roomStation')} *
               </label>
-              <input
-                type="text"
-                value={roomStation}
-                onChange={(e) => setRoomStation(e.target.value)}
-                placeholder={t('debts.roomStationPlaceholder')}
-                className="w-full px-3.5 py-2 text-xs sm:text-sm bg-white rounded-xl border border-[#E7E5E4] focus:outline-none focus:ring-2 focus:ring-[#0D9488] text-[#292524]"
-              />
+              {rooms.length === 0 ? (
+                <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-bold flex items-center gap-1.5">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  <span>{t('debts.roomNotExists')}</span>
+                </div>
+              ) : (
+                <select
+                  value={roomStation}
+                  onChange={(e) => {
+                    setRoomStation(e.target.value);
+                    setRoomError('');
+                  }}
+                  className={`w-full px-3.5 py-2 text-xs sm:text-sm bg-white rounded-xl border focus:outline-none focus:ring-2 font-bold text-[#292524] cursor-pointer ${
+                    roomError
+                      ? 'border-red-400 focus:ring-red-400 bg-red-50/40'
+                      : 'border-[#E7E5E4] focus:ring-[#0D9488]'
+                  }`}
+                >
+                  <option value="">{t('debts.selectRoomPlaceholder')}</option>
+                  {availableRoomOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              )}
+              {roomError && (
+                <span className="text-[11px] font-bold text-red-600 mt-1 block">
+                  {roomError}
+                </span>
+              )}
             </div>
             <div>
               <label className="text-xs font-bold text-[#44403C] block mb-1">

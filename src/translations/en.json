@@ -517,7 +517,10 @@
     "debtDeletedSuccess": "Debt entry deleted!",
     "itemsCount": "items",
     "selectProductPlaceholder": "Select a product...",
-    "customProduct": "Custom product"
+    "customProduct": "Custom product",
+    "roomNotExists": "This room does not exist. Please create a room in the 'Rooms' section first!",
+    "selectRoomPlaceholder": "Select a room...",
+    "noRoomsOpened": "No rooms opened yet"
   },
   "click": {
     "title": "Click Payments",
@@ -560,7 +563,10 @@
     "save": "Save",
     "cancel": "Cancel",
     "paymentRecordedSuccess": "Click payment successfully recorded!",
-    "itemsCount": "payments"
+    "itemsCount": "payments",
+    "roomNotExists": "This room does not exist. Please create a room in the 'Rooms' section first!",
+    "selectRoomPlaceholder": "Select a room...",
+    "noRoomsOpened": "No rooms opened yet"
   }
 }
 

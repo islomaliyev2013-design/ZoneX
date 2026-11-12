@@ -517,7 +517,10 @@
     "debtDeletedSuccess": "Запись о долге удалена!",
     "itemsCount": "шт. товаров",
     "selectProductPlaceholder": "Выберите товар...",
-    "customProduct": "Другой товар"
+    "customProduct": "Другой товар",
+    "roomNotExists": "Эта комната не существует. Сначала создайте комнату в разделе 'Комнаты'!",
+    "selectRoomPlaceholder": "Выберите комнату...",
+    "noRoomsOpened": "Пока не открыто ни одной комнаты"
   },
   "click": {
     "title": "Платежи Click",
@@ -560,7 +563,10 @@
     "save": "Сохранить",
     "cancel": "Отмена",
     "paymentRecordedSuccess": "Платеж Click успешно сохранен!",
-    "itemsCount": "платежей"
+    "itemsCount": "платежей",
+    "roomNotExists": "Эта комната не существует. Сначала создайте комнату в разделе 'Комнаты'!",
+    "selectRoomPlaceholder": "Выберите комнату...",
+    "noRoomsOpened": "Пока не открыто ни одной комнаты"
   }
 }
 
