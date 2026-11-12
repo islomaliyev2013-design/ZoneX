@@ -46,7 +46,7 @@
     "fullName": "Полное имя",
     "fullNamePlaceholder": "например: Иван Иванов",
     "email": "Электронная почта",
-    "emailPlaceholder": "например: manager@playstation.com",
+    "emailPlaceholder": "например: manager.playstation.com",
     "confirmPassword": "Подтверждение пароля",
     "confirmPasswordPlaceholder": "Повторите пароль",
     "createAccountButton": "Создать аккаунт",

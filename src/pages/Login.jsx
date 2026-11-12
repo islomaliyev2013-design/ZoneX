@@ -248,7 +248,10 @@ export default function Login({ initialMode = 'login' }) {
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder={t('auth.usernamePlaceholder')}
                     className="w-full px-5 py-3 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition"
-                    autoComplete="off"
+                    readOnly
+                    onFocus={(e) => e.target.removeAttribute('readonly')}
+                    onPointerDown={(e) => e.target.removeAttribute('readonly')}
+                    autoComplete="one-time-code"
                     autoCorrect="off"
                     autoCapitalize="off"
                     spellCheck="false"
@@ -278,7 +281,10 @@ export default function Login({ initialMode = 'login' }) {
                         WebkitTextSecurity: showPassword ? 'none' : 'disc',
                       }}
                       className="w-full pl-5 pr-12 py-3 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition tracking-wider"
-                      autoComplete="off"
+                      readOnly
+                      onFocus={(e) => e.target.removeAttribute('readonly')}
+                      onPointerDown={(e) => e.target.removeAttribute('readonly')}
+                      autoComplete="new-password"
                       autoCorrect="off"
                       autoCapitalize="off"
                       spellCheck="false"
@@ -341,7 +347,10 @@ export default function Login({ initialMode = 'login' }) {
                     onChange={(e) => setRegFullName(e.target.value)}
                     placeholder={t('auth.fullNamePlaceholder')}
                     className="w-full px-5 py-2.5 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition"
-                    autoComplete="off"
+                    readOnly
+                    onFocus={(e) => e.target.removeAttribute('readonly')}
+                    onPointerDown={(e) => e.target.removeAttribute('readonly')}
+                    autoComplete="one-time-code"
                     autoCorrect="off"
                     autoCapitalize="off"
                     spellCheck="false"
@@ -363,7 +372,10 @@ export default function Login({ initialMode = 'login' }) {
                     onChange={(e) => setRegUsername(e.target.value)}
                     placeholder={t('auth.usernamePlaceholder')}
                     className="w-full px-5 py-2.5 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition"
-                    autoComplete="off"
+                    readOnly
+                    onFocus={(e) => e.target.removeAttribute('readonly')}
+                    onPointerDown={(e) => e.target.removeAttribute('readonly')}
+                    autoComplete="one-time-code"
                     autoCorrect="off"
                     autoCapitalize="off"
                     spellCheck="false"
@@ -380,13 +392,15 @@ export default function Login({ initialMode = 'login' }) {
                   </label>
                   <input
                     type="text"
-                    inputMode="email"
                     name="sec_reg_inbox_v1"
                     value={regEmail}
                     onChange={(e) => setRegEmail(e.target.value)}
                     placeholder={t('auth.emailPlaceholder')}
                     className="w-full px-5 py-2.5 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition"
-                    autoComplete="off"
+                    readOnly
+                    onFocus={(e) => e.target.removeAttribute('readonly')}
+                    onPointerDown={(e) => e.target.removeAttribute('readonly')}
+                    autoComplete="one-time-code"
                     autoCorrect="off"
                     autoCapitalize="off"
                     spellCheck="false"
@@ -413,7 +427,10 @@ export default function Login({ initialMode = 'login' }) {
                         WebkitTextSecurity: showRegPassword ? 'none' : 'disc',
                       }}
                       className="w-full pl-5 pr-12 py-2.5 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition tracking-wider"
-                      autoComplete="off"
+                      readOnly
+                      onFocus={(e) => e.target.removeAttribute('readonly')}
+                      onPointerDown={(e) => e.target.removeAttribute('readonly')}
+                      autoComplete="new-password"
                       autoCorrect="off"
                       autoCapitalize="off"
                       spellCheck="false"
@@ -453,7 +470,10 @@ export default function Login({ initialMode = 'login' }) {
                         WebkitTextSecurity: showRegConfirmPassword ? 'none' : 'disc',
                       }}
                       className="w-full pl-5 pr-12 py-2.5 rounded-full bg-white text-slate-900 placeholder:text-slate-400 text-sm font-medium border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm transition tracking-wider"
-                      autoComplete="off"
+                      readOnly
+                      onFocus={(e) => e.target.removeAttribute('readonly')}
+                      onPointerDown={(e) => e.target.removeAttribute('readonly')}
+                      autoComplete="new-password"
                       autoCorrect="off"
                       autoCapitalize="off"
                       spellCheck="false"

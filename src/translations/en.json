@@ -46,7 +46,7 @@
     "fullName": "Full Name",
     "fullNamePlaceholder": "e.g. John Doe",
     "email": "Email Address",
-    "emailPlaceholder": "e.g. manager@playstation.com",
+    "emailPlaceholder": "e.g. manager.playstation.com",
     "confirmPassword": "Confirm Password",
     "confirmPasswordPlaceholder": "Re-enter your password",
     "createAccountButton": "Create Account",
