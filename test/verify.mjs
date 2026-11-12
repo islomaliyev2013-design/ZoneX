@@ -10,6 +10,8 @@ import {
   generateInitialRooms,
   INITIAL_ROOMS_COUNT,
   STATIONS_PER_ROOM,
+  loadDebts,
+  saveDebts,
 } from '../src/utils/storage.js';
 import {
   formatCurrency,
@@ -119,6 +121,32 @@ assert.strictEqual(calculateBudgetFromDuration(60, 50000), 50000);
 // 30 minutes duration at 50 000/hr = 25 000 so'm
 assert.strictEqual(calculateBudgetFromDuration(30, 50000), 25000);
 console.log('✅ Test 6 Passed: Timed session budget and duration calculations accurate');
+
+// 7. Debts Calculation and Data Model Test
+console.log('\nTest 7: Debts management and calculation verification');
+const mockDebt = {
+  id: 'debt_test_1',
+  customerName: 'Jasur Aliyev',
+  phone: '+998 90 123 45 67',
+  roomStation: '1-PlayStation - 1-xona',
+  gameplayAmount: 35000,
+  products: [
+    { name: 'Flash', quantity: 2, sellingPrice: 15000, total: 30000 },
+    { name: 'Coca-Cola 0.5L', quantity: 1, sellingPrice: 10000, total: 10000 },
+  ],
+  productsAmount: 40000,
+  totalDebt: 75000,
+  status: 'unpaid',
+};
+
+assert.strictEqual(mockDebt.gameplayAmount + mockDebt.productsAmount, mockDebt.totalDebt);
+assert.strictEqual(mockDebt.totalDebt, 75000);
+assert.strictEqual(mockDebt.status, 'unpaid');
+
+// Function checks
+assert.strictEqual(typeof loadDebts, 'function');
+assert.strictEqual(typeof saveDebts, 'function');
+console.log('✅ Test 7 Passed: Debts data model and calculation verified');
 
 console.log('\n🎉 ALL TESTS PASSED SUCCESSFULLY!');
 

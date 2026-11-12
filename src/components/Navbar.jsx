@@ -6,6 +6,7 @@ import {
   ShoppingBag,
   History,
   BarChart3,
+  ReceiptText,
   LogOut,
   Menu,
   X,
@@ -19,7 +20,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
   const { t } = useLanguage();
-  const { totalRooms, totalStations } = useApp();
+  const { totalRooms, totalStations, unpaidDebtsCount = 0 } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -27,6 +28,12 @@ export default function Navbar() {
     { to: '/', label: t('nav.dashboard'), icon: LayoutDashboard },
     { to: '/rooms', label: t('nav.rooms'), icon: Tv },
     { to: '/sales', label: t('nav.sales'), icon: ShoppingBag },
+    {
+      to: '/debts',
+      label: t('nav.debts'),
+      icon: ReceiptText,
+      badge: unpaidDebtsCount > 0 ? unpaidDebtsCount : null,
+    },
     { to: '/history', label: t('nav.history'), icon: History },
     { to: '/reports', label: t('nav.reports'), icon: BarChart3 },
   ];
@@ -94,6 +101,11 @@ export default function Navbar() {
                 >
                   <Icon className="w-4 h-4 flex-shrink-0" />
                   <span>{item.label}</span>
+                  {item.badge != null && (
+                    <span className="ml-1 px-1.5 py-0.2 bg-[#DC2626] text-white text-[10px] font-black rounded-full leading-none">
+                      {item.badge}
+                    </span>
+                  )}
                 </NavLink>
               );
             })}
@@ -168,8 +180,15 @@ export default function Navbar() {
                   }`
                 }
               >
-                <Icon className="w-4 h-4" />
-                <span>{item.label}</span>
+                <div className="flex items-center gap-3">
+                  <Icon className="w-4 h-4" />
+                  <span>{item.label}</span>
+                </div>
+                {item.badge != null && (
+                  <span className="px-2 py-0.5 bg-[#DC2626] text-white text-xs font-black rounded-full">
+                    {item.badge}
+                  </span>
+                )}
               </NavLink>
             );
           })}

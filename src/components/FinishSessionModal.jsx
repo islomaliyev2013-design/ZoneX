@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { CheckCircle2, X, Receipt, Timer, BellRing } from 'lucide-react';
+import { CheckCircle2, X, Receipt, Timer, BellRing, ReceiptText } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import { calculateGamingPayment, calculateProductTotals } from '../utils/calculations';
@@ -9,13 +9,17 @@ import { stopAlarm } from '../utils/audioAlert';
 import ProductInputTable from './ProductInputTable';
 
 export default function FinishSessionModal({ station, isOpen, onClose }) {
-  const { settings, finishSession } = useApp();
+  const { settings, finishSession, finishSessionAsDebt } = useApp();
   const { t } = useLanguage();
   const currency = settings.currency || "so'm";
 
   const [products, setProducts] = useState([]);
   const [customGamingPayment, setCustomGamingPayment] = useState('');
   const [nowTimestamp, setNowTimestamp] = useState(Date.now());
+  const [showDebtDrawer, setShowDebtDrawer] = useState(false);
+  const [debtCustomerName, setDebtCustomerName] = useState('');
+  const [debtPhone, setDebtPhone] = useState('');
+  const [debtNotes, setDebtNotes] = useState('');
 
   useEffect(() => {
     if (isOpen && station?.session) {
@@ -40,6 +44,19 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
       }
 
       setCustomGamingPayment(defaultPayment.toString());
+
+      if (
+        station.session.customerName &&
+        station.session.customerName !== 'Walk-in' &&
+        station.session.customerName !== 'Nomsiz mijoz'
+      ) {
+        setDebtCustomerName(station.session.customerName);
+      } else {
+        setDebtCustomerName('');
+      }
+      setDebtPhone('');
+      setDebtNotes('');
+      setShowDebtDrawer(false);
     }
   }, [isOpen, station]);
 
@@ -83,6 +100,35 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
       });
     } catch (err) {
       console.error('Error finishing session:', err);
+    }
+
+    onClose();
+  };
+
+  const handleRecordAsDebt = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+
+    try {
+      const finalName = debtCustomerName.trim() || session.customerName || 'Nomsiz';
+      finishSessionAsDebt(station.id, {
+        customerName: finalName,
+        phone: debtPhone.trim(),
+        notes: debtNotes.trim(),
+        finalGamingPayment,
+        finalProducts: validProducts.map((p) => ({
+          name: p.name.trim(),
+          quantity: Number(p.quantity) || 1,
+          purchasePrice: Number(p.purchasePrice) || 0,
+          sellingPrice: Number(p.sellingPrice) || 0,
+          totalCost: (Number(p.quantity) || 1) * (Number(p.purchasePrice) || 0),
+          totalRevenue: (Number(p.quantity) || 1) * (Number(p.sellingPrice) || 0),
+          profit:
+            (Number(p.quantity) || 1) * (Number(p.sellingPrice) || 0) -
+            (Number(p.quantity) || 1) * (Number(p.purchasePrice) || 0),
+        })),
+      });
+    } catch (err) {
+      console.error('Error recording debt:', err);
     }
 
     onClose();
@@ -289,24 +335,107 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
             </div>
           </div>
 
+          {/* Debt Form Drawer */}
+          {showDebtDrawer && (
+            <div className="p-4 rounded-xl bg-amber-50/80 border-2 border-amber-300 text-[#292524] space-y-3 animate-in fade-in">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <ReceiptText className="w-4 h-4 text-amber-600" />
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800">
+                    {t('sessionModal.recordDebtDrawerTitle')}
+                  </h4>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowDebtDrawer(false)}
+                  className="text-xs text-[#78716C] hover:text-[#292524] underline cursor-pointer"
+                >
+                  {t('common.cancel')}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[11px] font-bold text-[#44403C] block mb-1">
+                    {t('debts.customerName')} *
+                  </label>
+                  <input
+                    type="text"
+                    value={debtCustomerName}
+                    onChange={(e) => setDebtCustomerName(e.target.value)}
+                    placeholder={t('debts.customerNamePlaceholder')}
+                    className="w-full px-3 py-2 text-xs bg-white rounded-lg border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold text-[#292524]"
+                    autoFocus
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] font-bold text-[#44403C] block mb-1">
+                    {t('debts.customerPhone')}
+                  </label>
+                  <input
+                    type="text"
+                    value={debtPhone}
+                    onChange={(e) => setDebtPhone(e.target.value)}
+                    placeholder={t('debts.customerPhonePlaceholder')}
+                    className="w-full px-3 py-2 text-xs bg-white rounded-lg border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-[#292524]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-[#44403C] block mb-1">
+                  {t('debts.notes')}
+                </label>
+                <input
+                  type="text"
+                  value={debtNotes}
+                  onChange={(e) => setDebtNotes(e.target.value)}
+                  placeholder={t('debts.notesPlaceholder')}
+                  className="w-full px-3 py-2 text-xs bg-white rounded-lg border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-[#292524]"
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={handleRecordAsDebt}
+                className="w-full py-2.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs sm:text-sm shadow-sm flex items-center justify-center gap-2 transition cursor-pointer"
+              >
+                <ReceiptText className="w-4 h-4" />
+                {t('sessionModal.confirmRecordDebt')} ({formatCurrency(totalAmountToCollect, currency)})
+              </button>
+            </div>
+          )}
+
         </div>
 
         {/* Sticky Footer Action Buttons — Always Visible and Clickable */}
-        <div className="shrink-0 px-5 py-3.5 bg-white border-t border-[#E7E5E4] flex gap-3">
+        <div className="shrink-0 px-5 py-3.5 bg-white border-t border-[#E7E5E4] flex flex-wrap sm:flex-nowrap gap-2 sm:gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-2.5 px-4 rounded-xl border border-[#E7E5E4] text-[#78716C] hover:bg-[#F5F5F4] hover:text-[#292524] font-bold text-sm transition cursor-pointer"
+            className="flex-1 py-2.5 px-3 rounded-xl border border-[#E7E5E4] text-[#78716C] hover:bg-[#F5F5F4] hover:text-[#292524] font-bold text-xs sm:text-sm transition cursor-pointer"
           >
             {t('sessionModal.cancel')}
           </button>
           <button
             type="button"
+            onClick={() => setShowDebtDrawer((prev) => !prev)}
+            className={`flex-1 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition cursor-pointer border ${
+              showDebtDrawer
+                ? 'bg-amber-600 text-white border-amber-600'
+                : 'bg-amber-50 hover:bg-amber-100 text-amber-700 border-amber-300'
+            }`}
+          >
+            <ReceiptText className="w-4 h-4" />
+            <span>{t('sessionModal.recordAsDebtBtn')}</span>
+          </button>
+          <button
+            type="button"
             onClick={handleFinish}
-            className="flex-2 py-2.5 px-6 rounded-xl bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2 transition cursor-pointer"
+            className="flex-2 py-2.5 px-5 rounded-xl bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold text-xs sm:text-sm shadow-sm flex items-center justify-center gap-2 transition cursor-pointer"
           >
             <CheckCircle2 className="w-4 h-4" />
-            {t('sessionModal.finishAndSaveBtn')}
+            <span>{t('sessionModal.finishAndSaveBtn')}</span>
           </button>
         </div>
 

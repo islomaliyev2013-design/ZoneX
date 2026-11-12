@@ -8,6 +8,8 @@ import {
   saveSettings,
   loadProductsCatalog,
   saveProductsCatalog,
+  loadDebts,
+  saveDebts,
   createRoomObject,
 } from '../utils/storage';
 import {
@@ -53,6 +55,7 @@ function AppInnerProvider({ accountId, children }) {
   const [transactions, setTransactions] = useState(() => loadTransactions(accountId));
   const [settings, setSettings] = useState(() => loadSettings(accountId));
   const [productsCatalog, setProductsCatalog] = useState(() => loadProductsCatalog(accountId));
+  const [debts, setDebts] = useState(() => loadDebts(accountId));
   const [cloudStatus, setCloudStatus] = useState('checking'); // 'connected' | 'not_ready' | 'offline' | 'checking'
   const [cloudMessage, setCloudMessage] = useState('');
 
@@ -72,6 +75,10 @@ function AppInnerProvider({ accountId, children }) {
   useEffect(() => {
     saveProductsCatalog(productsCatalog, accountId);
   }, [productsCatalog, accountId]);
+
+  useEffect(() => {
+    saveDebts(debts, accountId);
+  }, [debts, accountId]);
 
   // Check Supabase connection and sync data from Cloud
   useEffect(() => {
@@ -553,6 +560,146 @@ function AppInnerProvider({ accountId, children }) {
     saveTransactions([], accountId);
   };
 
+  /**
+   * Debts Management
+   */
+  const addDebt = (debtData) => {
+    const now = new Date();
+    const newDebt = {
+      id: `debt_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+      customerName: debtData.customerName?.trim() || 'Nomsiz',
+      phone: debtData.phone?.trim() || '',
+      roomStation: debtData.roomStation?.trim() || '',
+      gameplayAmount: Number(debtData.gameplayAmount) || 0,
+      products: Array.isArray(debtData.products) ? debtData.products : [],
+      productsAmount: Number(debtData.productsAmount) || 0,
+      totalDebt:
+        debtData.totalDebt != null
+          ? Number(debtData.totalDebt)
+          : (Number(debtData.gameplayAmount) || 0) + (Number(debtData.productsAmount) || 0),
+      dateStr: debtData.dateStr || toDateKey(now),
+      timeStr: debtData.timeStr || formatTimeDisplay(now),
+      createdAt: debtData.createdAt || Date.now(),
+      status: debtData.status || 'unpaid', // 'unpaid' | 'paid'
+      paidAt: debtData.paidAt || null,
+      notes: debtData.notes?.trim() || '',
+    };
+    setDebts((prev) => {
+      const updated = [newDebt, ...prev];
+      saveDebts(updated, accountId);
+      return updated;
+    });
+    return newDebt;
+  };
+
+  const updateDebt = (debtId, updates) => {
+    setDebts((prev) => {
+      const updated = prev.map((d) => {
+        if (d.id !== debtId) return d;
+        const next = { ...d, ...updates };
+        if (updates.gameplayAmount !== undefined || updates.productsAmount !== undefined) {
+          const gp = updates.gameplayAmount !== undefined ? Number(updates.gameplayAmount) || 0 : d.gameplayAmount;
+          const pa = updates.productsAmount !== undefined ? Number(updates.productsAmount) || 0 : d.productsAmount;
+          if (updates.totalDebt === undefined) {
+            next.totalDebt = gp + pa;
+          }
+        }
+        return next;
+      });
+      saveDebts(updated, accountId);
+      return updated;
+    });
+  };
+
+  const deleteDebt = (debtId) => {
+    setDebts((prev) => {
+      const updated = prev.filter((d) => d.id !== debtId);
+      saveDebts(updated, accountId);
+      return updated;
+    });
+  };
+
+  const markDebtAsPaid = (debtId) => {
+    setDebts((prev) => {
+      const updated = prev.map((d) =>
+        d.id === debtId
+          ? {
+              ...d,
+              status: 'paid',
+              paidAt: Date.now(),
+            }
+          : d
+      );
+      saveDebts(updated, accountId);
+      return updated;
+    });
+  };
+
+  const finishSessionAsDebt = (stationId, debtDetails = {}) => {
+    const station = findStation(stationId);
+    if (!station || !station.session) return null;
+
+    const session = station.session;
+    const now = Date.now();
+    const nowDate = new Date(now);
+    const dateStr = toDateKey(nowDate);
+    const timeStr = formatTimeDisplay(nowDate);
+
+    // 1. Calculate gaming charge
+    const gamingAmount =
+      debtDetails.finalGamingPayment !== undefined
+        ? Number(debtDetails.finalGamingPayment)
+        : calculateGamingPayment(now - session.startTime, session.hourlyPrice);
+
+    // 2. Products
+    const finalProducts = debtDetails.finalProducts || session.products || [];
+    const validProducts = finalProducts.filter(
+      (p) => p.name && p.name.trim() !== '' && Number(p.quantity) > 0
+    );
+    const productTotals = calculateProductTotals(validProducts);
+
+    const totalDebt = gamingAmount + productTotals.totalRevenue;
+
+    // 3. Create debt record
+    const newDebt = addDebt({
+      customerName: debtDetails.customerName || session.customerName || 'Nomsiz',
+      phone: debtDetails.phone || '',
+      roomStation: `${station.roomName || 'PlayStation'} - ${station.stationName || 'Xona'}`,
+      gameplayAmount: gamingAmount,
+      products: validProducts,
+      productsAmount: productTotals.totalRevenue,
+      totalDebt,
+      dateStr,
+      timeStr,
+      createdAt: now,
+      status: 'unpaid',
+      notes: debtDetails.notes || '',
+    });
+
+    // 4. Reset station to available (stopping any alarm)
+    stopAlarm(stationId);
+    setRooms((prevRooms) => {
+      const updated = prevRooms.map((room) => {
+        if (room.id !== station.roomId) return room;
+        return {
+          ...room,
+          stations: (room.stations || []).map((s) => {
+            if (s.id !== stationId) return s;
+            return {
+              ...s,
+              status: 'available',
+              session: null,
+            };
+          }),
+        };
+      });
+      saveRoomsStateToCloud(accountId, updated);
+      return updated;
+    });
+
+    return newDebt;
+  };
+
   // Calculations for dashboard and quick monitors - purely dynamic!
   const allStations = rooms.flatMap((r) => r.stations || []);
   const totalRooms = rooms.length;
@@ -566,6 +713,15 @@ function AppInnerProvider({ accountId, children }) {
   const todayTransactions = transactions.filter((tx) => tx.dateStr === todayKey);
   const todaySummary = calculateTransactionsSummary(todayTransactions);
 
+  // Debts calculations
+  const unpaidDebts = debts.filter((d) => d.status === 'unpaid');
+  const unpaidDebtsCount = unpaidDebts.length;
+  const totalUnpaidDebtAmount = unpaidDebts.reduce((sum, d) => sum + (Number(d.totalDebt) || 0), 0);
+  const totalGamingDebt = unpaidDebts.reduce((sum, d) => sum + (Number(d.gameplayAmount) || 0), 0);
+  const totalProductDebt = unpaidDebts.reduce((sum, d) => sum + (Number(d.productsAmount) || 0), 0);
+  const paidDebts = debts.filter((d) => d.status === 'paid');
+  const totalPaidDebtAmount = paidDebts.reduce((sum, d) => sum + (Number(d.totalDebt) || 0), 0);
+
   return (
     <AppContext.Provider
       value={{
@@ -573,9 +729,22 @@ function AppInnerProvider({ accountId, children }) {
         transactions,
         settings,
         productsCatalog,
+        debts,
         addProductToCatalog,
         updateProductInCatalog,
         deleteProductFromCatalog,
+        addDebt,
+        updateDebt,
+        deleteDebt,
+        markDebtAsPaid,
+        finishSessionAsDebt,
+        unpaidDebts,
+        unpaidDebtsCount,
+        totalUnpaidDebtAmount,
+        totalGamingDebt,
+        totalProductDebt,
+        paidDebts,
+        totalPaidDebtAmount,
         cloudStatus,
         cloudMessage,
         totalRooms,

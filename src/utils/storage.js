@@ -6,6 +6,7 @@ const getRoomsKey = (accountId = 'account_admin') => `ps_rooms_data_v4_${account
 const getTransactionsKey = (accountId = 'account_admin') => `ps_transactions_data_v4_${accountId}`;
 const getSettingsKey = (accountId = 'account_admin') => `ps_settings_v4_${accountId}`;
 const getCatalogKey = (accountId = 'account_admin') => `ps_catalog_v4_${accountId}`;
+const getDebtsKey = (accountId = 'account_admin') => `ps_debts_v4_${accountId}`;
 
 // Automatic cleanup of legacy test data from localStorage
 if (typeof window !== 'undefined' && window.localStorage) {
@@ -218,5 +219,33 @@ export function saveProductsCatalog(catalog, accountId = 'account_admin') {
     localStorage.setItem(getCatalogKey(accountId), JSON.stringify(catalog));
   } catch (err) {
     console.error('Failed to save products catalog:', err);
+  }
+}
+
+/**
+ * Debts storage for PlayStation Manager
+ * Tracks unpaid/paid customer credit records
+ */
+export function loadDebts(accountId = 'account_admin') {
+  try {
+    const key = getDebtsKey(accountId);
+    const stored = localStorage.getItem(key);
+    if (stored !== null) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load debts from localStorage:', err);
+  }
+  return [];
+}
+
+export function saveDebts(debts, accountId = 'account_admin') {
+  try {
+    localStorage.setItem(getDebtsKey(accountId), JSON.stringify(debts));
+  } catch (err) {
+    console.error('Failed to save debts to localStorage:', err);
   }
 }

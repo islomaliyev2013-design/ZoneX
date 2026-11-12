@@ -10,6 +10,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Rooms from './pages/Rooms';
 import Sales from './pages/Sales';
+import Debts from './pages/Debts';
 import History from './pages/History';
 import Reports from './pages/Reports';
 
@@ -93,6 +94,16 @@ export default function App() {
                   <ProtectedRoute>
                     <AppLayout>
                       <Sales />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/debts"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <Debts />
                     </AppLayout>
                   </ProtectedRoute>
                 }
