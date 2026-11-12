@@ -14,11 +14,11 @@
     "delete": "Удалить"
   },
   "nav": {
-    "dashboard": "Панель управления",
+    "dashboard": "Панель",
     "rooms": "Комнаты",
     "sales": "Продажи",
     "debts": "Долги",
-    "click": "Оплата Click",
+    "click": "Click",
     "history": "История",
     "reports": "Отчеты",
     "info": "Информация",

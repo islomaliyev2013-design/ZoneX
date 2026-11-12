@@ -58,15 +58,15 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-[#E7E5E4] shadow-xs select-none">
-      <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-[70px] gap-4">
+      <div className="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-[68px] gap-2 lg:gap-4">
           
           {/* 1. Left Side: Brand Logo with Gamepad Icon */}
           <NavLink
             to="/"
-            className="flex items-center gap-3 group flex-shrink-0 transition-transform active:scale-95"
+            className="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0 transition-transform active:scale-95"
           >
-            <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-xs border border-[#0D9488]/40 flex-shrink-0 group-hover:scale-105 transition-all">
+            <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-xs border border-[#0D9488]/40 flex-shrink-0 group-hover:scale-105 transition-all">
               <img
                 src="/app-icon.jpg"
                 alt="PlayStation Manager"
@@ -74,7 +74,7 @@ export default function Navbar() {
               />
             </div>
             <div className="leading-none">
-              <div className="text-base sm:text-lg font-black tracking-tight text-[#292524] flex items-center gap-1.5 whitespace-nowrap">
+              <div className="text-sm sm:text-base xl:text-lg font-black tracking-tight text-[#292524] flex items-center gap-1 whitespace-nowrap">
                 <span>PlayStation</span>
                 <span className="text-[#0D9488] font-black">
                   Manager
@@ -89,7 +89,7 @@ export default function Navbar() {
           </NavLink>
 
           {/* 2. Center: Minimal Clean Navigation Island */}
-          <nav className="hidden lg:flex items-center gap-1 bg-[#F5F5F4] border border-[#E7E5E4] p-1 rounded-xl shadow-xs">
+          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 bg-[#F5F5F4] border border-[#E7E5E4] p-1 rounded-xl shadow-xs">
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -98,17 +98,17 @@ export default function Navbar() {
                   to={item.to}
                   end={item.to === '/'}
                   className={({ isActive }) =>
-                    `flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-150 ${
+                    `flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-lg text-xs xl:text-sm font-bold whitespace-nowrap transition-all duration-150 ${
                       isActive
-                        ? 'bg-[#0D9488] text-white font-bold shadow-xs'
+                        ? 'bg-[#0D9488] text-white font-black shadow-xs'
                         : 'text-[#78716C] hover:text-[#292524] hover:bg-white'
                     }`
                   }
                 >
-                  <Icon className="w-4 h-4 flex-shrink-0" />
+                  <Icon className="w-3.5 h-3.5 xl:w-4 xl:h-4 flex-shrink-0" />
                   <span>{item.label}</span>
                   {item.badge != null && (
-                    <span className="ml-1 px-1.5 py-0.2 bg-[#DC2626] text-white text-[10px] font-black rounded-full leading-none">
+                    <span className="ml-0.5 px-1.5 py-0.2 bg-[#DC2626] text-white text-[10px] font-black rounded-full leading-none">
                       {item.badge}
                     </span>
                   )}
@@ -118,21 +118,21 @@ export default function Navbar() {
           </nav>
 
           {/* 3. Right Side: Language Selector + User Profile + Logout */}
-          <div className="hidden sm:flex items-center gap-3 flex-shrink-0">
+          <div className="hidden sm:flex items-center gap-2 xl:gap-3 flex-shrink-0">
             {/* Language Selector Dropdown */}
             <LanguageSelector variant="header" />
 
             {/* User Profile Pill & Logout Button */}
-            <div className="flex items-center gap-2 pl-3 border-l border-[#E7E5E4]">
+            <div className="flex items-center gap-1.5 xl:gap-2 pl-2 xl:pl-3 border-l border-[#E7E5E4]">
               <div
-                className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#F5F5F4] border border-[#E7E5E4] text-xs shadow-xs"
+                className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-[#F5F5F4] border border-[#E7E5E4] text-xs shadow-xs"
                 title={`${t('nav.loggedInAs')} ${currentUser?.username || ''}`}
               >
                 <div className="w-7 h-7 rounded-lg bg-[#0D9488] flex items-center justify-center font-bold text-white text-xs shadow-xs flex-shrink-0">
                   {userInitial}
                 </div>
-                <div className="flex flex-col text-left leading-tight">
-                  <span className="font-bold text-[#292524] text-xs">
+                <div className="flex flex-col text-left leading-tight max-w-[100px] xl:max-w-[130px]">
+                  <span className="font-bold text-[#292524] text-xs truncate">
                     {userDisplayName}
                   </span>
                   <span className="text-[10px] text-[#78716C] capitalize font-medium">
@@ -144,7 +144,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="p-2 rounded-xl bg-white hover:bg-red-50 text-[#78716C] hover:text-[#DC2626] border border-[#E7E5E4] hover:border-red-200 transition shadow-xs cursor-pointer"
+                className="p-2 rounded-xl bg-white hover:bg-red-50 text-[#78716C] hover:text-[#DC2626] border border-[#E7E5E4] hover:border-red-200 transition shadow-xs cursor-pointer flex-shrink-0"
                 title={t('nav.logout')}
               >
                 <LogOut className="w-4 h-4" />

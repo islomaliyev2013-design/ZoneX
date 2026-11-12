@@ -851,3 +851,4 @@ function DebtModal({ isOpen, initialData, onClose, onSave, currency, productsCat
 
   return typeof document !== 'undefined' ? createPortal(modalNode, document.body) : modalNode;
 }
+

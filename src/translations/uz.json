@@ -14,11 +14,11 @@
     "delete": "O‘chirish"
   },
   "nav": {
-    "dashboard": "Boshqaruv paneli",
+    "dashboard": "Boshqaruv",
     "rooms": "Xonalar",
-    "sales": "Mahsulot savdosi",
+    "sales": "Savdo",
     "debts": "Qarzlar",
-    "click": "Click to‘lovlar",
+    "click": "Click",
     "history": "Tarix",
     "reports": "Hisobotlar",
     "info": "Ma'lumot",

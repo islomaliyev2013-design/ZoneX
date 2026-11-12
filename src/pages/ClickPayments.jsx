@@ -716,3 +716,4 @@ function ClickPaymentModal({ isOpen, initialData, onClose, onSave, currency, t }
 
   return typeof document !== 'undefined' ? createPortal(modalNode, document.body) : modalNode;
 }
+
