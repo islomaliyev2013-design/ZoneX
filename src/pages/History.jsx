@@ -246,7 +246,18 @@ export default function History() {
                       <tr className="hover:bg-[#F5F5F4]/60 transition">
                         {/* Date & Time */}
                         <td className="py-3 px-4 font-semibold text-[#292524] whitespace-nowrap">
-                          <div>{formatDateDisplay(tx.createdAt || tx.dateStr)}</div>
+                          <div className="flex items-center gap-1.5">
+                            <span>{formatDateDisplay(tx.createdAt || tx.dateStr)}</span>
+                            {tx.paymentMethod === 'click' ? (
+                              <span className="px-1.5 py-0.2 rounded bg-sky-100 text-[#0284C7] font-black text-[9px] uppercase">
+                                Click
+                              </span>
+                            ) : (
+                              <span className="px-1.5 py-0.2 rounded bg-stone-100 text-[#78716C] font-bold text-[9px] uppercase">
+                                Naqd
+                              </span>
+                            )}
+                          </div>
                           <div className="text-[10px] text-[#78716C] font-normal">{tx.timeStr}</div>
                         </td>
 

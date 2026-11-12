@@ -10,6 +10,8 @@ import {
   saveProductsCatalog,
   loadDebts,
   saveDebts,
+  loadClickPayments,
+  saveClickPayments,
   createRoomObject,
 } from '../utils/storage';
 import {
@@ -56,6 +58,7 @@ function AppInnerProvider({ accountId, children }) {
   const [settings, setSettings] = useState(() => loadSettings(accountId));
   const [productsCatalog, setProductsCatalog] = useState(() => loadProductsCatalog(accountId));
   const [debts, setDebts] = useState(() => loadDebts(accountId));
+  const [clickPayments, setClickPayments] = useState(() => loadClickPayments(accountId));
   const [cloudStatus, setCloudStatus] = useState('checking'); // 'connected' | 'not_ready' | 'offline' | 'checking'
   const [cloudMessage, setCloudMessage] = useState('');
 
@@ -79,6 +82,10 @@ function AppInnerProvider({ accountId, children }) {
   useEffect(() => {
     saveDebts(debts, accountId);
   }, [debts, accountId]);
+
+  useEffect(() => {
+    saveClickPayments(clickPayments, accountId);
+  }, [clickPayments, accountId]);
 
   // Check Supabase connection and sync data from Cloud
   useEffect(() => {
@@ -405,7 +412,10 @@ function AppInnerProvider({ accountId, children }) {
   /**
    * Finish session and create transaction record
    */
-  const finishSession = (stationId, { finalGamingPayment, finalProducts = [] }) => {
+  const finishSession = (
+    stationId,
+    { finalGamingPayment, finalProducts = [], paymentMethod = 'cash', transactionRef = '' }
+  ) => {
     const station = findStation(stationId);
     if (!station || !station.session) return null;
 
@@ -420,6 +430,7 @@ function AppInnerProvider({ accountId, children }) {
         : autoGaming;
 
     const prodTotals = calculateProductTotals(finalProducts);
+    const totalAmount = gamingPayment + prodTotals.totalRevenue;
 
     const transaction = {
       id: `tx_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
@@ -442,8 +453,27 @@ function AppInnerProvider({ accountId, children }) {
       productCost: prodTotals.totalCost,
       productProfit: prodTotals.totalProfit,
       totalProfit: gamingPayment + prodTotals.totalProfit,
-      totalPaid: gamingPayment + prodTotals.totalRevenue,
+      totalPaid: totalAmount,
+      paymentMethod: paymentMethod || 'cash',
+      transactionRef: transactionRef || '',
     };
+
+    // If paid via Click, automatically record in Click payments
+    if (paymentMethod === 'click') {
+      addClickPayment({
+        customerName: station.session.customerName || 'Walk-in',
+        roomStation: `${station.roomName || 'PlayStation'} - ${station.stationName || 'Xona'}`,
+        amount: totalAmount,
+        purpose: 'session',
+        purposeLabel: `${station.roomName || 'PlayStation'} - ${station.stationName || 'Xona'}`,
+        transactionRef,
+        dateStr: toDateKey(endTime),
+        timeStr: formatTimeDisplay(endTime),
+        createdAt: endTime,
+        status: 'completed',
+        notes: `PlayStation seansi (${formatTimeDisplay(endTime)})`,
+      });
+    }
 
     // Save transaction locally and in cloud
     setTransactions((prev) => [transaction, ...prev]);
@@ -700,6 +730,50 @@ function AppInnerProvider({ accountId, children }) {
     return newDebt;
   };
 
+  /**
+   * Click Payments Management
+   */
+  const addClickPayment = (paymentData) => {
+    const now = new Date();
+    const newPayment = {
+      id: `click_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+      customerName: paymentData.customerName?.trim() || 'Mijoz',
+      phone: paymentData.phone?.trim() || '',
+      roomStation: paymentData.roomStation?.trim() || '',
+      amount: Number(paymentData.amount) || 0,
+      purpose: paymentData.purpose || 'session',
+      purposeLabel: paymentData.purposeLabel?.trim() || '',
+      transactionRef: paymentData.transactionRef?.trim() || '',
+      dateStr: paymentData.dateStr || toDateKey(now),
+      timeStr: paymentData.timeStr || formatTimeDisplay(now),
+      createdAt: paymentData.createdAt || Date.now(),
+      status: paymentData.status || 'completed',
+      notes: paymentData.notes?.trim() || '',
+    };
+    setClickPayments((prev) => {
+      const updated = [newPayment, ...prev];
+      saveClickPayments(updated, accountId);
+      return updated;
+    });
+    return newPayment;
+  };
+
+  const updateClickPayment = (paymentId, updates) => {
+    setClickPayments((prev) => {
+      const updated = prev.map((p) => (p.id === paymentId ? { ...p, ...updates } : p));
+      saveClickPayments(updated, accountId);
+      return updated;
+    });
+  };
+
+  const deleteClickPayment = (paymentId) => {
+    setClickPayments((prev) => {
+      const updated = prev.filter((p) => p.id !== paymentId);
+      saveClickPayments(updated, accountId);
+      return updated;
+    });
+  };
+
   // Calculations for dashboard and quick monitors - purely dynamic!
   const allStations = rooms.flatMap((r) => r.stations || []);
   const totalRooms = rooms.length;
@@ -722,6 +796,12 @@ function AppInnerProvider({ accountId, children }) {
   const paidDebts = debts.filter((d) => d.status === 'paid');
   const totalPaidDebtAmount = paidDebts.reduce((sum, d) => sum + (Number(d.totalDebt) || 0), 0);
 
+  // Click Payments calculations
+  const todayClickPayments = clickPayments.filter((p) => p.dateStr === todayKey);
+  const todayClickTotal = todayClickPayments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+  const totalClickAmount = clickPayments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+  const clickPaymentsCount = clickPayments.length;
+
   return (
     <AppContext.Provider
       value={{
@@ -730,6 +810,7 @@ function AppInnerProvider({ accountId, children }) {
         settings,
         productsCatalog,
         debts,
+        clickPayments,
         addProductToCatalog,
         updateProductInCatalog,
         deleteProductFromCatalog,
@@ -745,6 +826,13 @@ function AppInnerProvider({ accountId, children }) {
         totalProductDebt,
         paidDebts,
         totalPaidDebtAmount,
+        addClickPayment,
+        updateClickPayment,
+        deleteClickPayment,
+        todayClickPayments,
+        todayClickTotal,
+        totalClickAmount,
+        clickPaymentsCount,
         cloudStatus,
         cloudMessage,
         totalRooms,

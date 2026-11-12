@@ -7,6 +7,7 @@ const getTransactionsKey = (accountId = 'account_admin') => `ps_transactions_dat
 const getSettingsKey = (accountId = 'account_admin') => `ps_settings_v4_${accountId}`;
 const getCatalogKey = (accountId = 'account_admin') => `ps_catalog_v4_${accountId}`;
 const getDebtsKey = (accountId = 'account_admin') => `ps_debts_v4_${accountId}`;
+const getClickPaymentsKey = (accountId = 'account_admin') => `ps_click_payments_v4_${accountId}`;
 
 // Automatic cleanup of legacy test data from localStorage
 if (typeof window !== 'undefined' && window.localStorage) {
@@ -247,5 +248,33 @@ export function saveDebts(debts, accountId = 'account_admin') {
     localStorage.setItem(getDebtsKey(accountId), JSON.stringify(debts));
   } catch (err) {
     console.error('Failed to save debts to localStorage:', err);
+  }
+}
+
+/**
+ * Click payments storage for PlayStation Manager
+ * Tracks customer payments received via Click
+ */
+export function loadClickPayments(accountId = 'account_admin') {
+  try {
+    const key = getClickPaymentsKey(accountId);
+    const stored = localStorage.getItem(key);
+    if (stored !== null) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load click payments from localStorage:', err);
+  }
+  return [];
+}
+
+export function saveClickPayments(payments, accountId = 'account_admin') {
+  try {
+    localStorage.setItem(getClickPaymentsKey(accountId), JSON.stringify(payments));
+  } catch (err) {
+    console.error('Failed to save click payments to localStorage:', err);
   }
 }

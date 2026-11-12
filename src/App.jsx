@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import Rooms from './pages/Rooms';
 import Sales from './pages/Sales';
 import Debts from './pages/Debts';
+import ClickPayments from './pages/ClickPayments';
 import History from './pages/History';
 import Reports from './pages/Reports';
 
@@ -104,6 +105,16 @@ export default function App() {
                   <ProtectedRoute>
                     <AppLayout>
                       <Debts />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/click"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <ClickPayments />
                     </AppLayout>
                   </ProtectedRoute>
                 }

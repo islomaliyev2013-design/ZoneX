@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { CheckCircle2, X, Receipt, Timer, BellRing, ReceiptText } from 'lucide-react';
+import { CheckCircle2, X, Receipt, Timer, BellRing, ReceiptText, Coins, Smartphone } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import { calculateGamingPayment, calculateProductTotals } from '../utils/calculations';
@@ -20,6 +20,8 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
   const [debtCustomerName, setDebtCustomerName] = useState('');
   const [debtPhone, setDebtPhone] = useState('');
   const [debtNotes, setDebtNotes] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('cash'); // 'cash' | 'click'
+  const [transactionRef, setTransactionRef] = useState('');
 
   useEffect(() => {
     if (isOpen && station?.session) {
@@ -57,6 +59,8 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
       setDebtPhone('');
       setDebtNotes('');
       setShowDebtDrawer(false);
+      setPaymentMethod('cash');
+      setTransactionRef('');
     }
   }, [isOpen, station]);
 
@@ -97,6 +101,8 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
             (Number(p.quantity) || 1) * (Number(p.sellingPrice) || 0) -
             (Number(p.quantity) || 1) * (Number(p.purchasePrice) || 0),
         })),
+        paymentMethod,
+        transactionRef,
       });
     } catch (err) {
       console.error('Error finishing session:', err);
@@ -126,6 +132,8 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
             (Number(p.quantity) || 1) * (Number(p.sellingPrice) || 0) -
             (Number(p.quantity) || 1) * (Number(p.purchasePrice) || 0),
         })),
+        paymentMethod,
+        transactionRef,
       });
     } catch (err) {
       console.error('Error recording debt:', err);
@@ -333,6 +341,60 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
                 </span>
               </div>
             </div>
+          </div>
+
+          {/* Payment Method Selector (Naqd vs Click) */}
+          <div className="p-3.5 rounded-xl bg-[#F5F5F4] border border-[#E7E5E4] space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#44403C] uppercase tracking-wider">
+                {t('sessionModal.paymentMethodLabel')}
+              </span>
+              <span className={`text-[11px] font-black uppercase px-2 py-0.5 rounded-md ${
+                paymentMethod === 'click' ? 'bg-[#00A5EC]/10 text-[#00A5EC]' : 'bg-[#16A34A]/10 text-[#16A34A]'
+              }`}>
+                {paymentMethod === 'click' ? 'Click' : t('sessionModal.methodCash')}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2.5">
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('cash')}
+                className={`py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 border cursor-pointer ${
+                  paymentMethod === 'cash'
+                    ? 'bg-white text-[#292524] border-[#0D9488] shadow-xs ring-2 ring-[#0D9488]/30 font-black'
+                    : 'bg-white/60 text-[#78716C] border-[#E7E5E4] hover:bg-white'
+                }`}
+              >
+                <Coins className="w-4 h-4 text-[#16A34A]" />
+                <span>{t('sessionModal.methodCash')}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('click')}
+                className={`py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 border cursor-pointer ${
+                  paymentMethod === 'click'
+                    ? 'bg-[#00A5EC] text-white border-[#00A5EC] shadow-xs font-black'
+                    : 'bg-white/60 text-[#78716C] border-[#E7E5E4] hover:bg-white'
+                }`}
+              >
+                <Smartphone className="w-4 h-4" />
+                <span>{t('sessionModal.methodClick')}</span>
+              </button>
+            </div>
+
+            {paymentMethod === 'click' && (
+              <div className="pt-1 animate-in fade-in">
+                <input
+                  type="text"
+                  value={transactionRef}
+                  onChange={(e) => setTransactionRef(e.target.value)}
+                  placeholder={t('sessionModal.transactionRefPlaceholder')}
+                  className="w-full px-3 py-2 text-xs bg-white rounded-lg border border-sky-300 focus:outline-none focus:ring-2 focus:ring-[#00A5EC] text-[#292524] font-medium"
+                />
+              </div>
+            )}
           </div>
 
           {/* Debt Form Drawer */}

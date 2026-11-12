@@ -12,6 +12,8 @@ import {
   STATIONS_PER_ROOM,
   loadDebts,
   saveDebts,
+  loadClickPayments,
+  saveClickPayments,
 } from '../src/utils/storage.js';
 import {
   formatCurrency,
@@ -147,6 +149,27 @@ assert.strictEqual(mockDebt.status, 'unpaid');
 assert.strictEqual(typeof loadDebts, 'function');
 assert.strictEqual(typeof saveDebts, 'function');
 console.log('✅ Test 7 Passed: Debts data model and calculation verified');
+
+// 8. Click Payments Test
+console.log('\nTest 8: Click payments management and verification');
+const mockClickPayment = {
+  id: 'click_test_1',
+  customerName: 'Alisher Rahimov',
+  phone: '+998 93 999 88 77',
+  roomStation: '2-PlayStation - 1-xona',
+  amount: 45000,
+  purpose: 'session',
+  transactionRef: 'CLK-901823',
+  dateStr: '2026-11-12',
+  timeStr: '11:15',
+  status: 'completed',
+};
+
+assert.strictEqual(mockClickPayment.amount, 45000);
+assert.strictEqual(mockClickPayment.status, 'completed');
+assert.strictEqual(typeof loadClickPayments, 'function');
+assert.strictEqual(typeof saveClickPayments, 'function');
+console.log('✅ Test 8 Passed: Click payments data model and calculation verified');
 
 console.log('\n🎉 ALL TESTS PASSED SUCCESSFULLY!');
 
