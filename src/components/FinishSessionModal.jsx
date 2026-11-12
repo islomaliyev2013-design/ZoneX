@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { CheckCircle2, X, Receipt, Timer, BellRing, ReceiptText, Coins, Smartphone } from 'lucide-react';
+import { CheckCircle2, X, Receipt, Timer, ReceiptText, Coins, Smartphone } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import { calculateGamingPayment, calculateProductTotals } from '../utils/calculations';
@@ -153,25 +153,25 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
     .replace(/^Station\s*(\d+)$/i, '$1-xona');
 
   const modalContent = (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-900/70 backdrop-blur-md p-3 sm:p-5 overflow-hidden">
-      <div className="bg-white rounded-2xl w-full max-w-2xl text-[#292524] shadow-2xl border border-[#E7E5E4] flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-5 overflow-hidden">
+      <div className="bg-[#1D1B2E] rounded-2xl w-full max-w-2xl text-white shadow-2xl border border-[rgba(167,139,250,0.15)] flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95">
         
         {/* Sticky Header — Always Visible */}
-        <div className="shrink-0 px-5 py-3.5 bg-white text-[#292524] flex items-center justify-between border-b border-[#E7E5E4]">
+        <div className="shrink-0 px-5 py-3.5 bg-[#1D1B2E] text-white flex items-center justify-between border-b border-[rgba(167,139,250,0.15)]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-red-50 text-[#DC2626] border border-red-200 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center shrink-0">
               <Receipt className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-extrabold text-[#292524] leading-tight">
+              <h3 className="text-base font-extrabold text-white leading-tight">
                 {t('sessionModal.finishTitle', {
                   room: localizedRoomName,
                   station: localizedStationName,
                 })}
               </h3>
-              <p className="text-xs text-[#78716C] mt-0.5">
+              <p className="text-xs text-[#A1A1AA] mt-0.5">
                 {t('sessionModal.customerLabel')}{' '}
-                <span className="text-[#292524] font-bold">
+                <span className="text-white font-bold">
                   {session.customerName || t('common.walkIn')}
                 </span>
               </p>
@@ -180,7 +180,7 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#78716C] hover:text-[#292524] hover:bg-[#F5F5F4] transition cursor-pointer"
+            className="p-1.5 rounded-lg text-[#A1A1AA] hover:text-white hover:bg-[#101014] transition cursor-pointer"
             title={t('common.cancel')}
           >
             <X className="w-5 h-5" />
@@ -192,55 +192,55 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
           
           {/* Timed Session Badge if applicable */}
           {session.isTimed && (
-            <div className="flex items-center justify-between p-3 rounded-xl bg-[#F0FDFA] border border-[#99F6E4] text-[#0D9488] text-xs font-bold">
+            <div className="flex items-center justify-between p-3 rounded-xl bg-[#7C3AED]/15 border border-[#7C3AED]/30 text-[#A78BFA] text-xs font-bold">
               <span className="flex items-center gap-2">
-                <Timer className="w-4 h-4 text-[#0D9488] shrink-0" />
+                <Timer className="w-4 h-4 text-[#A78BFA] shrink-0" />
                 <span>
                   {t('sessionModal.timedBadge')}: {session.targetBudget != null ? formatCurrency(session.targetBudget, currency) : formatDurationHuman(session.targetDurationMs)}
                 </span>
               </span>
-              <span className="text-[11px] font-normal text-[#78716C]">
+              <span className="text-[11px] font-normal text-[#A1A1AA]">
                 Limitga yetganda avtomatik signal yangragan
               </span>
             </div>
           )}
 
           {/* Gaming Session Summary Card */}
-          <div className="p-3.5 rounded-xl bg-[#F5F5F4] border border-[#E7E5E4]">
+          <div className="p-3.5 rounded-xl bg-[#101014] border border-[rgba(167,139,250,0.15)]">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
               
-              <div className="p-2 bg-white rounded-xl border border-[#E7E5E4]">
-                <span className="text-[10px] font-bold text-[#78716C] block uppercase">
+              <div className="p-2 bg-[#1D1B2E] rounded-xl border border-[rgba(167,139,250,0.15)]">
+                <span className="text-[10px] font-bold text-[#A1A1AA] block uppercase">
                   {t('sessionModal.startedAt')}
                 </span>
-                <span className="text-sm font-bold text-[#292524] mt-0.5 block font-mono">
+                <span className="text-sm font-bold text-white mt-0.5 block font-mono">
                   {formatTimeDisplay(session.startTime)}
                 </span>
               </div>
 
-              <div className="p-2 bg-white rounded-xl border border-[#E7E5E4]">
-                <span className="text-[10px] font-bold text-[#78716C] block uppercase">
+              <div className="p-2 bg-[#1D1B2E] rounded-xl border border-[rgba(167,139,250,0.15)]">
+                <span className="text-[10px] font-bold text-[#A1A1AA] block uppercase">
                   {t('sessionModal.endedAt')}
                 </span>
-                <span className="text-sm font-bold text-[#292524] mt-0.5 block font-mono">
+                <span className="text-sm font-bold text-white mt-0.5 block font-mono">
                   {formatTimeDisplay(nowTimestamp)}
                 </span>
               </div>
 
-              <div className="p-2 bg-[#F0FDFA] rounded-xl border border-[#CCFBF1]">
-                <span className="text-[10px] font-bold text-[#0D9488] block uppercase">
+              <div className="p-2 bg-[#7C3AED]/20 rounded-xl border border-[rgba(167,139,250,0.3)]">
+                <span className="text-[10px] font-bold text-[#A78BFA] block uppercase">
                   {t('sessionModal.duration')}
                 </span>
-                <span className="text-sm font-extrabold text-[#0D9488] mt-0.5 block font-mono">
+                <span className="text-sm font-extrabold text-[#A78BFA] mt-0.5 block font-mono">
                   {formatDurationHuman(durationMs)}
                 </span>
               </div>
 
-              <div className="p-2 bg-white rounded-xl border border-[#E7E5E4]">
-                <span className="text-[10px] font-bold text-[#78716C] block uppercase">
+              <div className="p-2 bg-[#1D1B2E] rounded-xl border border-[rgba(167,139,250,0.15)]">
+                <span className="text-[10px] font-bold text-[#A1A1AA] block uppercase">
                   {t('sessionModal.hourlyRate')}
                 </span>
-                <span className="text-sm font-bold text-[#292524] mt-0.5 block font-mono truncate">
+                <span className="text-sm font-bold text-white mt-0.5 block font-mono truncate">
                   {formatCurrency(session.hourlyPrice, currency)}/soat
                 </span>
               </div>
@@ -248,14 +248,14 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
             </div>
 
             {/* Gaming Payment input */}
-            <div className="mt-3 pt-3 border-t border-[#E7E5E4] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div className="mt-3 pt-3 border-t border-[rgba(167,139,250,0.15)] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div>
-                <label className="text-xs font-bold text-[#292524] block">
+                <label className="text-xs font-bold text-white block">
                   {t('sessionModal.gamingPayment', {
                     amount: formatCurrency(autoGamingPayment, currency),
                   })}
                 </label>
-                <span className="text-[11px] text-[#78716C]">
+                <span className="text-[11px] text-[#A1A1AA]">
                   {t('sessionModal.autoComputedHint')}
                 </span>
               </div>
@@ -267,9 +267,9 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
                   step="any"
                   value={customGamingPayment}
                   onChange={(e) => setCustomGamingPayment(e.target.value)}
-                  className="w-full pl-3 pr-20 py-2 text-right font-bold text-base bg-white border border-[#E7E5E4] rounded-xl text-[#292524] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488]"
+                  className="w-full pl-3 pr-20 py-2 text-right font-bold text-base bg-[#1D1B2E] border border-[rgba(167,139,250,0.2)] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED] focus:border-[#7C3AED]"
                 />
-                <span className="absolute right-3 top-2.5 text-[#78716C] text-xs font-bold pointer-events-none">
+                <span className="absolute right-3 top-2.5 text-[#A1A1AA] text-xs font-bold pointer-events-none">
                   {currency}
                 </span>
               </div>
@@ -277,12 +277,12 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
           </div>
 
           {/* Product Sales Section */}
-          <div className="border border-[#E7E5E4] rounded-xl p-3.5 bg-[#F5F5F4]/40">
+          <div className="border border-[rgba(167,139,250,0.15)] rounded-xl p-3.5 bg-[#101014]/60">
             <div className="flex items-center justify-between mb-2.5">
-              <h4 className="text-xs font-bold text-[#292524] uppercase tracking-wide">
+              <h4 className="text-xs font-bold text-white uppercase tracking-wide">
                 {t('sessionModal.productsSoldToCustomer')}
               </h4>
-              <span className="text-[11px] text-[#78716C]">
+              <span className="text-[11px] text-[#A1A1AA]">
                 {t('sessionModal.drinksSnacksHint')}
               </span>
             </div>
@@ -295,48 +295,48 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
           </div>
 
           {/* Grand Receipt Summary */}
-          <div className="p-3.5 rounded-xl bg-[#F0FDFA] border border-[#99F6E4]/80 text-[#292524] space-y-1.5">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-[#0D9488] mb-1.5">
+          <div className="p-3.5 rounded-xl bg-[#7C3AED]/15 border border-[rgba(167,139,250,0.25)] text-white space-y-1.5">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#A78BFA] mb-1.5">
               {t('sessionModal.checkoutSummary')}
             </h4>
 
-            <div className="flex justify-between text-xs py-1 border-b border-[#E7E5E4]">
-              <span className="text-[#78716C]">{t('sessionModal.gamingPaymentLabel')}</span>
-              <span className="font-bold text-[#292524] font-mono">
+            <div className="flex justify-between text-xs py-1 border-b border-[rgba(167,139,250,0.15)]">
+              <span className="text-[#A1A1AA]">{t('sessionModal.gamingPaymentLabel')}</span>
+              <span className="font-bold text-white font-mono">
                 {formatCurrency(finalGamingPayment, currency)}
               </span>
             </div>
 
-            <div className="flex justify-between text-xs py-1 border-b border-[#E7E5E4]">
-              <span className="text-[#78716C]">
+            <div className="flex justify-between text-xs py-1 border-b border-[rgba(167,139,250,0.15)]">
+              <span className="text-[#A1A1AA]">
                 {t('sessionModal.productSalesLabel', { count: validProducts.length })}
               </span>
-              <span className="font-bold text-[#0D9488] font-mono">
+              <span className="font-bold text-[#A78BFA] font-mono">
                 {formatCurrency(productTotals.totalRevenue, currency)}
               </span>
             </div>
 
-            <div className="flex justify-between text-xs py-1 border-b border-[#E7E5E4]">
-              <span className="text-[#78716C]">{t('sessionModal.productProfitLabel')}</span>
-              <span className="font-extrabold text-[#16A34A] font-mono">
+            <div className="flex justify-between text-xs py-1 border-b border-[rgba(167,139,250,0.15)]">
+              <span className="text-[#A1A1AA]">{t('sessionModal.productProfitLabel')}</span>
+              <span className="font-extrabold text-emerald-400 font-mono">
                 {formatCurrency(productTotals.totalProfit, currency)}
               </span>
             </div>
 
             <div className="pt-2 flex justify-between items-baseline">
               <div>
-                <span className="text-[10px] font-bold uppercase text-[#78716C] block">
+                <span className="text-[10px] font-bold uppercase text-[#A1A1AA] block">
                   {t('sessionModal.totalCustomerBill')}
                 </span>
-                <span className="text-xl sm:text-2xl font-black text-[#292524] font-mono">
+                <span className="text-xl sm:text-2xl font-black text-white font-mono">
                   {formatCurrency(totalAmountToCollect, currency)}
                 </span>
               </div>
               <div className="text-right">
-                <span className="text-[10px] font-bold uppercase text-[#0D9488] block">
+                <span className="text-[10px] font-bold uppercase text-[#A78BFA] block">
                   {t('sessionModal.yourTotalProfit')}
                 </span>
-                <span className="text-xl sm:text-2xl font-black text-[#16A34A] font-mono">
+                <span className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">
                   {formatCurrency(totalProfit, currency)}
                 </span>
               </div>
@@ -344,13 +344,13 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
           </div>
 
           {/* Payment Method Selector (Naqd vs Click) */}
-          <div className="p-3.5 rounded-xl bg-[#F5F5F4] border border-[#E7E5E4] space-y-2.5">
+          <div className="p-3.5 rounded-xl bg-[#101014] border border-[rgba(167,139,250,0.15)] space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#44403C] uppercase tracking-wider">
+              <span className="text-xs font-bold text-[#A1A1AA] uppercase tracking-wider">
                 {t('sessionModal.paymentMethodLabel')}
               </span>
               <span className={`text-[11px] font-black uppercase px-2 py-0.5 rounded-md ${
-                paymentMethod === 'click' ? 'bg-[#00A5EC]/10 text-[#00A5EC]' : 'bg-[#16A34A]/10 text-[#16A34A]'
+                paymentMethod === 'click' ? 'bg-[#00A5EC]/20 text-[#00A5EC] border border-[#00A5EC]/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
               }`}>
                 {paymentMethod === 'click' ? 'Click' : t('sessionModal.methodCash')}
               </span>
@@ -362,11 +362,11 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
                 onClick={() => setPaymentMethod('cash')}
                 className={`py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 border cursor-pointer ${
                   paymentMethod === 'cash'
-                    ? 'bg-white text-[#292524] border-[#0D9488] shadow-xs ring-2 ring-[#0D9488]/30 font-black'
-                    : 'bg-white/60 text-[#78716C] border-[#E7E5E4] hover:bg-white'
+                    ? 'bg-[#7C3AED] text-white border-[#7C3AED] shadow-[0_0_15px_rgba(124,58,237,0.3)] font-black'
+                    : 'bg-[#1D1B2E] text-[#A1A1AA] border-[rgba(167,139,250,0.15)] hover:text-white hover:border-[#7C3AED]/40'
                 }`}
               >
-                <Coins className="w-4 h-4 text-[#16A34A]" />
+                <Coins className="w-4 h-4 text-emerald-400" />
                 <span>{t('sessionModal.methodCash')}</span>
               </button>
 
@@ -375,8 +375,8 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
                 onClick={() => setPaymentMethod('click')}
                 className={`py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 border cursor-pointer ${
                   paymentMethod === 'click'
-                    ? 'bg-[#00A5EC] text-white border-[#00A5EC] shadow-xs font-black'
-                    : 'bg-white/60 text-[#78716C] border-[#E7E5E4] hover:bg-white'
+                    ? 'bg-[#00A5EC] text-white border-[#00A5EC] shadow-[0_0_15px_rgba(0,165,236,0.3)] font-black'
+                    : 'bg-[#1D1B2E] text-[#A1A1AA] border-[rgba(167,139,250,0.15)] hover:text-white hover:border-[#00A5EC]/40'
                 }`}
               >
                 <Smartphone className="w-4 h-4" />
@@ -391,7 +391,7 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
                   value={transactionRef}
                   onChange={(e) => setTransactionRef(e.target.value)}
                   placeholder={t('sessionModal.transactionRefPlaceholder')}
-                  className="w-full px-3 py-2 text-xs bg-white rounded-lg border border-sky-300 focus:outline-none focus:ring-2 focus:ring-[#00A5EC] text-[#292524] font-medium"
+                  className="w-full px-3 py-2 text-xs bg-[#1D1B2E] rounded-lg border border-sky-400/40 focus:outline-none focus:ring-2 focus:ring-[#00A5EC] text-white placeholder-[#A1A1AA]/50 font-medium"
                 />
               </div>
             )}
@@ -399,18 +399,18 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
 
           {/* Debt Form Drawer */}
           {showDebtDrawer && (
-            <div className="p-4 rounded-xl bg-amber-50/80 border-2 border-amber-300 text-[#292524] space-y-3 animate-in fade-in">
+            <div className="p-4 rounded-xl bg-[#101014] border-2 border-amber-500/40 text-white space-y-3 animate-in fade-in">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <ReceiptText className="w-4 h-4 text-amber-600" />
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800">
+                  <ReceiptText className="w-4 h-4 text-amber-400" />
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-amber-300">
                     {t('sessionModal.recordDebtDrawerTitle')}
                   </h4>
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowDebtDrawer(false)}
-                  className="text-xs text-[#78716C] hover:text-[#292524] underline cursor-pointer"
+                  className="text-xs text-[#A1A1AA] hover:text-white underline cursor-pointer"
                 >
                   {t('common.cancel')}
                 </button>
@@ -418,7 +418,7 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[11px] font-bold text-[#44403C] block mb-1">
+                  <label className="text-[11px] font-bold text-[#A1A1AA] block mb-1">
                     {t('debts.customerName')} *
                   </label>
                   <input
@@ -426,12 +426,12 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
                     value={debtCustomerName}
                     onChange={(e) => setDebtCustomerName(e.target.value)}
                     placeholder={t('debts.customerNamePlaceholder')}
-                    className="w-full px-3 py-2 text-xs bg-white rounded-lg border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold text-[#292524]"
+                    className="w-full px-3 py-2 text-xs bg-[#1D1B2E] rounded-lg border border-amber-500/30 focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold text-white placeholder-[#A1A1AA]/50"
                     autoFocus
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-bold text-[#44403C] block mb-1">
+                  <label className="text-[11px] font-bold text-[#A1A1AA] block mb-1">
                     {t('debts.customerPhone')}
                   </label>
                   <input
@@ -439,13 +439,13 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
                     value={debtPhone}
                     onChange={(e) => setDebtPhone(e.target.value)}
                     placeholder={t('debts.customerPhonePlaceholder')}
-                    className="w-full px-3 py-2 text-xs bg-white rounded-lg border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-[#292524]"
+                    className="w-full px-3 py-2 text-xs bg-[#1D1B2E] rounded-lg border border-amber-500/30 focus:outline-none focus:ring-2 focus:ring-amber-500 text-white placeholder-[#A1A1AA]/50"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-[11px] font-bold text-[#44403C] block mb-1">
+                <label className="text-[11px] font-bold text-[#A1A1AA] block mb-1">
                   {t('debts.notes')}
                 </label>
                 <input
@@ -453,7 +453,7 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
                   value={debtNotes}
                   onChange={(e) => setDebtNotes(e.target.value)}
                   placeholder={t('debts.notesPlaceholder')}
-                  className="w-full px-3 py-2 text-xs bg-white rounded-lg border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-[#292524]"
+                  className="w-full px-3 py-2 text-xs bg-[#1D1B2E] rounded-lg border border-amber-500/30 focus:outline-none focus:ring-2 focus:ring-amber-500 text-white placeholder-[#A1A1AA]/50"
                 />
               </div>
 
@@ -471,11 +471,11 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
         </div>
 
         {/* Sticky Footer Action Buttons — Always Visible and Clickable */}
-        <div className="shrink-0 px-5 py-3.5 bg-white border-t border-[#E7E5E4] flex flex-wrap sm:flex-nowrap gap-2 sm:gap-3">
+        <div className="shrink-0 px-5 py-3.5 bg-[#1D1B2E] border-t border-[rgba(167,139,250,0.15)] flex flex-wrap sm:flex-nowrap gap-2 sm:gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-2.5 px-3 rounded-xl border border-[#E7E5E4] text-[#78716C] hover:bg-[#F5F5F4] hover:text-[#292524] font-bold text-xs sm:text-sm transition cursor-pointer"
+            className="flex-1 py-2.5 px-3 rounded-xl border border-[rgba(167,139,250,0.15)] text-[#A1A1AA] hover:bg-[#101014] hover:text-white font-bold text-xs sm:text-sm transition cursor-pointer"
           >
             {t('sessionModal.cancel')}
           </button>
@@ -485,7 +485,7 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
             className={`flex-1 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition cursor-pointer border ${
               showDebtDrawer
                 ? 'bg-amber-600 text-white border-amber-600'
-                : 'bg-amber-50 hover:bg-amber-100 text-amber-700 border-amber-300'
+                : 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/30'
             }`}
           >
             <ReceiptText className="w-4 h-4" />
@@ -494,7 +494,7 @@ export default function FinishSessionModal({ station, isOpen, onClose }) {
           <button
             type="button"
             onClick={handleFinish}
-            className="flex-2 py-2.5 px-5 rounded-xl bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold text-xs sm:text-sm shadow-sm flex items-center justify-center gap-2 transition cursor-pointer"
+            className="flex-2 py-2.5 px-5 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold text-xs sm:text-sm shadow-[0_0_15px_rgba(124,58,237,0.35)] flex items-center justify-center gap-2 transition cursor-pointer"
           >
             <CheckCircle2 className="w-4 h-4" />
             <span>{t('sessionModal.finishAndSaveBtn')}</span>

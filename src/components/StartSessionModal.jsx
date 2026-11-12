@@ -19,7 +19,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { formatCurrency } from '../utils/formatters';
 import { calculateDurationFromBudget, calculateBudgetFromDuration } from '../utils/calculations';
 import { testAlarmSound } from '../utils/audioAlert';
-import { ROOM_DEFAULT_CONFIGS, DEFAULT_CATALOG } from '../utils/storage';
+import { ROOM_DEFAULT_CONFIGS } from '../utils/storage';
 
 export default function StartSessionModal({ station, isOpen, onClose }) {
   const { settings, productsCatalog = [], startSession } = useApp();
@@ -203,17 +203,17 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
     .replace(/^Station\s*(\d+)$/i, '$1-xona');
 
   const modalContent = (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-900/70 backdrop-blur-md p-3 sm:p-5 overflow-hidden">
-      <div className="bg-white rounded-2xl w-full max-w-lg text-[#292524] shadow-2xl border border-[#E7E5E4] flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-5 overflow-hidden">
+      <div className="bg-[#1D1B2E] rounded-2xl w-full max-w-lg text-white shadow-2xl border border-[rgba(167,139,250,0.15)] flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95">
         
         {/* Sticky Header — Always Visible */}
-        <div className="shrink-0 px-5 py-3.5 bg-white text-[#292524] flex items-center justify-between border-b border-[#E7E5E4]">
+        <div className="shrink-0 px-5 py-3.5 bg-[#1D1B2E] text-white flex items-center justify-between border-b border-[rgba(167,139,250,0.15)]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#F0FDFA] text-[#0D9488] border border-[#CCFBF1] flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-[#7C3AED]/20 text-[#A78BFA] border border-[rgba(167,139,250,0.25)] flex items-center justify-center shrink-0">
               <Tv className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-extrabold text-[#292524] leading-tight flex items-center gap-2">
+              <h3 className="text-base font-extrabold text-white leading-tight flex items-center gap-2">
                 <span>
                   {t('sessionModal.startTitle', {
                     room: localizedRoomName,
@@ -221,14 +221,14 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                   })}
                 </span>
                 {station.zoneType && (
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-[#F0FDFA] text-[#0D9488] border-[#99F6E4]">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-[#7C3AED]/20 text-[#A78BFA] border-[rgba(167,139,250,0.3)]">
                     {station.zoneType}
                   </span>
                 )}
               </h3>
-              <p className="text-xs text-[#78716C] mt-0.5 font-medium">
+              <p className="text-xs text-[#A1A1AA] mt-0.5 font-medium">
                 {t('sessionModal.startSubtitle')} •{' '}
-                <span className="font-bold text-[#0D9488]">
+                <span className="font-bold text-[#A78BFA]">
                   {station.roomId === 3 || station.isUnlimitedOnly
                     ? `${t('infoPage.room3Badge') || 'Vaqti cheklanmagan'} (${formatCurrency(ROOM_DEFAULT_CONFIGS[3]?.hourlyRate || 30000, currency)}${t('station.perHour') || '/soat'})`
                     : `${formatCurrency(ROOM_DEFAULT_CONFIGS[station.roomId]?.hourlyRate || station.hourlyRate || 20000, currency)}${t('station.perHour') || '/soat'}`}
@@ -239,7 +239,7 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#78716C] hover:text-[#292524] hover:bg-[#F5F5F4] transition cursor-pointer"
+            className="p-1.5 rounded-lg text-[#A1A1AA] hover:text-white hover:bg-[#101014] transition cursor-pointer"
             title={t('common.cancel')}
           >
             <X className="w-5 h-5" />
@@ -254,8 +254,8 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
             
             {/* Hourly Price */}
             <div>
-              <label className="block text-xs font-bold text-[#78716C] uppercase tracking-wide mb-1.5">
-                {t('sessionModal.hourlyPrice')} <span className="text-[#DC2626]">*</span>
+              <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wide mb-1.5">
+                {t('sessionModal.hourlyPrice')} <span className="text-rose-400">*</span>
               </label>
               <div className="relative">
                 <input
@@ -265,10 +265,10 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                   value={hourlyPrice}
                   onChange={(e) => setHourlyPrice(e.target.value)}
                   placeholder="20000"
-                  className="w-full pl-4 pr-32 py-2.5 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-base font-bold text-[#292524] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
+                  className="w-full pl-4 pr-32 py-2.5 bg-[#101014] border border-[rgba(167,139,250,0.2)] rounded-xl text-base font-bold text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED] focus:border-[#7C3AED] transition"
                   required
                 />
-                <span className="absolute right-3.5 top-3 text-[#78716C] text-xs font-bold pointer-events-none">
+                <span className="absolute right-3.5 top-3 text-[#A1A1AA] text-xs font-bold pointer-events-none">
                   {currency} / soat
                 </span>
               </div>
@@ -277,28 +277,28 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                 <button
                   type="button"
                   onClick={() => setHourlyPrice((prev) => Math.max(0, Number(prev || 0) + 1000))}
-                  className="px-2.5 py-1 rounded-lg bg-[#F5F5F4] hover:bg-[#F0FDFA] text-[#78716C] hover:text-[#0D9488] border border-[#E7E5E4] hover:border-[#99F6E4] text-xs font-bold transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-[#101014] hover:bg-[#7C3AED]/20 text-[#A1A1AA] hover:text-[#A78BFA] border border-[rgba(167,139,250,0.15)] hover:border-[#7C3AED]/40 text-xs font-bold transition cursor-pointer"
                 >
                   +1 000
                 </button>
                 <button
                   type="button"
                   onClick={() => setHourlyPrice((prev) => Math.max(0, Number(prev || 0) + 5000))}
-                  className="px-2.5 py-1 rounded-lg bg-[#F5F5F4] hover:bg-[#F0FDFA] text-[#78716C] hover:text-[#0D9488] border border-[#E7E5E4] hover:border-[#99F6E4] text-xs font-bold transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-[#101014] hover:bg-[#7C3AED]/20 text-[#A1A1AA] hover:text-[#A78BFA] border border-[rgba(167,139,250,0.15)] hover:border-[#7C3AED]/40 text-xs font-bold transition cursor-pointer"
                 >
                   +5 000
                 </button>
                 <button
                   type="button"
                   onClick={() => setHourlyPrice((prev) => Math.max(0, Number(prev || 0) + 10000))}
-                  className="px-2.5 py-1 rounded-lg bg-[#F5F5F4] hover:bg-[#F0FDFA] text-[#78716C] hover:text-[#0D9488] border border-[#E7E5E4] hover:border-[#99F6E4] text-xs font-bold transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-[#101014] hover:bg-[#7C3AED]/20 text-[#A1A1AA] hover:text-[#A78BFA] border border-[rgba(167,139,250,0.15)] hover:border-[#7C3AED]/40 text-xs font-bold transition cursor-pointer"
                 >
                   +10 000
                 </button>
                 <button
                   type="button"
                   onClick={() => setHourlyPrice((prev) => Math.max(0, Number(prev || 0) - 1000))}
-                  className="px-2.5 py-1 rounded-lg bg-[#F5F5F4] hover:bg-red-50 text-[#78716C] hover:text-[#DC2626] border border-[#E7E5E4] hover:border-red-200 text-xs font-bold transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-[#101014] hover:bg-rose-500/20 text-[#A1A1AA] hover:text-rose-400 border border-[rgba(167,139,250,0.15)] hover:border-rose-500/30 text-xs font-bold transition cursor-pointer"
                 >
                   -1 000
                 </button>
@@ -307,17 +307,17 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
 
             {/* 3-xona Vaqti Cheklanmagan Notification */}
             {(station.roomId === 3 || station.isUnlimitedOnly) && (
-              <div className="p-3 rounded-xl bg-[#F0FDFA] border border-[#99F6E4] flex items-center gap-2.5 text-[#0D9488] text-xs font-semibold">
-                <Clock className="w-4 h-4 shrink-0 text-[#0D9488]" />
+              <div className="p-3 rounded-xl bg-[#7C3AED]/15 border border-[#7C3AED]/30 flex items-center gap-2.5 text-[#A78BFA] text-xs font-semibold">
+                <Clock className="w-4 h-4 shrink-0 text-[#A78BFA]" />
                 <span>
-                  {t('infoPage.room3Badge') || 'Vaqti cheklanmagan'}: 3-xona (Neon Pulse Lounge) ochiq cheksiz seans rejimida ishlaydi.
+                  {t('infoPage.room3Badge') || 'Vaqti cheklanmagan'}: 3-xona ochiq cheksiz seans rejimida ishlaydi.
                 </span>
               </div>
             )}
 
             {/* Session Type Selector: Open vs Timed */}
             <div className="pt-1">
-              <label className="block text-xs font-bold text-[#78716C] uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wide mb-1.5">
                 {t('sessionModal.sessionType')}
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -326,22 +326,22 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                   onClick={() => setSessionType('open')}
                   className={`p-3 rounded-xl border text-left transition flex items-center gap-3 cursor-pointer ${
                     sessionType === 'open'
-                      ? 'bg-[#F0FDFA] border-[#0D9488] text-[#292524] ring-1 ring-[#0D9488]/30 shadow-xs'
-                      : 'bg-[#F5F5F4] border-[#E7E5E4] text-[#78716C] hover:text-[#292524] hover:border-[#0D9488]/40'
+                      ? 'bg-[#7C3AED]/20 border-[#7C3AED] text-white ring-1 ring-[#7C3AED]/40 shadow-[0_0_15px_rgba(124,58,237,0.25)]'
+                      : 'bg-[#101014] border-[rgba(167,139,250,0.15)] text-[#A1A1AA] hover:text-white hover:border-[#7C3AED]/40'
                   }`}
                 >
                   <div
                     className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                       sessionType === 'open'
-                        ? 'bg-[#0D9488] text-white font-bold'
-                        : 'bg-white text-[#78716C] border border-[#E7E5E4]'
+                        ? 'bg-[#7C3AED] text-white font-bold'
+                        : 'bg-[#1D1B2E] text-[#A1A1AA] border border-[rgba(167,139,250,0.15)]'
                     }`}
                   >
                     <Clock className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-[#292524]">{t('sessionModal.typeOpen')}</div>
-                    <div className="text-[10px] text-[#78716C] line-clamp-1">{t('sessionModal.typeOpenDesc')}</div>
+                    <div className="text-xs font-bold text-white">{t('sessionModal.typeOpen')}</div>
+                    <div className="text-[10px] text-[#A1A1AA] line-clamp-1">{t('sessionModal.typeOpenDesc')}</div>
                   </div>
                 </button>
 
@@ -350,22 +350,22 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                   onClick={() => setSessionType('timed')}
                   className={`p-3 rounded-xl border text-left transition flex items-center gap-3 cursor-pointer ${
                     sessionType === 'timed'
-                      ? 'bg-[#F0FDFA] border-[#0D9488] text-[#292524] ring-1 ring-[#0D9488]/30 shadow-xs'
-                      : 'bg-[#F5F5F4] border-[#E7E5E4] text-[#78716C] hover:text-[#292524] hover:border-[#0D9488]/40'
+                      ? 'bg-[#7C3AED]/20 border-[#7C3AED] text-white ring-1 ring-[#7C3AED]/40 shadow-[0_0_15px_rgba(124,58,237,0.25)]'
+                      : 'bg-[#101014] border-[rgba(167,139,250,0.15)] text-[#A1A1AA] hover:text-white hover:border-[#7C3AED]/40'
                   }`}
                 >
                   <div
                     className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                       sessionType === 'timed'
-                        ? 'bg-[#0D9488] text-white font-bold'
-                        : 'bg-white text-[#78716C] border border-[#E7E5E4]'
+                        ? 'bg-[#7C3AED] text-white font-bold'
+                        : 'bg-[#1D1B2E] text-[#A1A1AA] border border-[rgba(167,139,250,0.15)]'
                     }`}
                   >
                     <BellRing className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-[#292524]">{t('sessionModal.typeTimed')}</div>
-                    <div className="text-[10px] text-[#78716C] line-clamp-1">{t('sessionModal.typeTimedDesc')}</div>
+                    <div className="text-xs font-bold text-white">{t('sessionModal.typeTimed')}</div>
+                    <div className="text-[10px] text-[#A1A1AA] line-clamp-1">{t('sessionModal.typeTimedDesc')}</div>
                   </div>
                 </button>
               </div>
@@ -373,22 +373,22 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
 
             {/* Timed Session Options */}
             {sessionType === 'timed' && (
-              <div className="p-4 rounded-xl bg-[#F5F5F4] border border-[#E7E5E4] space-y-3.5 animate-in fade-in duration-200">
+              <div className="p-4 rounded-xl bg-[#101014]/60 border border-[rgba(167,139,250,0.15)] space-y-3.5 animate-in fade-in duration-200">
                 {/* Timed Sub-mode: Summa bo'yicha vs Vaqt bo'yicha */}
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#78716C]">
+                  <span className="text-xs font-bold text-[#A1A1AA]">
                     {limitMode === 'budget'
                       ? t('sessionModal.budgetLabel')
                       : t('sessionModal.durationLabel')}
                   </span>
-                  <div className="flex items-center gap-1 bg-white p-0.5 rounded-lg border border-[#E7E5E4]">
+                  <div className="flex items-center gap-1 bg-[#101014] p-0.5 rounded-lg border border-[rgba(167,139,250,0.15)]">
                     <button
                       type="button"
                       onClick={() => setLimitMode('budget')}
                       className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition cursor-pointer ${
                         limitMode === 'budget'
-                          ? 'bg-[#0D9488] text-white shadow-xs'
-                          : 'text-[#78716C] hover:text-[#292524]'
+                          ? 'bg-[#7C3AED] text-white shadow-xs'
+                          : 'text-[#A1A1AA] hover:text-white'
                       }`}
                     >
                       <Coins className="w-3 h-3 inline mr-1" />
@@ -399,8 +399,8 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                       onClick={() => setLimitMode('duration')}
                       className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition cursor-pointer ${
                         limitMode === 'duration'
-                          ? 'bg-[#0D9488] text-white shadow-xs'
-                          : 'text-[#78716C] hover:text-[#292524]'
+                          ? 'bg-[#7C3AED] text-white shadow-xs'
+                          : 'text-[#A1A1AA] hover:text-white'
                       }`}
                     >
                       <Timer className="w-3 h-3 inline mr-1" />
@@ -420,9 +420,9 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                         value={budgetAmount}
                         onChange={(e) => setBudgetAmount(e.target.value)}
                         placeholder="20000"
-                        className="w-full pl-4 pr-20 py-2.5 bg-white border border-[#E7E5E4] rounded-xl text-base font-bold text-[#292524] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
+                        className="w-full pl-4 pr-20 py-2.5 bg-[#101014] border border-[rgba(167,139,250,0.2)] rounded-xl text-base font-bold text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED] focus:border-[#7C3AED] transition"
                       />
-                      <span className="absolute right-3.5 top-3 text-[#78716C] text-xs font-bold pointer-events-none">
+                      <span className="absolute right-3.5 top-3 text-[#A1A1AA] text-xs font-bold pointer-events-none">
                         {currency}
                       </span>
                     </div>
@@ -436,8 +436,8 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                           onClick={() => setBudgetAmount(preset)}
                           className={`px-2.5 py-1 rounded-lg text-xs font-bold transition border cursor-pointer ${
                             budgetAmount === preset
-                              ? 'bg-[#0D9488] text-white border-[#0D9488]'
-                              : 'bg-white text-[#78716C] border-[#E7E5E4] hover:border-[#0D9488]/40 hover:text-[#292524]'
+                              ? 'bg-[#7C3AED] text-white border-[#7C3AED] shadow-[0_0_10px_rgba(124,58,237,0.3)]'
+                              : 'bg-[#1D1B2E] text-[#A1A1AA] border-[rgba(167,139,250,0.15)] hover:border-[#7C3AED]/40 hover:text-white'
                           }`}
                         >
                           {parseInt(preset, 10).toLocaleString('ru-RU')}
@@ -458,9 +458,9 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                         value={durationMinutes}
                         onChange={(e) => setDurationMinutes(e.target.value)}
                         placeholder="60"
-                        className="w-full pl-4 pr-24 py-2.5 bg-white border border-[#E7E5E4] rounded-xl text-base font-bold text-[#292524] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
+                        className="w-full pl-4 pr-24 py-2.5 bg-[#101014] border border-[rgba(167,139,250,0.2)] rounded-xl text-base font-bold text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED] focus:border-[#7C3AED] transition"
                       />
-                      <span className="absolute right-3.5 top-3 text-[#78716C] text-xs font-bold pointer-events-none">
+                      <span className="absolute right-3.5 top-3 text-[#A1A1AA] text-xs font-bold pointer-events-none">
                         daqiqa
                       </span>
                     </div>
@@ -480,8 +480,8 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                           onClick={() => setDurationMinutes(item.val)}
                           className={`px-2.5 py-1 rounded-lg text-xs font-bold transition border cursor-pointer ${
                             durationMinutes === item.val
-                              ? 'bg-[#0D9488] text-white border-[#0D9488]'
-                              : 'bg-white text-[#78716C] border-[#E7E5E4] hover:border-[#0D9488]/40 hover:text-[#292524]'
+                              ? 'bg-[#7C3AED] text-white border-[#7C3AED] shadow-[0_0_10px_rgba(124,58,237,0.3)]'
+                              : 'bg-[#1D1B2E] text-[#A1A1AA] border-[rgba(167,139,250,0.15)] hover:border-[#7C3AED]/40 hover:text-white'
                           }`}
                         >
                           {item.label}
@@ -492,13 +492,13 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                 )}
 
                 {/* Real-time Calculation Display */}
-                <div className="p-3 rounded-xl bg-white border border-[#E7E5E4] flex items-center justify-between text-xs">
-                  <span className="text-[#78716C] font-semibold">
+                <div className="p-3 rounded-xl bg-[#1D1B2E] border border-[rgba(167,139,250,0.15)] flex items-center justify-between text-xs">
+                  <span className="text-[#A1A1AA] font-semibold">
                     {limitMode === 'budget'
                       ? t('sessionModal.allocatedTime')
                       : t('sessionModal.computedCost')}
                   </span>
-                  <span className="font-extrabold text-[#0D9488] text-sm font-mono">
+                  <span className="font-extrabold text-[#A78BFA] text-sm font-mono">
                     {limitMode === 'budget'
                       ? formatAllocatedTimeString(computedDurationMs)
                       : formatCurrency(computedBudget, currency)}
@@ -506,9 +506,9 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                 </div>
 
                 {/* Alarm Notification Banner & Sound Test */}
-                <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-[#F0FDFA] border border-[#99F6E4] text-[#0D9488] text-xs">
+                <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-[#7C3AED]/15 border border-[#7C3AED]/30 text-[#A78BFA] text-xs">
                   <div className="flex items-center gap-2">
-                    <BellRing className="w-4 h-4 shrink-0 text-[#0D9488] animate-pulse" />
+                    <BellRing className="w-4 h-4 shrink-0 text-[#A78BFA] animate-pulse" />
                     <span className="text-[11px] leading-tight font-semibold">
                       {t('sessionModal.alarmNotice')}
                     </span>
@@ -516,7 +516,7 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                   <button
                     type="button"
                     onClick={testAlarmSound}
-                    className="px-2.5 py-1 rounded-lg bg-[#0D9488] hover:bg-[#0F766E] text-white text-[11px] font-bold shrink-0 transition flex items-center gap-1 cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg bg-[#7C3AED] hover:bg-[#6D28D9] text-white text-[11px] font-bold shrink-0 transition flex items-center gap-1 cursor-pointer shadow-[0_0_10px_rgba(124,58,237,0.3)]"
                     title="Ovozni eshitib ko'rish"
                   >
                     <Volume2 className="w-3.5 h-3.5" />
@@ -525,30 +525,30 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                 </div>
 
                 {/* Mahsulotlar (Ichimliklar & Gazaklar - Cola, Semichka va h.k.) */}
-                <div className="pt-3 border-t border-[#E7E5E4] space-y-2.5">
+                <div className="pt-3 border-t border-[rgba(167,139,250,0.15)] space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-lg bg-amber-50 text-amber-600 border border-amber-200 flex items-center justify-center shrink-0">
+                      <div className="w-6 h-6 rounded-lg bg-[#7C3AED]/20 text-[#A78BFA] border border-[rgba(167,139,250,0.25)] flex items-center justify-center shrink-0">
                         <ShoppingBag className="w-3.5 h-3.5" />
                       </div>
                       <div>
-                        <span className="text-xs font-bold text-[#292524] block leading-tight">
+                        <span className="text-xs font-bold text-white block leading-tight">
                           {t('sessionModal.sessionProductsTitle')}
                         </span>
-                        <span className="text-[10px] text-[#78716C]">
+                        <span className="text-[10px] text-[#A1A1AA]">
                           {t('sessionModal.sessionProductsSubtitle')}
                         </span>
                       </div>
                     </div>
                     {selectedProductsCount > 0 && (
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#F0FDFA] text-[#0D9488] border border-[#CCFBF1]">
+                        <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#7C3AED]/20 text-[#A78BFA] border border-[rgba(167,139,250,0.3)]">
                           {selectedProductsCount} ta • {formatCurrency(selectedProductsTotal, currency)}
                         </span>
                         <button
                           type="button"
                           onClick={handleClearProducts}
-                          className="text-[10px] text-[#78716C] hover:text-[#DC2626] underline font-semibold transition cursor-pointer"
+                          className="text-[10px] text-[#A1A1AA] hover:text-rose-400 underline font-semibold transition cursor-pointer"
                         >
                           Tozalash
                         </button>
@@ -566,8 +566,8 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                             key={item.id}
                             className={`p-2.5 rounded-xl border flex items-center justify-between transition-all duration-150 ${
                               qty > 0
-                                ? 'bg-[#F0FDFA] border-[#0D9488] text-[#292524] shadow-xs'
-                                : 'bg-white border-[#E7E5E4] hover:border-[#0D9488]/40 text-[#292524]'
+                                ? 'bg-[#7C3AED]/20 border-[#7C3AED] text-white shadow-[0_0_12px_rgba(124,58,237,0.2)]'
+                                : 'bg-[#1D1B2E] border-[rgba(167,139,250,0.15)] hover:border-[#7C3AED]/40 text-white'
                             }`}
                           >
                             <div className="min-w-0 pr-1.5 flex items-center gap-2 flex-1">
@@ -575,10 +575,10 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                                 {getProductEmoji(item.name)}
                               </span>
                               <div className="min-w-0">
-                                <span className="text-xs font-bold text-[#292524] block truncate leading-tight">
+                                <span className="text-xs font-bold text-white block truncate leading-tight">
                                   {item.name}
                                 </span>
-                                <span className="text-[11px] font-semibold text-[#0D9488] block mt-0.5">
+                                <span className="text-[11px] font-semibold text-[#A78BFA] block mt-0.5">
                                   {formatCurrency(item.sellingPrice, currency)}
                                 </span>
                               </div>
@@ -586,22 +586,22 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
 
                             <div className="shrink-0 flex items-center">
                               {qty > 0 ? (
-                                <div className="flex items-center gap-1 bg-white p-0.5 rounded-lg border border-[#0D9488]/40">
+                                <div className="flex items-center gap-1 bg-[#101014] p-0.5 rounded-lg border border-[#7C3AED]/40">
                                   <button
                                     type="button"
                                     onClick={() => handleDecrementProduct(item.id)}
-                                    className="w-5 h-5 rounded flex items-center justify-center bg-[#F5F5F4] hover:bg-red-50 text-[#78716C] hover:text-[#DC2626] text-xs font-bold transition cursor-pointer"
+                                    className="w-5 h-5 rounded flex items-center justify-center bg-[#1D1B2E] hover:bg-rose-500/20 text-[#A1A1AA] hover:text-rose-400 text-xs font-bold transition cursor-pointer"
                                     title="1 ta kamaytirish"
                                   >
                                     <Minus className="w-3 h-3" />
                                   </button>
-                                  <span className="w-5 text-center text-xs font-extrabold text-[#292524]">
+                                  <span className="w-5 text-center text-xs font-extrabold text-white">
                                     {qty}
                                   </span>
                                   <button
                                     type="button"
                                     onClick={() => handleIncrementProduct(item)}
-                                    className="w-5 h-5 rounded flex items-center justify-center bg-[#0D9488] hover:bg-[#0F766E] text-white text-xs font-black transition cursor-pointer"
+                                    className="w-5 h-5 rounded flex items-center justify-center bg-[#7C3AED] hover:bg-[#6D28D9] text-white text-xs font-black transition cursor-pointer"
                                     title="1 ta qo'shish"
                                   >
                                     <Plus className="w-3 h-3 stroke-[3]" />
@@ -611,9 +611,9 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                                 <button
                                   type="button"
                                   onClick={() => handleIncrementProduct(item)}
-                                  className="px-2 py-1 rounded-lg bg-[#F5F5F4] hover:bg-[#F0FDFA] text-[#78716C] hover:text-[#0D9488] border border-[#E7E5E4] hover:border-[#99F6E4] text-[11px] font-bold transition flex items-center gap-1 cursor-pointer"
+                                  className="px-2 py-1 rounded-lg bg-[#101014] hover:bg-[#7C3AED]/20 text-[#A1A1AA] hover:text-[#A78BFA] border border-[rgba(167,139,250,0.15)] hover:border-[#7C3AED]/40 text-[11px] font-bold transition flex items-center gap-1 cursor-pointer"
                                 >
-                                  <Plus className="w-3 h-3 text-[#0D9488]" />
+                                  <Plus className="w-3 h-3 text-[#A78BFA]" />
                                   <span>Qo‘shish</span>
                                 </button>
                               )}
@@ -623,7 +623,7 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                       })}
                     </div>
                   ) : (
-                    <div className="p-3.5 rounded-xl bg-white border border-[#E7E5E4] text-center text-xs text-[#78716C]">
+                    <div className="p-3.5 rounded-xl bg-[#1D1B2E] border border-[rgba(167,139,250,0.15)] text-center text-xs text-[#A1A1AA]">
                       {t('sessionModal.noProductsCatalog') || "Mahsulotlar mavjud emas. Mahsulot qo'shish uchun Sotuvlar bo'limiga o'ting."}
                     </div>
                   )}
@@ -633,14 +633,14 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
 
             {/* Customer Name */}
             <div>
-              <label className="block text-xs font-bold text-[#78716C] uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wide mb-1.5">
                 {t('sessionModal.customerName')}{' '}
-                <span className="text-[#A8A29E] text-[10px] font-normal">
+                <span className="text-[#A1A1AA]/60 text-[10px] font-normal">
                   {t('sessionModal.optional')}
                 </span>
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-3 text-[#A8A29E]">
+                <span className="absolute left-3.5 top-3 text-[#A1A1AA]">
                   <User className="w-4 h-4" />
                 </span>
                 <input
@@ -648,7 +648,7 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   placeholder={t('sessionModal.customerNamePlaceholder')}
-                  className="w-full pl-10 pr-4 py-2.5 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-sm font-semibold text-[#292524] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
+                  className="w-full pl-10 pr-4 py-2.5 bg-[#101014] border border-[rgba(167,139,250,0.2)] rounded-xl text-sm font-semibold text-white placeholder-[#A1A1AA]/50 focus:outline-none focus:ring-2 focus:ring-[#7C3AED] focus:border-[#7C3AED] transition"
                 />
               </div>
             </div>
@@ -657,12 +657,12 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
 
           {/* Summary of products & total if products selected */}
           {selectedProductsTotal > 0 && (
-            <div className="shrink-0 px-5 py-2.5 bg-[#F5F5F4] border-t border-[#E7E5E4] flex items-center justify-between text-xs">
-              <span className="text-[#78716C] font-semibold flex items-center gap-1.5">
-                <ShoppingBag className="w-3.5 h-3.5 text-amber-600" />
+            <div className="shrink-0 px-5 py-2.5 bg-[#101014] border-t border-[rgba(167,139,250,0.15)] flex items-center justify-between text-xs">
+              <span className="text-[#A1A1AA] font-semibold flex items-center gap-1.5">
+                <ShoppingBag className="w-3.5 h-3.5 text-[#A78BFA]" />
                 <span>{t('sessionModal.totalWithProducts')}</span>
               </span>
-              <span className="font-extrabold text-[#0D9488] text-sm">
+              <span className="font-extrabold text-[#A78BFA] text-sm">
                 {formatCurrency(
                   (sessionType === 'timed' ? computedBudget : 0) + selectedProductsTotal,
                   currency
@@ -672,17 +672,17 @@ export default function StartSessionModal({ station, isOpen, onClose }) {
           )}
 
           {/* Sticky Footer Action Buttons */}
-          <div className="shrink-0 px-5 py-3.5 bg-white border-t border-[#E7E5E4] flex gap-3">
+          <div className="shrink-0 px-5 py-3.5 bg-[#1D1B2E] border-t border-[rgba(167,139,250,0.15)] flex gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 px-4 rounded-xl border border-[#E7E5E4] text-[#78716C] hover:bg-[#F5F5F4] hover:text-[#292524] font-semibold text-sm transition cursor-pointer"
+              className="flex-1 py-2.5 px-4 rounded-xl border border-[rgba(167,139,250,0.15)] text-[#A1A1AA] hover:bg-[#101014] hover:text-white font-semibold text-sm transition cursor-pointer"
             >
               {t('sessionModal.cancel')}
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 px-4 rounded-xl bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2 transition cursor-pointer"
+              className="flex-1 py-2.5 px-4 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold text-sm shadow-[0_0_15px_rgba(124,58,237,0.35)] flex items-center justify-center gap-2 transition cursor-pointer"
             >
               <Play className="w-4 h-4 fill-white" />
               {t('sessionModal.startSessionBtn')}

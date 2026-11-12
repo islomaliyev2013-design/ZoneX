@@ -28,34 +28,24 @@ export default function LanguageSelector({ variant = 'header' }) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition border shadow-xs cursor-pointer ${
-          isAuthPage
-            ? 'bg-midnight-card hover:bg-midnight-hover text-slate-200 hover:text-white border-midnight-border'
-            : 'bg-white hover:bg-[#F5F5F4] text-[#292524] border-[#E7E5E4]'
-        }`}
+        className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition border border-[rgba(167,139,250,0.15)] shadow-xs cursor-pointer bg-[#1D1B2E] hover:bg-[#25233B] text-white hover:border-[#7C3AED]/40"
         aria-label="Select Language"
       >
         <span className="text-sm leading-none">{activeLanguage.flag}</span>
         <span className="font-semibold">{activeLanguage.name}</span>
         <ChevronDown
-          className={`w-3.5 h-3.5 transition-transform ${
-            isAuthPage ? 'text-slate-400' : 'text-[#78716C]'
-          } ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-3.5 h-3.5 transition-transform text-[#A1A1AA] ${
+            isOpen ? 'rotate-180' : ''
+          }`}
         />
       </button>
 
       {isOpen && (
         <div
-          className={`absolute right-0 mt-1.5 w-44 rounded-xl shadow-xl border py-1.5 z-50 animate-in fade-in zoom-in-95 ${
-            isAuthPage
-              ? 'bg-midnight-card text-white border-midnight-border backdrop-blur-md'
-              : 'bg-white text-[#292524] border-[#E7E5E4]'
-          }`}
+          className="absolute right-0 mt-1.5 w-44 rounded-xl shadow-2xl border border-[rgba(167,139,250,0.15)] py-1.5 z-50 animate-in fade-in zoom-in-95 bg-[#1D1B2E] text-white backdrop-blur-md"
         >
           <div
-            className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider border-b ${
-              isAuthPage ? 'text-slate-400 border-midnight-border' : 'text-[#78716C] border-[#E7E5E4]'
-            }`}
+            className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider border-b text-[#A1A1AA] border-[rgba(167,139,250,0.15)]"
           >
             Language / Til / Язык
           </div>
@@ -71,12 +61,8 @@ export default function LanguageSelector({ variant = 'header' }) {
                 }}
                 className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition cursor-pointer ${
                   isSelected
-                    ? isAuthPage
-                      ? 'bg-[#06B6D4]/15 text-[#22D3EE] font-bold'
-                      : 'bg-[#F0FDFA] text-[#0D9488] font-bold'
-                    : isAuthPage
-                    ? 'text-slate-300 hover:bg-[#1B2736] hover:text-white'
-                    : 'text-[#292524] hover:bg-[#F5F5F4]'
+                    ? 'bg-[#7C3AED]/20 text-[#A78BFA] font-bold'
+                    : 'text-[#A1A1AA] hover:bg-[#25233B] hover:text-white'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -85,9 +71,7 @@ export default function LanguageSelector({ variant = 'header' }) {
                 </div>
                 {isSelected && (
                   <Check
-                    className={`w-3.5 h-3.5 ${
-                      isAuthPage ? 'text-[#22D3EE]' : 'text-[#0D9488]'
-                    }`}
+                    className="w-3.5 h-3.5 text-[#A78BFA]"
                   />
                 )}
               </button>

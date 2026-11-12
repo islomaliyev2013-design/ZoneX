@@ -62,20 +62,20 @@ export default function AddProductsModal({ station, isOpen, onClose }) {
     .replace(/^Station\s*(\d+)$/i, '$1-xona');
 
   const modalContent = (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-900/70 backdrop-blur-md p-3 sm:p-5 overflow-hidden">
-      <div className="bg-white rounded-2xl w-full max-w-xl text-[#292524] shadow-2xl border border-[#E7E5E4] flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-5 overflow-hidden">
+      <div className="bg-[#1D1B2E] rounded-2xl w-full max-w-xl text-white shadow-2xl border border-[rgba(167,139,250,0.15)] flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95">
         
         {/* Sticky Header */}
-        <div className="shrink-0 px-5 py-3.5 bg-white text-[#292524] flex items-center justify-between border-b border-[#E7E5E4]">
+        <div className="shrink-0 px-5 py-3.5 bg-[#1D1B2E] text-white flex items-center justify-between border-b border-[rgba(167,139,250,0.15)]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#F0FDFA] text-[#0D9488] border border-[#CCFBF1] flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-[#7C3AED]/20 text-[#A78BFA] border border-[rgba(167,139,250,0.25)] flex items-center justify-center shrink-0">
               <ShoppingBag className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-extrabold text-[#292524] leading-tight">
+              <h3 className="text-base font-extrabold text-white leading-tight">
                 {t('sessionModal.addProductsTitle', { station: localizedStationName })}
               </h3>
-              <p className="text-xs text-[#78716C] mt-0.5">
+              <p className="text-xs text-[#A1A1AA] mt-0.5">
                 {t('sessionModal.addProductsSubtitle', {
                   room: localizedRoomName,
                   customer: station.session.customerName || t('common.walkIn'),
@@ -86,7 +86,7 @@ export default function AddProductsModal({ station, isOpen, onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#78716C] hover:text-[#292524] hover:bg-[#F5F5F4] transition cursor-pointer"
+            className="p-1.5 rounded-lg text-[#A1A1AA] hover:text-white hover:bg-[#25233B] transition cursor-pointer"
             title={t('common.cancel')}
           >
             <X className="w-5 h-5" />
@@ -106,17 +106,17 @@ export default function AddProductsModal({ station, isOpen, onClose }) {
           </div>
 
           {/* Sticky Footer */}
-          <div className="shrink-0 px-5 py-3.5 bg-white border-t border-[#E7E5E4] flex gap-3">
+          <div className="shrink-0 px-5 py-3.5 bg-[#1D1B2E] border-t border-[rgba(167,139,250,0.15)] flex gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 px-4 rounded-xl border border-[#E7E5E4] text-[#78716C] hover:bg-[#F5F5F4] hover:text-[#292524] font-bold text-sm transition cursor-pointer"
+              className="flex-1 py-2.5 px-4 rounded-xl border border-[rgba(167,139,250,0.15)] text-[#A1A1AA] hover:bg-[#25233B] hover:text-white font-bold text-sm transition cursor-pointer"
             >
               {t('sessionModal.cancel')}
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 px-4 rounded-xl bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2 transition cursor-pointer"
+              className="flex-1 py-2.5 px-4 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold text-sm shadow-[0_0_15px_rgba(124,58,237,0.35)] flex items-center justify-center gap-2 transition cursor-pointer"
             >
               <Check className="w-4 h-4" />
               {t('sessionModal.addToSessionBtn')}

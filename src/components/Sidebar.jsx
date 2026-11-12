@@ -41,25 +41,25 @@ export default function Sidebar({
   };
 
   const sidebarContent = (
-    <div className="flex flex-col h-full justify-between bg-white text-[#292524] select-none">
+    <div className="flex flex-col h-full justify-between bg-[#101014] text-white select-none">
       {/* Top Section: Brand & Navigation */}
       <div>
         {/* Brand Logo */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-[#E7E5E4]">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-[rgba(167,139,250,0.15)]">
           <NavLink
             to="/"
             onClick={onCloseMobile}
             className="flex items-center gap-3 overflow-hidden group"
           >
-            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-xs border border-[#CCFBF1] flex-shrink-0">
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-xs border border-[rgba(167,139,250,0.25)] flex-shrink-0">
               <img src="/app-icon.jpg" alt="PlayStation Manager" className="w-full h-full object-cover" />
             </div>
             {!isCollapsed && (
               <div className="min-w-0 flex-1">
-                <span className="text-base font-extrabold tracking-tight text-[#292524] block leading-tight whitespace-nowrap">
-                  PlayStation <span className="text-[#0D9488]">Manager</span>
+                <span className="text-base font-extrabold tracking-tight text-white block leading-tight whitespace-nowrap">
+                  PlayStation <span className="text-[#A78BFA]">Manager</span>
                 </span>
-                <span className="text-[10px] text-[#78716C] font-semibold tracking-wide block uppercase whitespace-nowrap">
+                <span className="text-[10px] text-[#A1A1AA] font-semibold tracking-wide block uppercase whitespace-nowrap">
                   {t('common.appSubtitle')}
                 </span>
               </div>
@@ -70,7 +70,7 @@ export default function Sidebar({
           <button
             type="button"
             onClick={onToggleCollapse}
-            className="hidden lg:flex items-center justify-center w-7 h-7 rounded-lg bg-[#F5F5F4] hover:bg-[#E7E5E4] text-[#78716C] hover:text-[#292524] border border-[#E7E5E4] transition cursor-pointer"
+            className="hidden lg:flex items-center justify-center w-7 h-7 rounded-lg bg-[#1D1B2E] hover:bg-[#25233B] text-[#A1A1AA] hover:text-white border border-[rgba(167,139,250,0.15)] transition cursor-pointer"
             title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {isCollapsed ? (
@@ -95,8 +95,8 @@ export default function Sidebar({
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all duration-150 ${
                     isActive
-                      ? 'bg-[#0D9488] text-white shadow-xs'
-                      : 'text-[#78716C] hover:text-[#292524] hover:bg-[#F5F5F4]'
+                      ? 'bg-[#7C3AED] text-white shadow-[0_0_15px_rgba(124,58,237,0.35)]'
+                      : 'text-[#A1A1AA] hover:text-white hover:bg-[#1D1B2E]'
                   } ${isCollapsed ? 'justify-center px-2' : ''}`
                 }
               >
@@ -109,11 +109,11 @@ export default function Sidebar({
       </div>
 
       {/* Bottom Section: Language, Admin Profile, Logout */}
-      <div className="p-3 border-t border-[#E7E5E4] space-y-3">
+      <div className="p-3 border-t border-[rgba(167,139,250,0.15)] space-y-3">
         {/* Language Selector */}
         <div className={`flex ${isCollapsed ? 'justify-center' : 'items-center justify-between'}`}>
           {!isCollapsed && (
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#78716C]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#A1A1AA]">
               Language
             </span>
           )}
@@ -122,27 +122,27 @@ export default function Sidebar({
 
         {/* Admin Profile Box */}
         <div
-          className={`p-2.5 rounded-xl bg-[#F5F5F4] border border-[#E7E5E4] flex items-center ${
+          className={`p-2.5 rounded-xl bg-[#1D1B2E] border border-[rgba(167,139,250,0.15)] flex items-center ${
             isCollapsed ? 'justify-center' : 'justify-between'
           }`}
         >
           <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-8 h-8 rounded-lg bg-[#F0FDFA] text-[#0D9488] border border-[#CCFBF1] flex items-center justify-center font-bold text-xs flex-shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-[#7C3AED]/20 text-[#A78BFA] border border-[rgba(167,139,250,0.25)] flex items-center justify-center font-bold text-xs flex-shrink-0">
               {currentUser?.username?.charAt(0)?.toUpperCase() || 'A'}
             </div>
             {!isCollapsed && (
               <div className="overflow-hidden">
                 <div className="flex items-center gap-1.5 truncate">
-                  <span className="text-xs font-bold text-[#292524] truncate">
+                  <span className="text-xs font-bold text-white truncate">
                     {currentUser?.username || 'admin'}
                   </span>
                   {isAdmin && (
-                    <span className="px-1.5 py-0.5 rounded bg-[#F0FDFA] text-[#0D9488] border border-[#CCFBF1] text-[9px] font-extrabold uppercase">
+                    <span className="px-1.5 py-0.5 rounded bg-[#7C3AED]/20 text-[#A78BFA] border border-[rgba(167,139,250,0.3)] text-[9px] font-extrabold uppercase">
                       Admin
                     </span>
                   )}
                 </div>
-                <span className="text-[10px] text-[#78716C] block truncate">
+                <span className="text-[10px] text-[#A1A1AA] block truncate">
                   {currentUser?.fullName || 'Administrator'}
                 </span>
               </div>
@@ -153,21 +153,21 @@ export default function Sidebar({
             <button
               type="button"
               onClick={handleLogout}
-              className="p-1.5 rounded-lg text-[#78716C] hover:text-[#DC2626] hover:bg-red-50 transition cursor-pointer"
-              title={t('nav.logout')}
+              className="p-1.5 rounded-lg text-[#A1A1AA] hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer"
+              title={t('auth.logout')}
             >
               <LogOut className="w-4 h-4" />
             </button>
           )}
         </div>
 
-        {/* Collapsed view logout button */}
+        {/* When collapsed, standalone logout icon button */}
         {isCollapsed && (
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full flex items-center justify-center p-2 rounded-xl text-[#78716C] hover:text-[#DC2626] hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer"
-            title={t('nav.logout')}
+            className="w-full flex items-center justify-center p-2 rounded-xl text-[#A1A1AA] hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer"
+            title={t('auth.logout')}
           >
             <LogOut className="w-4 h-4" />
           </button>
@@ -178,23 +178,23 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Desktop Persistent Sidebar */}
+      {/* Desktop Sidebar (Persistent) */}
       <aside
-        className={`hidden lg:block fixed top-0 left-0 bottom-0 z-30 transition-all duration-300 border-r border-[#E7E5E4] bg-white ${
-          isCollapsed ? 'w-20' : 'w-72'
+        className={`hidden lg:flex flex-col flex-shrink-0 transition-all duration-300 ease-in-out border-r border-[rgba(167,139,250,0.15)] z-20 ${
+          isCollapsed ? 'w-20' : 'w-64'
         }`}
       >
         {sidebarContent}
       </aside>
 
-      {/* Mobile Drawer Overlay */}
+      {/* Mobile Drawer (Overlay) */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 flex">
+        <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="fixed inset-0 bg-stone-900/60 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity"
             onClick={onCloseMobile}
           />
-          <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white border-r border-[#E7E5E4] z-10 animate-in slide-in-from-left duration-200">
+          <div className="fixed inset-y-0 left-0 w-64 shadow-2xl z-10 animate-in slide-in-from-left duration-200">
             {sidebarContent}
           </div>
         </div>

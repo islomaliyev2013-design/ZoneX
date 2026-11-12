@@ -71,20 +71,20 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
   };
 
   const modalContent = (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-900/70 backdrop-blur-md p-3 sm:p-5 overflow-hidden">
-      <div className="bg-white rounded-2xl w-full max-w-lg text-[#292524] shadow-2xl border border-[#E7E5E4] flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-5 overflow-hidden">
+      <div className="bg-[#1D1B2E] rounded-2xl w-full max-w-lg text-white shadow-2xl border border-[rgba(167,139,250,0.15)] flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95">
         
         {/* Sticky Header */}
-        <div className="shrink-0 px-5 py-4 bg-white text-[#292524] flex items-center justify-between border-b border-[#E7E5E4]">
+        <div className="shrink-0 px-5 py-4 bg-[#1D1B2E] text-white flex items-center justify-between border-b border-[rgba(167,139,250,0.15)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#F0FDFA] text-[#0D9488] border border-[#CCFBF1] flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[#7C3AED]/20 text-[#A78BFA] border border-[rgba(167,139,250,0.25)] flex items-center justify-center shrink-0">
               <Tv className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-extrabold text-[#292524] leading-tight">
+              <h3 className="text-base sm:text-lg font-extrabold text-white leading-tight">
                 {mode === 'edit' ? t('rooms.editRoomBtn') : t('rooms.addRoomBtn')}
               </h3>
-              <p className="text-xs text-[#78716C] mt-0.5">
+              <p className="text-xs text-[#A1A1AA] mt-0.5">
                 {mode === 'edit'
                   ? initialRoom?.name
                   : t('rooms.noRoomsSubtitle')}
@@ -94,7 +94,7 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#78716C] hover:text-[#292524] hover:bg-[#F5F5F4] transition cursor-pointer"
+            className="p-1.5 rounded-lg text-[#A1A1AA] hover:text-white hover:bg-[#25233B] transition cursor-pointer"
             title={t('common.cancel')}
           >
             <X className="w-5 h-5" />
@@ -106,7 +106,7 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
           
           {/* Room Name */}
           <div>
-            <label className="block text-xs font-bold text-[#78716C] uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wide mb-1.5">
               {t('rooms.roomNameLabel')} *
             </label>
             <input
@@ -115,13 +115,13 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="masalan: 1-PlayStation, VIP Kabina, Cyber Lounge"
-              className="w-full px-4 py-2.5 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-sm font-semibold text-[#292524] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
+              className="w-full px-4 py-2.5 bg-[#101014] border border-[rgba(167,139,250,0.2)] rounded-xl text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/50 focus:border-[#7C3AED] transition"
             />
           </div>
 
           {/* Zone Type */}
           <div>
-            <label className="block text-xs font-bold text-[#78716C] uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wide mb-1.5">
               {t('rooms.zoneTypeLabel')}
             </label>
             <input
@@ -129,7 +129,7 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
               value={zoneType}
               onChange={(e) => setZoneType(e.target.value)}
               placeholder="masalan: VIP Kabina, Standart Zal"
-              className="w-full px-4 py-2 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-xs font-semibold text-[#292524] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] mb-2 transition"
+              className="w-full px-4 py-2 bg-[#101014] border border-[rgba(167,139,250,0.2)] rounded-xl text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/50 focus:border-[#7C3AED] mb-2 transition"
             />
             {/* Quick Presets */}
             <div className="flex flex-wrap gap-1.5">
@@ -140,8 +140,8 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
                   onClick={() => setZoneType(preset)}
                   className={`text-xs px-2.5 py-1 rounded-lg border font-bold transition cursor-pointer ${
                     zoneType === preset
-                      ? 'bg-[#0D9488] text-white border-[#0D9488]'
-                      : 'bg-[#F5F5F4] text-[#78716C] border-[#E7E5E4] hover:border-[#0D9488]/40 hover:text-[#292524]'
+                      ? 'bg-[#7C3AED] text-white border-[#7C3AED] shadow-[0_0_10px_rgba(124,58,237,0.4)]'
+                      : 'bg-[#101014] text-[#A1A1AA] border-[rgba(167,139,250,0.15)] hover:border-[#7C3AED]/40 hover:text-white'
                   }`}
                 >
                   {preset}
@@ -152,7 +152,7 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
 
           {/* Hourly Rate */}
           <div>
-            <label className="block text-xs font-bold text-[#78716C] uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wide mb-1.5">
               {t('rooms.hourlyRateLabel')} ({currency} / soat) *
             </label>
             <div className="relative">
@@ -163,9 +163,9 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
                 step="500"
                 value={hourlyRate}
                 onChange={(e) => setHourlyRate(e.target.value)}
-                className="w-full pl-4 pr-24 py-2.5 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-sm font-bold text-[#292524] focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
+                className="w-full pl-4 pr-24 py-2.5 bg-[#101014] border border-[rgba(167,139,250,0.2)] rounded-xl text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/50 focus:border-[#7C3AED] transition"
               />
-              <span className="absolute right-3.5 top-3 text-[#78716C] text-xs font-bold pointer-events-none">
+              <span className="absolute right-3.5 top-3 text-[#A1A1AA] text-xs font-bold pointer-events-none">
                 {currency}/soat
               </span>
             </div>
@@ -179,8 +179,8 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
                   onClick={() => setHourlyRate(String(rate))}
                   className={`text-xs px-2.5 py-1 rounded-lg border font-bold transition cursor-pointer ${
                     hourlyRate === String(rate)
-                      ? 'bg-[#0D9488] text-white border-[#0D9488]'
-                      : 'bg-[#F5F5F4] text-[#0D9488] border-[#E7E5E4] hover:border-[#0D9488]/40'
+                      ? 'bg-[#7C3AED] text-white border-[#7C3AED] shadow-[0_0_10px_rgba(124,58,237,0.4)]'
+                      : 'bg-[#101014] text-[#A78BFA] border-[rgba(167,139,250,0.2)] hover:border-[#7C3AED]/40'
                   }`}
                 >
                   {formatCurrency(rate, currency)}
@@ -190,12 +190,12 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
           </div>
 
           {/* Unlimited Only Toggle */}
-          <div className="p-3 rounded-xl bg-[#F5F5F4] border border-[#E7E5E4] flex items-center justify-between">
+          <div className="p-3 rounded-xl bg-[#101014] border border-[rgba(167,139,250,0.15)] flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold text-[#292524] block">
+              <span className="text-xs font-bold text-white block">
                 {t('rooms.isUnlimitedLabel')}
               </span>
-              <span className="text-[11px] text-[#78716C]">
+              <span className="text-[11px] text-[#A1A1AA]">
                 Seanslar faqat ochiq vaqt rejimida boshlanadi
               </span>
             </div>
@@ -206,14 +206,14 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
                 onChange={(e) => setIsUnlimitedOnly(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-[#D6D3D1] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[#E7E5E4] after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#0D9488]"></div>
+              <div className="w-11 h-6 bg-[#25233B] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[#101014] after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#7C3AED]"></div>
             </label>
           </div>
 
           {/* Initial Consoles Count (Only for mode === 'add') */}
           {mode === 'add' && (
             <div>
-              <label className="block text-xs font-bold text-[#78716C] uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wide mb-1.5">
                 {t('rooms.initialStationsLabel')}
               </label>
               <div className="flex items-center gap-2">
@@ -224,22 +224,22 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
                     onClick={() => setStationCount(num)}
                     className={`flex-1 py-2 rounded-xl text-xs font-bold border transition cursor-pointer ${
                       stationCount === num
-                        ? 'bg-[#0D9488] text-white border-[#0D9488] shadow-xs'
-                        : 'bg-white text-[#78716C] border-[#E7E5E4] hover:border-[#0D9488]/40 hover:text-[#292524]'
+                        ? 'bg-[#7C3AED] text-white border-[#7C3AED] shadow-[0_0_10px_rgba(124,58,237,0.4)]'
+                        : 'bg-[#101014] text-[#A1A1AA] border-[rgba(167,139,250,0.15)] hover:border-[#7C3AED]/40 hover:text-white'
                     }`}
                   >
                     {num === 0 ? '0 ta' : `${num} ta xona`}
                   </button>
                 ))}
               </div>
-              <p className="text-[11px] text-[#78716C] mt-1.5">
+              <p className="text-[11px] text-[#A1A1AA] mt-1.5">
                 Xonalarni keyinchalik ham istalgan paytda «+ Xona qo‘shish» tugmasi orqali qo‘shishingiz mumkin.
               </p>
             </div>
           )}
 
           {/* Action Buttons */}
-          <div className="pt-4 flex items-center justify-between gap-3 border-t border-[#E7E5E4]">
+          <div className="pt-4 flex items-center justify-between gap-3 border-t border-[rgba(167,139,250,0.15)]">
             {mode === 'edit' && initialRoom ? (
               <button
                 type="button"
@@ -252,7 +252,7 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
                     onClose();
                   }
                 }}
-                className="px-3 py-2 rounded-xl text-[#DC2626] hover:bg-red-50 border border-transparent hover:border-red-200 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+                className="px-3 py-2 rounded-xl text-rose-400 hover:bg-rose-500/20 border border-transparent hover:border-rose-500/30 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>{t('rooms.deleteRoomBtn')}</span>
@@ -263,13 +263,13 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 rounded-xl border border-[#E7E5E4] text-[#78716C] hover:text-[#292524] hover:bg-[#F5F5F4] text-xs font-bold transition cursor-pointer"
+                className="px-4 py-2.5 rounded-xl border border-[rgba(167,139,250,0.15)] text-[#A1A1AA] hover:text-white hover:bg-[#25233B] text-xs font-bold transition cursor-pointer"
               >
                 {t('common.cancel')}
               </button>
               <button
                 type="submit"
-                className="px-5 py-2.5 rounded-xl bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold text-xs shadow-sm transition cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold text-xs shadow-[0_0_15px_rgba(124,58,237,0.35)] transition cursor-pointer"
               >
                 {mode === 'edit' ? t('rooms.editRoomBtn') : t('rooms.addRoomBtn')}
               </button>

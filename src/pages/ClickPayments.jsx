@@ -114,23 +114,23 @@ export default function ClickPayments() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-12">
       {/* 1. Header with Click Branding & Action Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-5 sm:p-6 rounded-2xl border border-[#E7E5E4] shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-[#1D1B2E] p-5 sm:p-6 rounded-2xl border border-[rgba(167,139,250,0.15)] shadow-xs">
         <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-xl bg-[#00A5EC]/10 border border-[#00A5EC]/30 flex items-center justify-center text-[#00A5EC] shadow-xs flex-shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-[#7C3AED]/20 border border-[rgba(167,139,250,0.25)] flex items-center justify-center text-[#A78BFA] shadow-xs flex-shrink-0">
             <Smartphone className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-black text-[#292524] tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                 {t('click.title')}
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#00A5EC] text-white text-[10px] font-black uppercase tracking-wider shadow-xs">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#7C3AED] text-white text-[10px] font-black uppercase tracking-wider shadow-[0_0_10px_rgba(124,58,237,0.4)]">
                 CLICK
               </span>
             </div>
-            <p className="text-xs sm:text-sm text-[#78716C] mt-0.5">
+            <p className="text-xs sm:text-sm text-[#A1A1AA] mt-0.5">
               {t('click.subtitle')}
             </p>
           </div>
@@ -139,7 +139,7 @@ export default function ClickPayments() {
         <button
           type="button"
           onClick={handleOpenAddModal}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#00A5EC] hover:bg-[#0284C7] text-white font-bold text-sm shadow-sm transition active:scale-98 cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold text-sm shadow-[0_0_15px_rgba(124,58,237,0.35)] transition active:scale-98 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>{t('click.addPayment')}</span>
@@ -149,90 +149,90 @@ export default function ClickPayments() {
       {/* 2. Top Summary KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         {/* Today's Click Revenue */}
-        <div className="col-span-2 sm:col-span-1 p-4 rounded-2xl bg-sky-50/80 border-2 border-sky-200 flex flex-col justify-between shadow-xs">
-          <div className="flex items-center justify-between text-[#0284C7] mb-2">
+        <div className="col-span-2 sm:col-span-1 p-4 rounded-2xl bg-[#1D1B2E] border-2 border-[rgba(167,139,250,0.3)] shadow-[0_0_15px_rgba(124,58,237,0.15)] flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[#A78BFA] mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider">
               {t('click.todayClick')}
             </span>
             <Smartphone className="w-4 h-4" />
           </div>
           <div>
-            <span className="text-xl sm:text-2xl font-black text-[#0284C7] font-mono block">
+            <span className="text-xl sm:text-2xl font-black text-[#A78BFA] font-mono block">
               {formatCurrency(todayClickTotal, currency)}
             </span>
-            <span className="text-[11px] font-semibold text-sky-700 mt-1 block">
+            <span className="text-[11px] font-semibold text-[#A1A1AA] mt-1 block">
               {clickPayments.filter((p) => p.dateStr === getTodayKey()).length} {t('click.itemsCount')}
             </span>
           </div>
         </div>
 
         {/* Total Click Revenue */}
-        <div className="p-4 rounded-2xl bg-white border border-[#E7E5E4] flex flex-col justify-between shadow-xs">
-          <div className="flex items-center justify-between text-[#78716C] mb-2">
+        <div className="p-4 rounded-2xl bg-[#1D1B2E] border border-[rgba(167,139,250,0.15)] flex flex-col justify-between shadow-xs">
+          <div className="flex items-center justify-between text-[#A1A1AA] mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider">
               {t('click.totalClick')}
             </span>
-            <CreditCard className="w-4 h-4 text-[#0D9488]" />
+            <CreditCard className="w-4 h-4 text-[#A78BFA]" />
           </div>
           <div>
-            <span className="text-lg sm:text-xl font-black text-[#292524] font-mono block">
+            <span className="text-lg sm:text-xl font-black text-white font-mono block">
               {formatCurrency(totalClickAmount, currency)}
             </span>
-            <span className="text-[11px] text-[#78716C] mt-1 block">
+            <span className="text-[11px] text-[#A1A1AA] mt-1 block">
               {t('click.filterAll')}
             </span>
           </div>
         </div>
 
         {/* Click Payments Count */}
-        <div className="p-4 rounded-2xl bg-white border border-[#E7E5E4] flex flex-col justify-between shadow-xs">
-          <div className="flex items-center justify-between text-[#78716C] mb-2">
+        <div className="p-4 rounded-2xl bg-[#1D1B2E] border border-[rgba(167,139,250,0.15)] flex flex-col justify-between shadow-xs">
+          <div className="flex items-center justify-between text-[#A1A1AA] mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider">
               {t('click.paymentsCount')}
             </span>
-            <Receipt className="w-4 h-4 text-[#0D9488]" />
+            <Receipt className="w-4 h-4 text-[#A78BFA]" />
           </div>
           <div>
-            <span className="text-xl sm:text-2xl font-black text-[#292524] font-mono block">
+            <span className="text-xl sm:text-2xl font-black text-white font-mono block">
               {clickPaymentsCount}
             </span>
-            <span className="text-[11px] text-[#78716C] mt-1 block">
+            <span className="text-[11px] text-[#A1A1AA] mt-1 block">
               {t('click.itemsCount')}
             </span>
           </div>
         </div>
 
         {/* Average Ticket */}
-        <div className="p-4 rounded-2xl bg-white border border-[#E7E5E4] flex flex-col justify-between shadow-xs">
-          <div className="flex items-center justify-between text-[#78716C] mb-2">
+        <div className="p-4 rounded-2xl bg-[#1D1B2E] border border-[rgba(167,139,250,0.15)] flex flex-col justify-between shadow-xs">
+          <div className="flex items-center justify-between text-[#A1A1AA] mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider">
               {t('click.averageTicket')}
             </span>
-            <TrendingUp className="w-4 h-4 text-[#0D9488]" />
+            <TrendingUp className="w-4 h-4 text-[#A78BFA]" />
           </div>
           <div>
-            <span className="text-lg sm:text-xl font-black text-[#292524] font-mono block">
+            <span className="text-lg sm:text-xl font-black text-white font-mono block">
               {formatCurrency(averageTicket, currency)}
             </span>
-            <span className="text-[11px] text-[#78716C] mt-1 block">
+            <span className="text-[11px] text-[#A1A1AA] mt-1 block">
               {currency} / {t('click.customerName').toLowerCase()}
             </span>
           </div>
         </div>
 
         {/* Click Share (%) */}
-        <div className="col-span-2 sm:col-span-1 p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 flex flex-col justify-between shadow-xs">
-          <div className="flex items-center justify-between text-emerald-700 mb-2">
+        <div className="col-span-2 sm:col-span-1 p-4 rounded-2xl bg-[#1D1B2E] border border-emerald-500/30 flex flex-col justify-between shadow-xs">
+          <div className="flex items-center justify-between text-emerald-400 mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider">
               {t('click.clickShare')}
             </span>
             <Percent className="w-4 h-4" />
           </div>
           <div>
-            <span className="text-xl sm:text-2xl font-black text-[#16A34A] font-mono block">
+            <span className="text-xl sm:text-2xl font-black text-emerald-400 font-mono block">
               {clickSharePercent}%
             </span>
-            <span className="text-[11px] text-emerald-700 mt-1 block font-semibold">
+            <span className="text-[11px] text-emerald-300 mt-1 block font-semibold">
               Click • {100 - clickSharePercent}% Naqd
             </span>
           </div>
@@ -240,22 +240,22 @@ export default function ClickPayments() {
       </div>
 
       {/* 3. Search and Date Filter Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-[#E7E5E4] shadow-xs">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#1D1B2E] p-3.5 sm:p-4 rounded-2xl border border-[rgba(167,139,250,0.15)] shadow-xs">
         {/* Search Input */}
         <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#78716C]" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A1A1AA]" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder={t('click.searchPlaceholder')}
-            className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-[#292524] placeholder-[#78716C] focus:outline-none focus:ring-2 focus:ring-[#00A5EC] focus:bg-white transition"
+            className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-[#101014] border border-[rgba(167,139,250,0.2)] rounded-xl text-white placeholder-[#A1A1AA]/60 focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/40 focus:border-[#7C3AED] transition"
           />
           {searchTerm && (
             <button
               type="button"
               onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#78716C] hover:text-[#292524] p-1"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A1A1AA] hover:text-white p-1"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -263,7 +263,7 @@ export default function ClickPayments() {
         </div>
 
         {/* Date Filter Tabs */}
-        <div className="flex items-center gap-1.5 p-1 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl self-start sm:self-auto">
+        <div className="flex items-center gap-1.5 p-1 bg-[#101014] border border-[rgba(167,139,250,0.15)] rounded-xl self-start sm:self-auto">
           {[
             { id: 'all', label: t('click.filterAll') },
             { id: 'today', label: t('click.filterToday') },
@@ -276,8 +276,8 @@ export default function ClickPayments() {
               onClick={() => setDateFilter(tab.id)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
                 dateFilter === tab.id
-                  ? 'bg-white text-[#292524] shadow-xs'
-                  : 'text-[#78716C] hover:text-[#292524]'
+                  ? 'bg-[#7C3AED] text-white shadow-[0_0_10px_rgba(124,58,237,0.4)]'
+                  : 'text-[#A1A1AA] hover:text-white'
               }`}
             >
               {tab.label}
@@ -288,16 +288,16 @@ export default function ClickPayments() {
 
       {/* 4. Click Payments List */}
       {filteredPayments.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-[#E7E5E4] p-12 text-center shadow-xs">
-          <div className="w-14 h-14 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center mx-auto mb-3 text-[#00A5EC]">
+        <div className="bg-[#1D1B2E] rounded-2xl border border-[rgba(167,139,250,0.15)] p-12 text-center shadow-xs">
+          <div className="w-14 h-14 rounded-2xl bg-[#101014] border border-[rgba(167,139,250,0.15)] flex items-center justify-center mx-auto mb-3 text-[#A78BFA]">
             <Smartphone className="w-7 h-7" />
           </div>
-          <h3 className="text-base font-bold text-[#292524]">{t('click.emptyTitle')}</h3>
-          <p className="text-xs text-[#78716C] mt-1 max-w-sm mx-auto">{t('click.emptyDesc')}</p>
+          <h3 className="text-base font-bold text-white">{t('click.emptyTitle')}</h3>
+          <p className="text-xs text-[#A1A1AA] mt-1 max-w-sm mx-auto">{t('click.emptyDesc')}</p>
           <button
             type="button"
             onClick={handleOpenAddModal}
-            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#00A5EC] text-white text-xs font-bold hover:bg-[#0284C7] transition cursor-pointer"
+            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#7C3AED] text-white text-xs font-bold hover:bg-[#6D28D9] transition cursor-pointer shadow-[0_0_15px_rgba(124,58,237,0.35)]"
           >
             <Plus className="w-4 h-4" />
             <span>{t('click.addPayment')}</span>
@@ -320,38 +320,38 @@ export default function ClickPayments() {
             return (
               <div
                 key={payment.id}
-                className="bg-white rounded-2xl border border-[#E7E5E4] hover:border-sky-300 transition-all shadow-xs p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+                className="bg-[#1D1B2E] rounded-2xl border border-[rgba(167,139,250,0.15)] hover:border-[#7C3AED]/40 hover:shadow-[0_0_15px_rgba(124,58,237,0.15)] transition-all shadow-xs p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4"
               >
                 {/* Left: Customer Info & Meta */}
                 <div className="flex items-start gap-3.5 min-w-[260px]">
-                  <div className="w-11 h-11 rounded-xl bg-[#00A5EC]/15 border border-[#00A5EC]/30 text-[#00A5EC] flex items-center justify-center font-black text-sm flex-shrink-0 shadow-xs">
+                  <div className="w-11 h-11 rounded-xl bg-[#7C3AED]/20 border border-[rgba(167,139,250,0.25)] text-[#A78BFA] flex items-center justify-center font-black text-sm flex-shrink-0 shadow-xs">
                     {userInitial}
                   </div>
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="text-sm sm:text-base font-black text-[#292524] leading-tight">
+                      <h3 className="text-sm sm:text-base font-black text-white leading-tight">
                         {payment.customerName}
                       </h3>
-                      <span className="px-2 py-0.5 rounded-md bg-[#00A5EC]/10 border border-[#00A5EC]/20 text-[10px] font-black text-[#00A5EC] uppercase">
+                      <span className="px-2 py-0.5 rounded-md bg-[#7C3AED]/20 border border-[#7C3AED]/30 text-[10px] font-black text-[#A78BFA] uppercase">
                         CLICK
                       </span>
                       {payment.transactionRef && (
-                        <span className="px-2 py-0.5 rounded-md bg-[#F5F5F4] border border-[#E7E5E4] text-[10px] font-mono font-bold text-[#78716C]">
+                        <span className="px-2 py-0.5 rounded-md bg-[#101014] border border-[rgba(167,139,250,0.2)] text-[10px] font-mono font-bold text-[#A78BFA]">
                           {payment.transactionRef}
                         </span>
                       )}
                     </div>
 
-                    <div className="flex items-center gap-3 text-xs text-[#78716C] flex-wrap">
+                    <div className="flex items-center gap-3 text-xs text-[#A1A1AA] flex-wrap">
                       {payment.phone && (
                         <span className="flex items-center gap-1 font-medium">
-                          <Phone className="w-3.5 h-3.5 text-[#00A5EC]" />
+                          <Phone className="w-3.5 h-3.5 text-[#A78BFA]" />
                           <span>{payment.phone}</span>
                         </span>
                       )}
                       <span className="flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5 text-[#78716C]" />
+                        <Calendar className="w-3.5 h-3.5 text-[#A1A1AA]" />
                         <span>
                           {payment.dateStr} {payment.timeStr}
                         </span>
@@ -359,7 +359,7 @@ export default function ClickPayments() {
                     </div>
 
                     {payment.notes && (
-                      <p className="text-xs text-[#57534E] italic bg-[#F5F5F4] px-2.5 py-1 rounded-md border border-[#E7E5E4] inline-block">
+                      <p className="text-xs text-[#A1A1AA] italic bg-[#101014] px-2.5 py-1 rounded-md border border-[rgba(167,139,250,0.15)] inline-block">
                         {payment.notes}
                       </p>
                     )}
@@ -367,16 +367,16 @@ export default function ClickPayments() {
                 </div>
 
                 {/* Center: Purpose & Room info */}
-                <div className="lg:px-6 lg:border-x lg:border-[#E7E5E4] min-w-[240px] space-y-1">
-                  <div className="text-[10px] font-bold text-[#78716C] uppercase tracking-wider">
+                <div className="lg:px-6 lg:border-x lg:border-[rgba(167,139,250,0.15)] min-w-[240px] space-y-1">
+                  <div className="text-[10px] font-bold text-[#A1A1AA] uppercase tracking-wider">
                     {t('click.purpose')}
                   </div>
-                  <div className="text-xs sm:text-sm font-bold text-[#292524] flex items-center gap-1.5">
-                    <Smartphone className="w-3.5 h-3.5 text-[#00A5EC]" />
+                  <div className="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                    <Smartphone className="w-3.5 h-3.5 text-[#A78BFA]" />
                     <span>{purposeText}</span>
                   </div>
                   {payment.roomStation && (
-                    <div className="text-[11px] text-[#78716C] flex items-center gap-1 font-medium">
+                    <div className="text-[11px] text-[#A1A1AA] flex items-center gap-1 font-medium">
                       <span>{payment.roomStation}</span>
                     </div>
                   )}
@@ -385,13 +385,13 @@ export default function ClickPayments() {
                 {/* Right: Amount & Actions */}
                 <div className="flex items-center justify-between lg:justify-end gap-4 min-w-[220px]">
                   <div>
-                    <span className="text-[10px] font-bold uppercase text-[#78716C] block">
+                    <span className="text-[10px] font-bold uppercase text-[#A1A1AA] block">
                       {t('click.amount')}
                     </span>
-                    <span className="text-lg sm:text-xl font-black font-mono text-[#00A5EC] block">
+                    <span className="text-lg sm:text-xl font-black font-mono text-emerald-400 block">
                       +{formatCurrency(payment.amount || 0, currency)}
                     </span>
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700 mt-0.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mt-0.5">
                       <CheckCircle2 className="w-3 h-3" />
                       <span>{t('click.statusCompleted')}</span>
                     </span>
@@ -402,7 +402,7 @@ export default function ClickPayments() {
                     <button
                       type="button"
                       onClick={() => handleOpenEditModal(payment)}
-                      className="p-2 rounded-xl bg-[#F5F5F4] hover:bg-stone-200 text-[#44403C] border border-[#E7E5E4] transition cursor-pointer"
+                      className="p-2 rounded-xl bg-[#101014] hover:bg-[#25233B] text-[#A1A1AA] hover:text-white border border-[rgba(167,139,250,0.15)] transition cursor-pointer"
                       title={t('click.editPayment')}
                     >
                       <Edit2 className="w-4 h-4" />
@@ -411,7 +411,7 @@ export default function ClickPayments() {
                     <button
                       type="button"
                       onClick={() => handleConfirmDelete(payment.id)}
-                      className="p-2 rounded-xl bg-white hover:bg-red-50 text-[#78716C] hover:text-[#DC2626] border border-[#E7E5E4] hover:border-red-200 transition cursor-pointer"
+                      className="p-2 rounded-xl bg-[#101014] hover:bg-rose-500/20 text-[#A1A1AA] hover:text-rose-400 border border-[rgba(167,139,250,0.15)] transition cursor-pointer"
                       title={t('click.deletePayment')}
                     >
                       <Trash2 className="w-4 h-4" />
@@ -502,15 +502,15 @@ function ClickPaymentModal({ isOpen, initialData, onClose, onSave, currency, roo
 
     // 1. Validate if rooms exist in the system
     if (!rooms || rooms.length === 0) {
-      setRoomError(t('click.roomNotExists'));
-      alert(t('click.roomNotExists'));
+      setRoomError(t('debts.roomNotExists'));
+      alert(t('debts.roomNotExists'));
       return;
     }
 
     // 2. Validate room selection
     if (!roomStation || !roomStation.trim()) {
-      setRoomError(t('click.roomNotExists'));
-      alert(t('click.roomNotExists'));
+      setRoomError(t('debts.roomNotExists'));
+      alert(t('debts.roomNotExists'));
       return;
     }
 
@@ -523,13 +523,18 @@ function ClickPaymentModal({ isOpen, initialData, onClose, onSave, currency, roo
     );
 
     if (!exists) {
-      setRoomError(t('click.roomNotExists'));
-      alert(t('click.roomNotExists'));
+      setRoomError(t('debts.roomNotExists'));
+      alert(t('debts.roomNotExists'));
+      return;
+    }
+
+    if (!customerName.trim()) {
+      alert(t('click.customerPlaceholder'));
       return;
     }
 
     if (parsedAmount <= 0) {
-      alert(t('click.amountPlaceholder'));
+      alert(t('click.amountRequired'));
       return;
     }
 
@@ -540,13 +545,13 @@ function ClickPaymentModal({ isOpen, initialData, onClose, onSave, currency, roo
     else purposeLabel = t('click.purposeOther');
 
     onSave({
-      customerName: customerName.trim() || 'Mijoz',
+      customerName: customerName.trim(),
       phone: phone.trim(),
       roomStation: roomStation.trim(),
       amount: parsedAmount,
       purpose,
       purposeLabel,
-      transactionRef: transactionRef.trim(),
+      transactionRef: transactionRef.trim() || undefined,
       dateStr,
       timeStr,
       notes: notes.trim(),
@@ -556,23 +561,28 @@ function ClickPaymentModal({ isOpen, initialData, onClose, onSave, currency, roo
 
   const modalNode = (
     <div
-      className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 z-[100] animate-in fade-in duration-200 overflow-y-auto"
+      className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 z-[100] animate-in fade-in duration-200 overflow-y-auto"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white border border-[#E7E5E4] rounded-2xl max-w-lg w-full shadow-2xl flex flex-col my-auto max-h-[90vh] overflow-hidden">
+      <div className="bg-[#1D1B2E] border border-[rgba(167,139,250,0.15)] rounded-2xl max-w-xl w-full shadow-2xl flex flex-col my-auto max-h-[90vh] overflow-hidden text-white">
         {/* Modal Header */}
-        <div className="shrink-0 p-5 border-b border-[#E7E5E4] flex items-center justify-between bg-sky-50/40">
+        <div className="shrink-0 p-5 border-b border-[rgba(167,139,250,0.15)] flex items-center justify-between bg-[#1D1B2E]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#00A5EC]/15 border border-[#00A5EC]/30 flex items-center justify-center text-[#00A5EC]">
+            <div className="w-10 h-10 rounded-xl bg-[#7C3AED]/20 border border-[rgba(167,139,250,0.25)] flex items-center justify-center text-[#A78BFA]">
               <Smartphone className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-black text-[#292524]">
-                {isEditing ? t('click.editPayment') : t('click.addPayment')}
-              </h3>
-              <p className="text-xs text-[#78716C]">
+              <div className="flex items-center gap-2">
+                <h3 className="text-base sm:text-lg font-black text-white">
+                  {isEditing ? t('click.editPayment') : t('click.addPayment')}
+                </h3>
+                <span className="px-2 py-0.5 rounded-full bg-[#7C3AED] text-white text-[9px] font-black uppercase">
+                  CLICK
+                </span>
+              </div>
+              <p className="text-xs text-[#A1A1AA]">
                 {isEditing ? initialData.customerName : t('click.subtitle')}
               </p>
             </div>
@@ -580,73 +590,75 @@ function ClickPaymentModal({ isOpen, initialData, onClose, onSave, currency, roo
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#78716C] hover:bg-[#F5F5F4] hover:text-[#292524] transition cursor-pointer"
+            className="p-1.5 rounded-lg text-[#A1A1AA] hover:bg-[#25233B] hover:text-white transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Modal Body */}
+        {/* Modal Scrollable Body */}
         <div className="flex-1 p-5 overflow-y-auto space-y-4">
           {/* Customer Name & Phone */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-bold text-[#44403C] block mb-1">
-                {t('click.customerName')}
+              <label className="text-xs font-bold text-[#A1A1AA] block mb-1">
+                {t('click.customerName')} *
               </label>
               <input
                 type="text"
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
-                placeholder={t('click.customerNamePlaceholder')}
-                className="w-full px-3.5 py-2 text-xs sm:text-sm bg-white rounded-xl border border-[#E7E5E4] focus:outline-none focus:ring-2 focus:ring-[#00A5EC] font-bold text-[#292524]"
+                placeholder={t('click.customerPlaceholder')}
+                className="w-full px-3.5 py-2 text-xs sm:text-sm bg-[#101014] rounded-xl border border-[rgba(167,139,250,0.2)] focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/50 focus:border-[#7C3AED] font-bold text-white"
                 autoFocus
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-[#44403C] block mb-1">
+              <label className="text-xs font-bold text-[#A1A1AA] block mb-1">
                 {t('click.customerPhone')}
               </label>
               <input
                 type="text"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder={t('click.customerPhonePlaceholder')}
-                className="w-full px-3.5 py-2 text-xs sm:text-sm bg-white rounded-xl border border-[#E7E5E4] focus:outline-none focus:ring-2 focus:ring-[#00A5EC] text-[#292524]"
+                placeholder={t('click.phonePlaceholder')}
+                className="w-full px-3.5 py-2 text-xs sm:text-sm bg-[#101014] rounded-xl border border-[rgba(167,139,250,0.2)] focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/50 focus:border-[#7C3AED] text-white"
               />
             </div>
           </div>
 
-          {/* Amount (To'lov summasi) */}
-          <div className="p-3.5 rounded-xl bg-[#F5F5F4] border border-[#E7E5E4] space-y-2">
+          {/* Amount (So'm) */}
+          <div className="p-3.5 rounded-xl bg-[#101014] border border-[rgba(167,139,250,0.15)] space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-[#292524] flex items-center gap-1.5">
-                <CreditCard className="w-4 h-4 text-[#00A5EC]" />
+              <label className="text-xs font-bold text-white flex items-center gap-1.5">
+                <CreditCard className="w-4 h-4 text-[#A78BFA]" />
                 <span>{t('click.amount')} *</span>
               </label>
-              <span className="text-xs font-black text-[#00A5EC] font-mono">
+              <span className="text-sm font-black text-emerald-400 font-mono">
                 {formatCurrency(parsedAmount, currency)}
               </span>
             </div>
 
-            <input
-              type="number"
-              min="0"
-              step="1000"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="0"
-              className="w-full px-3.5 py-2 text-base bg-white rounded-xl border border-[#E7E5E4] focus:outline-none focus:ring-2 focus:ring-[#00A5EC] font-mono font-black text-[#292524]"
-            />
+            <div className="relative">
+              <input
+                type="number"
+                min="0"
+                step="1000"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="masalan: 35000"
+                className="w-full px-3.5 py-2 text-sm bg-[#1D1B2E] rounded-xl border border-[rgba(167,139,250,0.2)] focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/50 focus:border-[#7C3AED] font-mono font-bold text-white"
+              />
+            </div>
 
-            {/* Quick amount chips */}
+            {/* Quick chips */}
             <div className="flex flex-wrap gap-1.5 pt-1">
-              {[10000, 20000, 30000, 50000, 100000].map((amt) => (
+              {[15000, 20000, 30000, 50000, 100000].map((amt) => (
                 <button
                   key={amt}
                   type="button"
                   onClick={() => setAmount(String(amt))}
-                  className="px-2.5 py-1 rounded-lg bg-white hover:bg-sky-50 text-[11px] font-bold text-[#0284C7] border border-[#E7E5E4] hover:border-sky-300 transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-[#1D1B2E] hover:bg-[#25233B] text-[11px] font-bold text-[#A78BFA] border border-[rgba(167,139,250,0.2)] transition cursor-pointer"
                 >
                   +{amt.toLocaleString()}
                 </button>
@@ -654,48 +666,32 @@ function ClickPaymentModal({ isOpen, initialData, onClose, onSave, currency, roo
             </div>
           </div>
 
-          {/* Purpose / Category */}
-          <div>
-            <label className="text-xs font-bold text-[#44403C] block mb-1.5">
-              {t('click.purpose')}
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              {[
-                { id: 'session', label: t('click.purposeSession'), icon: Tv },
-                { id: 'products', label: t('click.purposeProducts'), icon: ShoppingBag },
-                { id: 'debt', label: t('click.purposeDebt'), icon: Receipt },
-                { id: 'other', label: t('click.purposeOther'), icon: ArrowUpRight },
-              ].map((item) => {
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => setPurpose(item.id)}
-                    className={`p-2.5 rounded-xl border text-xs font-bold flex items-center gap-2 transition cursor-pointer ${
-                      purpose === item.id
-                        ? 'bg-[#00A5EC]/10 border-[#00A5EC] text-[#00A5EC] shadow-xs'
-                        : 'bg-white border-[#E7E5E4] text-[#78716C] hover:bg-[#F5F5F4]'
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Room / Station & Receipt / Check ID */}
+          {/* Purpose & Room */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-bold text-[#44403C] block mb-1">
+              <label className="text-xs font-bold text-[#A1A1AA] block mb-1">
+                {t('click.purpose')}
+              </label>
+              <select
+                value={purpose}
+                onChange={(e) => setPurpose(e.target.value)}
+                className="w-full px-3.5 py-2 text-xs sm:text-sm bg-[#101014] rounded-xl border border-[rgba(167,139,250,0.2)] focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/50 focus:border-[#7C3AED] font-bold text-white cursor-pointer"
+              >
+                <option value="session" className="bg-[#1D1B2E] text-white">{t('click.purposeSession')}</option>
+                <option value="products" className="bg-[#1D1B2E] text-white">{t('click.purposeProducts')}</option>
+                <option value="debt" className="bg-[#1D1B2E] text-white">{t('click.purposeDebt')}</option>
+                <option value="other" className="bg-[#1D1B2E] text-white">{t('click.purposeOther')}</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="text-xs font-bold text-[#A1A1AA] block mb-1">
                 {t('click.roomStation')} *
               </label>
               {rooms.length === 0 ? (
-                <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-bold flex items-center gap-1.5">
+                <div className="p-2 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-bold flex items-center gap-1.5">
                   <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                  <span>{t('click.roomNotExists')}</span>
+                  <span>{t('debts.roomNotExists')}</span>
                 </div>
               ) : (
                 <select
@@ -704,69 +700,67 @@ function ClickPaymentModal({ isOpen, initialData, onClose, onSave, currency, roo
                     setRoomStation(e.target.value);
                     setRoomError('');
                   }}
-                  className={`w-full px-3.5 py-2 text-xs sm:text-sm bg-white rounded-xl border focus:outline-none focus:ring-2 font-bold text-[#292524] cursor-pointer ${
+                  className={`w-full px-3.5 py-2 text-xs sm:text-sm bg-[#101014] rounded-xl border focus:outline-none focus:ring-2 font-bold text-white cursor-pointer ${
                     roomError
-                      ? 'border-red-400 focus:ring-red-400 bg-red-50/40'
-                      : 'border-[#E7E5E4] focus:ring-[#00A5EC]'
+                      ? 'border-rose-400 focus:ring-rose-400 bg-rose-950/30'
+                      : 'border-[rgba(167,139,250,0.2)] focus:ring-[#7C3AED]/50 focus:border-[#7C3AED]'
                   }`}
                 >
-                  <option value="">{t('click.selectRoomPlaceholder')}</option>
+                  <option value="">{t('debts.selectRoomPlaceholder')}</option>
                   {availableRoomOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
+                    <option key={opt.value} value={opt.value} className="bg-[#1D1B2E] text-white">
                       {opt.label}
                     </option>
                   ))}
                 </select>
               )}
               {roomError && (
-                <span className="text-[11px] font-bold text-red-600 mt-1 block">
+                <span className="text-[11px] font-bold text-rose-400 mt-1 block">
                   {roomError}
                 </span>
               )}
             </div>
+          </div>
+
+          {/* Transaction Ref & Date/Time */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-bold text-[#44403C] block mb-1">
+              <label className="text-xs font-bold text-[#A1A1AA] block mb-1">
                 {t('click.transactionRef')}
               </label>
               <input
                 type="text"
                 value={transactionRef}
                 onChange={(e) => setTransactionRef(e.target.value)}
-                placeholder={t('click.transactionRefPlaceholder')}
-                className="w-full px-3.5 py-2 text-xs sm:text-sm bg-white rounded-xl border border-[#E7E5E4] focus:outline-none focus:ring-2 focus:ring-[#00A5EC] font-mono text-[#292524]"
+                placeholder={t('click.refPlaceholder')}
+                className="w-full px-3.5 py-2 text-xs sm:text-sm bg-[#101014] rounded-xl border border-[rgba(167,139,250,0.2)] focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/50 focus:border-[#7C3AED] font-mono text-white placeholder-[#A1A1AA]/50"
               />
             </div>
-          </div>
 
-          {/* Date & Time */}
-          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-bold text-[#44403C] block mb-1">
+              <label className="text-xs font-bold text-[#A1A1AA] block mb-1">
                 {t('click.dateTime')}
               </label>
-              <input
-                type="text"
-                value={dateStr}
-                onChange={(e) => setDateStr(e.target.value)}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-[#E7E5E4] font-mono text-[#292524]"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-bold text-[#44403C] block mb-1 opacity-0">
-                time
-              </label>
-              <input
-                type="text"
-                value={timeStr}
-                onChange={(e) => setTimeStr(e.target.value)}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-[#E7E5E4] font-mono text-[#292524]"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={dateStr}
+                  onChange={(e) => setDateStr(e.target.value)}
+                  className="w-1/2 px-3 py-2 text-xs bg-[#101014] rounded-xl border border-[rgba(167,139,250,0.2)] font-mono text-white"
+                />
+                <input
+                  type="text"
+                  value={timeStr}
+                  onChange={(e) => setTimeStr(e.target.value)}
+                  className="w-1/2 px-3 py-2 text-xs bg-[#101014] rounded-xl border border-[rgba(167,139,250,0.2)] font-mono text-white"
+                />
+              </div>
             </div>
           </div>
 
           {/* Notes */}
           <div>
-            <label className="text-xs font-bold text-[#44403C] block mb-1">
+            <label className="text-xs font-bold text-[#A1A1AA] block mb-1">
               {t('click.notes')}
             </label>
             <textarea
@@ -774,27 +768,27 @@ function ClickPaymentModal({ isOpen, initialData, onClose, onSave, currency, roo
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder={t('click.notesPlaceholder')}
-              className="w-full px-3.5 py-2 text-xs sm:text-sm bg-white rounded-xl border border-[#E7E5E4] focus:outline-none focus:ring-2 focus:ring-[#00A5EC] text-[#292524]"
+              className="w-full px-3.5 py-2 text-xs sm:text-sm bg-[#101014] rounded-xl border border-[rgba(167,139,250,0.2)] focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/50 focus:border-[#7C3AED] text-white placeholder-[#A1A1AA]/50"
             />
           </div>
         </div>
 
-        {/* Modal Footer */}
-        <div className="shrink-0 p-4 bg-stone-50 border-t border-[#E7E5E4] flex gap-3">
+        {/* Modal Footer Buttons */}
+        <div className="shrink-0 p-4 bg-[#1D1B2E] border-t border-[rgba(167,139,250,0.15)] flex gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-2.5 px-4 rounded-xl border border-[#E7E5E4] text-[#78716C] hover:bg-white hover:text-[#292524] font-bold text-xs sm:text-sm transition cursor-pointer"
+            className="flex-1 py-2.5 px-4 rounded-xl border border-[rgba(167,139,250,0.15)] text-[#A1A1AA] hover:bg-[#25233B] hover:text-white font-bold text-xs sm:text-sm transition cursor-pointer"
           >
             {t('click.cancel')}
           </button>
           <button
             type="button"
             onClick={handleSubmit}
-            className="flex-2 py-2.5 px-6 rounded-xl bg-[#00A5EC] hover:bg-[#0284C7] text-white font-bold text-xs sm:text-sm shadow-sm flex items-center justify-center gap-2 transition cursor-pointer"
+            className="flex-2 py-2.5 px-6 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold text-xs sm:text-sm shadow-[0_0_15px_rgba(124,58,237,0.35)] flex items-center justify-center gap-2 transition cursor-pointer"
           >
             <CheckCircle2 className="w-4 h-4" />
-            <span>{t('click.save')}</span>
+            <span>{t('click.savePayment')}</span>
           </button>
         </div>
       </div>
@@ -803,4 +797,3 @@ function ClickPaymentModal({ isOpen, initialData, onClose, onSave, currency, roo
 
   return typeof document !== 'undefined' ? createPortal(modalNode, document.body) : modalNode;
 }
-
