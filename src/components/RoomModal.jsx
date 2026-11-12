@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Tv, Sparkles, Plus, Check } from 'lucide-react';
+import { X, Tv, Sparkles, Plus, Check, Trash2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useApp } from '../context/AppContext';
 import { formatCurrency } from '../utils/formatters';
@@ -14,7 +14,7 @@ const DEFAULT_ZONE_PRESETS = [
 
 export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom = null }) {
   const { t } = useLanguage();
-  const { settings, addRoom, updateRoom, rooms } = useApp();
+  const { settings, addRoom, updateRoom, deleteRoom, rooms } = useApp();
   const currency = settings?.currency || "so'm";
 
   const nextDefaultNumber =
@@ -239,20 +239,41 @@ export default function RoomModal({ isOpen, onClose, mode = 'add', initialRoom =
           )}
 
           {/* Action Buttons */}
-          <div className="pt-4 flex items-center justify-end gap-3 border-t border-[#E7E5E4]">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2.5 rounded-xl border border-[#E7E5E4] text-[#78716C] hover:text-[#292524] hover:bg-[#F5F5F4] text-xs font-bold transition cursor-pointer"
-            >
-              {t('common.cancel')}
-            </button>
-            <button
-              type="submit"
-              className="px-5 py-2.5 rounded-xl bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold text-xs shadow-sm transition cursor-pointer"
-            >
-              {mode === 'edit' ? t('rooms.editRoomBtn') : t('rooms.addRoomBtn')}
-            </button>
+          <div className="pt-4 flex items-center justify-between gap-3 border-t border-[#E7E5E4]">
+            {mode === 'edit' && initialRoom ? (
+              <button
+                type="button"
+                onClick={() => {
+                  const roomName = initialRoom.name
+                    ? initialRoom.name.replace(/^(\d+)-xona$/i, '$1-PlayStation')
+                    : `${initialRoom.id}-PlayStation`;
+                  if (window.confirm(`${roomName}ni butunlay o‘chirishni tasdiqlaysizmi?`)) {
+                    deleteRoom(initialRoom.id);
+                    onClose();
+                  }
+                }}
+                className="px-3 py-2 rounded-xl text-[#DC2626] hover:bg-red-50 border border-transparent hover:border-red-200 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>{t('rooms.deleteRoomBtn')}</span>
+              </button>
+            ) : <div />}
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2.5 rounded-xl border border-[#E7E5E4] text-[#78716C] hover:text-[#292524] hover:bg-[#F5F5F4] text-xs font-bold transition cursor-pointer"
+              >
+                {t('common.cancel')}
+              </button>
+              <button
+                type="submit"
+                className="px-5 py-2.5 rounded-xl bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold text-xs shadow-sm transition cursor-pointer"
+              >
+                {mode === 'edit' ? t('rooms.editRoomBtn') : t('rooms.addRoomBtn')}
+              </button>
+            </div>
           </div>
         </form>
       </div>

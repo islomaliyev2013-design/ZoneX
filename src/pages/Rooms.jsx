@@ -96,7 +96,10 @@ export default function Rooms() {
   };
 
   const handleDeleteStation = (station) => {
-    if (window.confirm(t('rooms.confirmDeleteStation'))) {
+    const stationName = station.stationName
+      ? station.stationName.replace(/^Konsol\s*(\d+)$/i, '$1-xona')
+      : `${station.stationNumber}-xona`;
+    if (window.confirm(`${stationName}ni o‘chirishni tasdiqlaysizmi?`)) {
       removeStationFromRoom(station.roomId, station.id);
     }
   };
@@ -314,15 +317,6 @@ export default function Rooms() {
                     >
                       <Pencil className="w-4 h-4" />
                     </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteRoom(selectedRoom.id)}
-                      className="p-2 rounded-xl bg-[#F5F5F4] hover:bg-red-50 text-[#78716C] hover:text-[#DC2626] border border-[#E7E5E4] hover:border-red-200 transition cursor-pointer"
-                      title={t('rooms.deleteRoomBtn')}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
                   </div>
                 </div>
 
@@ -406,6 +400,7 @@ export default function Rooms() {
                       station={station}
                       onFinishClick={(st) => setActiveStationForFinish(st)}
                       onAddProductsClick={(st) => setActiveStationForProducts(st)}
+                      onDeleteStationClick={(st) => handleDeleteStation(st)}
                     />
                   ))}
                 </div>

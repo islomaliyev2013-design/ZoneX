@@ -204,42 +204,42 @@ export default function StationCard({
           </div>
         </div>
 
-        {/* Status Badge + Optional Delete Console Button */}
+        {/* Status Badge + Delete Room Button */}
         <div className="flex items-center gap-1.5 shrink-0">
           {isOccupied ? (
-            <div className="flex items-center gap-1.5">
-              {isExpired ? (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black bg-[#DC2626] text-white shadow-xs animate-pulse">
-                  <BellRing className="w-3 h-3 animate-bounce" />
-                  {t('station.timeExpired')}
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA]">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#DC2626] opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#DC2626]"></span>
-                  </span>
-                  {t('station.occupied')}
-                </span>
-              )}
-            </div>
-          ) : (
-            <div className="flex items-center gap-1">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0]">
-                <span className="h-2 w-2 rounded-full bg-[#16A34A]"></span>
-                {t('station.available')}
+            isExpired ? (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black bg-[#DC2626] text-white shadow-xs animate-pulse">
+                <BellRing className="w-3 h-3 animate-bounce" />
+                {t('station.timeExpired')}
               </span>
-              {onDeleteStationClick && (
-                <button
-                  type="button"
-                  onClick={() => onDeleteStationClick(station)}
-                  className="p-1 rounded-lg text-[#78716C] hover:text-[#DC2626] hover:bg-red-50 transition cursor-pointer"
-                  title={t('rooms.deleteStationBtn')}
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA]">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#DC2626] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#DC2626]"></span>
+                </span>
+                {t('station.occupied')}
+              </span>
+            )
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0]">
+              <span className="h-2 w-2 rounded-full bg-[#16A34A]"></span>
+              {t('station.available')}
+            </span>
+          )}
+
+          {onDeleteStationClick && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDeleteStationClick(station);
+              }}
+              className="p-1.5 rounded-lg text-[#78716C] hover:text-[#DC2626] hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer"
+              title={t('rooms.deleteStationBtn')}
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
           )}
         </div>
       </div>
