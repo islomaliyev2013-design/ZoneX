@@ -10,7 +10,8 @@
     "cancel": "Отмена",
     "roomPrefix": "Комната",
     "stationPrefix": "Консоль",
-    "walkIn": "Без имени"
+    "walkIn": "Без имени",
+    "delete": "Удалить"
   },
   "nav": {
     "dashboard": "Панель управления",

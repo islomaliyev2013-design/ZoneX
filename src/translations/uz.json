@@ -10,7 +10,8 @@
     "cancel": "Bekor qilish",
     "roomPrefix": "PlayStation",
     "stationPrefix": "Xona",
-    "walkIn": "Nomsiz mijoz"
+    "walkIn": "Nomsiz mijoz",
+    "delete": "O‘chirish"
   },
   "nav": {
     "dashboard": "Boshqaruv paneli",

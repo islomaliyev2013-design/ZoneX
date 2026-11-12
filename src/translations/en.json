@@ -10,7 +10,8 @@
     "cancel": "Cancel",
     "roomPrefix": "Room",
     "stationPrefix": "Station",
-    "walkIn": "Walk-in"
+    "walkIn": "Walk-in",
+    "delete": "Delete"
   },
   "nav": {
     "dashboard": "Dashboard",
