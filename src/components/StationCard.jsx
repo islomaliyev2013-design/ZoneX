@@ -165,7 +165,7 @@ export default function StationCard({
 
   return (
     <div
-      className={`rounded-2xl p-5 shadow-xs border transition-all duration-150 flex flex-col justify-between h-full w-full ${
+      className={`rounded-2xl p-4 shadow-xs border transition-all duration-150 flex flex-col justify-between h-full w-full overflow-hidden ${
         isExpired
           ? 'bg-[#1D1B2E] border-rose-500 ring-4 ring-rose-500/30 shadow-[0_0_25px_rgba(244,63,94,0.35)] animate-pulse'
           : isOccupied
@@ -173,60 +173,30 @@ export default function StationCard({
           : 'bg-[#1D1B2E] border-[rgba(167,139,250,0.15)] hover:border-[#7C3AED]/50 hover:shadow-[0_0_20px_rgba(124,58,237,0.2)]'
       }`}
     >
-      {/* Top bar: Station Name & Status Badge */}
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <div className="flex items-center gap-2.5">
-          <div
-            className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 ${
-              isExpired
-                ? 'bg-rose-600 text-white animate-bounce'
-                : isOccupied
-                ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                : 'bg-[#7C3AED]/20 text-[#A78BFA] border border-[rgba(167,139,250,0.25)]'
-            }`}
-          >
-            {isExpired ? <BellRing className="w-5 h-5" /> : <Gamepad2 className="w-5 h-5" />}
-          </div>
-          <div className="min-w-0">
-            <h4 className="font-extrabold text-base text-white leading-tight truncate">
-              {localizedStationName}
-            </h4>
-            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-              <span className="text-[11px] text-[#A1A1AA] font-medium truncate">
+      {/* Top bar: Station Name & Delete Button cleanly contained */}
+      <div className="mb-2.5">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+            <div
+              className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 ${
+                isExpired
+                  ? 'bg-rose-600 text-white animate-bounce'
+                  : isOccupied
+                  ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                  : 'bg-[#7C3AED]/20 text-[#A78BFA] border border-[rgba(167,139,250,0.25)]'
+              }`}
+            >
+              {isExpired ? <BellRing className="w-5 h-5" /> : <Gamepad2 className="w-5 h-5" />}
+            </div>
+            <div className="min-w-0 flex-1">
+              <h4 className="font-extrabold text-sm sm:text-base text-white leading-tight truncate">
+                {localizedStationName}
+              </h4>
+              <span className="text-[11px] text-[#A1A1AA] font-medium truncate block mt-0.5">
                 {localizedRoomName}
               </span>
-              {station.zoneType && (
-                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded border bg-[#7C3AED]/20 text-[#A78BFA] border-[rgba(167,139,250,0.25)]">
-                  {station.zoneType}
-                </span>
-              )}
             </div>
           </div>
-        </div>
-
-        {/* Status Badge + Delete Room Button */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          {isOccupied ? (
-            isExpired ? (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black bg-rose-600 text-white shadow-xs animate-pulse">
-                <BellRing className="w-3 h-3 animate-bounce" />
-                {t('station.timeExpired')}
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
-                </span>
-                {t('station.occupied')}
-              </span>
-            )
-          ) : (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-              <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
-              {t('station.available')}
-            </span>
-          )}
 
           {onDeleteStationClick && (
             <button
@@ -235,11 +205,44 @@ export default function StationCard({
                 e.stopPropagation();
                 onDeleteStationClick(station);
               }}
-              className="p-1.5 rounded-lg text-[#A1A1AA] hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/30 transition cursor-pointer"
+              className="p-1.5 rounded-lg text-[#A1A1AA] hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/30 transition cursor-pointer shrink-0"
               title={t('rooms.deleteStationBtn')}
             >
               <Trash2 className="w-4 h-4" />
             </button>
+          )}
+        </div>
+
+        {/* Zone & Status Badges Row — Always fits neatly inside card */}
+        <div className="flex items-center justify-between gap-2 mt-2.5">
+          {station.zoneType ? (
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md border bg-[#7C3AED]/20 text-[#A78BFA] border-[rgba(167,139,250,0.25)] truncate max-w-[110px]">
+              {station.zoneType}
+            </span>
+          ) : (
+            <span />
+          )}
+
+          {isOccupied ? (
+            isExpired ? (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-rose-600 text-white shadow-xs animate-pulse whitespace-nowrap shrink-0">
+                <BellRing className="w-3 h-3 animate-bounce" />
+                {t('station.timeExpired')}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 whitespace-nowrap shrink-0">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                </span>
+                {t('station.occupied')}
+              </span>
+            )
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 whitespace-nowrap shrink-0">
+              <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
+              {t('station.available')}
+            </span>
           )}
         </div>
       </div>
@@ -249,18 +252,18 @@ export default function StationCard({
         {isOccupied ? (
           <div className="space-y-2.5 w-full">
             {/* Customer name */}
-            <div className="flex items-center justify-between text-xs py-1.5 px-3 bg-[#101014] rounded-xl border border-[rgba(167,139,250,0.15)]">
-              <span className="text-[#A1A1AA] flex items-center gap-1.5 font-medium">
+            <div className="flex items-center justify-between gap-2 text-xs py-1.5 px-2.5 bg-[#101014] rounded-xl border border-[rgba(167,139,250,0.15)]">
+              <span className="text-[#A1A1AA] flex items-center gap-1.5 font-medium shrink-0">
                 <User className="w-3.5 h-3.5 text-[#A1A1AA]" /> {t('station.customer')}
               </span>
-              <span className="font-bold text-white truncate max-w-[130px]">
+              <span className="font-bold text-white truncate min-w-0">
                 {session.customerName || t('common.walkIn')}
               </span>
             </div>
 
             {/* Time Expired Loud Alert Banner */}
             {isExpired && (
-              <div className="p-2.5 rounded-xl bg-rose-600 text-white flex items-center justify-between shadow-xs border border-rose-400">
+              <div className="p-2.5 rounded-xl bg-rose-600 text-white flex items-center justify-between flex-wrap gap-1.5 shadow-xs border border-rose-400">
                 <div className="flex items-center gap-1.5 font-black text-xs uppercase tracking-wide">
                   <BellRing className="w-4 h-4 animate-bounce shrink-0" />
                   <span>{t('station.timeExpired')}</span>
@@ -292,13 +295,13 @@ export default function StationCard({
                     : 'bg-[#101014] border-[rgba(167,139,250,0.15)]'
                 }`}
               >
-                <div className="flex items-center justify-between text-xs font-semibold mb-0.5">
+                <div className="flex items-center justify-between flex-wrap gap-1 text-xs font-semibold mb-0.5">
                   <span
-                    className={`flex items-center gap-1.5 ${
+                    className={`flex items-center gap-1 ${
                       isExpired ? 'text-rose-400 font-bold' : 'text-[#A78BFA]'
                     }`}
                   >
-                    <Clock className="w-3.5 h-3.5" />
+                    <Clock className="w-3.5 h-3.5 shrink-0" />
                     {isExpired ? t('station.timeExpired') : t('station.timeRemaining')}
                   </span>
                   <span className="text-[11px] text-[#A1A1AA] font-mono">
@@ -311,7 +314,7 @@ export default function StationCard({
 
                 {/* Digital Countdown Timer */}
                 <div
-                  className={`text-2xl font-black tracking-wider font-mono my-0.5 ${
+                  className={`text-xl sm:text-2xl font-black tracking-wider font-mono my-0.5 ${
                     isExpired ? 'text-rose-400 animate-pulse' : 'text-white'
                   }`}
                 >
@@ -331,7 +334,7 @@ export default function StationCard({
                 </div>
 
                 <div
-                  className="text-[11px] text-[#A1A1AA] mt-1 flex items-center justify-center gap-2"
+                  className="text-[11px] text-[#A1A1AA] mt-1 flex items-center justify-center flex-wrap gap-x-1.5 gap-y-0.5"
                   title={`O'tgan: ${formatTimer(elapsedMs)}`}
                 >
                   <span>
@@ -351,10 +354,10 @@ export default function StationCard({
                   <Clock className="w-3.5 h-3.5" />
                   <span>{t('station.elapsedTime')}</span>
                 </div>
-                <div className="text-2xl font-black tracking-wider text-white font-mono">
+                <div className="text-xl sm:text-2xl font-black tracking-wider text-white font-mono">
                   {formatTimer(elapsedMs)}
                 </div>
-                <div className="text-[11px] text-[#A1A1AA] mt-1 flex items-center justify-center gap-2">
+                <div className="text-[11px] text-[#A1A1AA] mt-1 flex items-center justify-center flex-wrap gap-x-1.5 gap-y-0.5">
                   <span>
                     {formatCurrency(session.hourlyPrice, currency)}{' '}
                     {t('station.perHour') || '/ soat'}
@@ -417,24 +420,24 @@ export default function StationCard({
             <button
               type="button"
               onClick={handleFinish}
-              className={`flex-1 py-2.5 px-4 rounded-xl text-white font-extrabold text-sm shadow-xs flex items-center justify-center gap-2 transition cursor-pointer ${
+              className={`flex-1 min-w-0 py-2.5 px-3 rounded-xl text-white font-extrabold text-xs sm:text-sm shadow-xs flex items-center justify-center gap-1.5 transition cursor-pointer ${
                 isExpired
                   ? 'bg-rose-600 hover:bg-rose-700 shadow-[0_0_15px_rgba(225,29,72,0.4)] ring-2 ring-rose-400 animate-pulse'
                   : 'bg-rose-600 hover:bg-rose-700 shadow-[0_0_15px_rgba(225,29,72,0.3)]'
               }`}
             >
-              <Square className="w-4 h-4 fill-white" />
-              {t('station.finishSession')}
+              <Square className="w-3.5 h-3.5 fill-white shrink-0" />
+              <span className="truncate">{t('station.finishSession')}</span>
             </button>
           </div>
         ) : (
           <button
             type="button"
             onClick={() => onStartClick(station)}
-            className="w-full py-2.5 px-4 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold text-sm shadow-[0_0_15px_rgba(124,58,237,0.35)] flex items-center justify-center gap-2 transition cursor-pointer"
+            className="w-full py-2.5 px-3 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold text-xs sm:text-sm shadow-[0_0_15px_rgba(124,58,237,0.35)] flex items-center justify-center gap-1.5 transition cursor-pointer"
           >
-            <Play className="w-4 h-4 fill-white" />
-            {t('station.startSession')}
+            <Play className="w-3.5 h-3.5 fill-white shrink-0" />
+            <span className="truncate">{t('station.startSession')}</span>
           </button>
         )}
       </div>

@@ -125,9 +125,9 @@ export default function Rooms() {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          {/* View Mode Filters: By Room vs Only Occupied (Zanyat) vs Free */}
-          {rooms.length > 0 && (
+        {rooms.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2">
+            {/* View Mode Filters: By Room vs Only Occupied (Zanyat) vs Free */}
             <div className="flex items-center bg-[#1D1B2E] p-1 rounded-xl border border-[rgba(167,139,250,0.15)] shadow-xs">
               <button
                 type="button"
@@ -168,18 +168,18 @@ export default function Rooms() {
                 <span>🟢 {availableStationsCount}</span>
               </button>
             </div>
-          )}
 
-          {/* Add New Room Button */}
-          <button
-            type="button"
-            onClick={handleOpenAddRoom}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold text-xs shadow-[0_0_15px_rgba(124,58,237,0.35)] transition active:scale-95 cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            <span>{t('rooms.addRoomBtn')}</span>
-          </button>
-        </div>
+            {/* Add New Room Button */}
+            <button
+              type="button"
+              onClick={handleOpenAddRoom}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold text-xs shadow-[0_0_15px_rgba(124,58,237,0.35)] transition active:scale-95 cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>{t('rooms.addRoomBtn')}</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ZERO ROOMS EMPTY STATE */}
